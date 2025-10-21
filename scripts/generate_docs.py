@@ -636,7 +636,8 @@ See the skill documentation for detailed usage instructions.
 """
             for agent in sorted(agents, key=lambda a: a.name):
                 efficiency = f"{agent.token_efficiency}%" if agent.token_efficiency else "N/A"
-                content += f"| [{agent.name}](generic-claude-framework/agents/{agent.name}/README.md) | {agent.description[:60]}... | {agent.speed_emoji()} | {agent.complexity_badge()} | {efficiency} |\n"
+                desc = agent.description.replace('\n', ' ').replace('\r', '')[:60]
+                content += f"| [{agent.name}](generic-claude-framework/agents/{agent.name}/README.md) | {desc}... | {agent.speed_emoji()} | {agent.complexity_badge()} | {efficiency} |\n"
 
         content += """
 
@@ -649,7 +650,8 @@ See the skill documentation for detailed usage instructions.
 """
 
         for agent in sorted(self.agents, key=lambda a: a.name):
-            content += f"| [{agent.name}](generic-claude-framework/agents/{agent.name}/README.md) | {agent.category} | {agent.speed_emoji()} | {agent.complexity_badge()} | {agent.description[:80]}... |\n"
+            desc = agent.description.replace('\n', ' ').replace('\r', '')[:80]
+            content += f"| [{agent.name}](generic-claude-framework/agents/{agent.name}/README.md) | {agent.category} | {agent.speed_emoji()} | {agent.complexity_badge()} | {desc}... |\n"
 
         content += """
 
@@ -744,7 +746,8 @@ Top picks for getting started:
 """
             for skill in sorted(skills, key=lambda s: s.name):
                 savings = f"{skill.token_savings}%" if skill.token_savings else "N/A"
-                content += f"| [{skill.name}](generic-claude-framework/skills/{skill.name}/README.md) | {skill.description[:60]}... | {skill.language} | {savings} |\n"
+                desc = skill.description.replace('\n', ' ').replace('\r', '')[:60]
+                content += f"| [{skill.name}](generic-claude-framework/skills/{skill.name}/README.md) | {desc}... | {skill.language} | {savings} |\n"
 
         content += """
 
@@ -770,7 +773,8 @@ Top picks for getting started:
 """
             for skill in sorted(skills, key=lambda s: s.name):
                 savings = f"{skill.token_savings}%" if skill.token_savings else "N/A"
-                content += f"| [{skill.name}](generic-claude-framework/skills/{skill.name}/README.md) | {skill.category} | {skill.description[:60]}... | {savings} |\n"
+                desc = skill.description.replace('\n', ' ').replace('\r', '')[:60]
+                content += f"| [{skill.name}](generic-claude-framework/skills/{skill.name}/README.md) | {skill.category} | {desc}... | {savings} |\n"
 
         content += """
 
@@ -783,7 +787,8 @@ Top picks for getting started:
 """
 
         for skill in sorted(self.skills, key=lambda s: s.name):
-            content += f"| [{skill.name}](generic-claude-framework/skills/{skill.name}/README.md) | {skill.category} | {skill.language} | {skill.description[:80]}... |\n"
+            desc = skill.description.replace('\n', ' ').replace('\r', '')[:80]
+            content += f"| [{skill.name}](generic-claude-framework/skills/{skill.name}/README.md) | {skill.category} | {skill.language} | {desc}... |\n"
 
         content += f"""
 

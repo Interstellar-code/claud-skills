@@ -1,6 +1,6 @@
 # Skill Catalog
 
-**Last Updated**: 2025-10-21 12:33:39
+**Last Updated**: 2025-10-21 14:56:34
 **Total Skills**: 9
 
 ## Quick Navigation
@@ -19,9 +19,7 @@
 | Skill | Description | Language | Token Savings |
 |-------|-------------|----------|---------------|
 | [changelog-manager](generic-claude-framework/skills/changelog-manager/README.md) | Update project changelog with uncommitted changes, synchroni... | Unknown | N/A |
-| [lark-agent](generic-claude-framework/skills/lark-agent/README.md) | Create hierarchical Lark tasks from markdown test plans.
-
-AC... | Unknown | N/A |
+| [lark-agent](generic-claude-framework/skills/lark-agent/README.md) | Create hierarchical Lark tasks from markdown test plans.  AC... | Unknown | N/A |
 | [lark-agent-simple](generic-claude-framework/skills/lark-agent-simple/README.md) | Token-efficient Lark task creation from markdown test files.... | Unknown | N/A |
 | [markdown-helper](generic-claude-framework/skills/markdown-helper/README.md) | Token-efficient markdown parsing, editing, and diagram gener... | Unknown | N/A |
 | [skill-creator](generic-claude-framework/skills/skill-creator/README.md) | Guide for creating effective skills. This skill should be us... | Unknown | N/A |
@@ -41,9 +39,7 @@ AC... | Unknown | N/A |
 | Skill | Category | Description | Token Savings |
 |-------|----------|-------------|---------------|
 | [changelog-manager](generic-claude-framework/skills/changelog-manager/README.md) | Utilities | Update project changelog with uncommitted changes, synchroni... | N/A |
-| [lark-agent](generic-claude-framework/skills/lark-agent/README.md) | Utilities | Create hierarchical Lark tasks from markdown test plans.
-
-AC... | N/A |
+| [lark-agent](generic-claude-framework/skills/lark-agent/README.md) | Utilities | Create hierarchical Lark tasks from markdown test plans.  AC... | N/A |
 | [lark-agent-simple](generic-claude-framework/skills/lark-agent-simple/README.md) | Utilities | Token-efficient Lark task creation from markdown test files.... | N/A |
 | [markdown-helper](generic-claude-framework/skills/markdown-helper/README.md) | Utilities | Token-efficient markdown parsing, editing, and diagram gener... | N/A |
 | [skill-creator](generic-claude-framework/skills/skill-creator/README.md) | Utilities | Guide for creating effective skills. This skill should be us... | N/A |
@@ -60,11 +56,8 @@ AC... | N/A |
 | Skill | Category | Language | Description |
 |-------|----------|----------|-------------|
 | [changelog-manager](generic-claude-framework/skills/changelog-manager/README.md) | Utilities | Unknown | Update project changelog with uncommitted changes, synchronize package versions,... |
-| [lark-agent](generic-claude-framework/skills/lark-agent/README.md) | Utilities | Unknown | Create hierarchical Lark tasks from markdown test plans.
-
-ACTIVATE THIS SKILL wh... |
-| [lark-agent-simple](generic-claude-framework/skills/lark-agent-simple/README.md) | Utilities | Unknown | Token-efficient Lark task creation from markdown test files.
-Uses 60-70% fewer t... |
+| [lark-agent](generic-claude-framework/skills/lark-agent/README.md) | Utilities | Unknown | Create hierarchical Lark tasks from markdown test plans.  ACTIVATE THIS SKILL wh... |
+| [lark-agent-simple](generic-claude-framework/skills/lark-agent-simple/README.md) | Utilities | Unknown | Token-efficient Lark task creation from markdown test files. Uses 60-70% fewer t... |
 | [markdown-helper](generic-claude-framework/skills/markdown-helper/README.md) | Utilities | Unknown | Token-efficient markdown parsing, editing, and diagram generation using native C... |
 | [skill-creator](generic-claude-framework/skills/skill-creator/README.md) | Utilities | Unknown | Guide for creating effective skills. This skill should be used when users want t... |
 | [sql-cli](generic-claude-framework/skills/sql-cli/README.md) | Utilities | Unknown | Token-efficient MySQL/PostgreSQL operations using mycli and native CLI tools (Wi... |

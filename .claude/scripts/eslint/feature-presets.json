@@ -1,0 +1,131 @@
+{
+  "presets": {
+    "subscription-form": {
+      "description": "Subscription creation/editing forms (tabbed and modal forms)",
+      "patterns": [
+        "resources/js/pages/app/subscriptions/forms/**/*.{ts,tsx}",
+        "resources/js/pages/app/subscriptions/forms/tabbed/**/*.{ts,tsx}",
+        "resources/js/components/app/subscriptions/*form*.{ts,tsx}",
+        "resources/js/types/**/*subscription*.ts"
+      ],
+      "excludes": [
+        "**/*.test.{ts,tsx}",
+        "**/*.spec.{ts,tsx}"
+      ]
+    },
+    "subscription-dashboard": {
+      "description": "Main subscriptions dashboard and listing",
+      "patterns": [
+        "resources/js/pages/app/subscriptions/subscriptions-content.tsx",
+        "resources/js/pages/app/subscriptions/index.tsx",
+        "resources/js/components/app/subscriptions/subscription-card.tsx",
+        "resources/js/components/app/subscriptions/*-table*.{ts,tsx}",
+        "resources/js/hooks/*subscription*.{ts,tsx}"
+      ]
+    },
+    "credential-import": {
+      "description": "Browser password/credential import feature",
+      "patterns": [
+        "resources/js/components/app/subscriptions/import-credentials-modal.tsx",
+        "resources/js/components/app/subscriptions/credential-import*.tsx",
+        "resources/js/services/credential-import-service.ts",
+        "resources/js/pages/app/subscriptions/credential-import-history.tsx",
+        "app/Http/Controllers/Api/User/CredentialImportController.php",
+        "app/Services/CredentialImportService.php",
+        "app/Models/CredentialImport*.php"
+      ]
+    },
+    "calendar": {
+      "description": "Calendar view and subscription scheduling",
+      "patterns": [
+        "resources/js/pages/app/calendar/**/*.{ts,tsx}",
+        "resources/js/components/app/calendar/**/*.{ts,tsx}",
+        "resources/js/hooks/use-calendar*.{ts,tsx}",
+        "resources/js/store/*calendar*.ts"
+      ]
+    },
+    "settings": {
+      "description": "User settings and preferences",
+      "patterns": [
+        "resources/js/pages/app/settings/**/*.{ts,tsx}",
+        "resources/js/components/app/settings/**/*.{ts,tsx}",
+        "resources/js/layouts/app/settings/**/*.{ts,tsx}"
+      ]
+    },
+    "auth": {
+      "description": "Authentication and authorization",
+      "patterns": [
+        "resources/js/pages/app/auth/**/*.{ts,tsx}",
+        "resources/js/layouts/auth/**/*.{ts,tsx}",
+        "resources/js/components/auth/**/*.{ts,tsx}",
+        "app/Http/Controllers/Api/User/AuthController.php",
+        "app/Http/Controllers/Api/User/OnboardingController.php"
+      ]
+    },
+    "onboarding": {
+      "description": "User onboarding flow",
+      "patterns": [
+        "resources/js/pages/app/onboarding/**/*.{ts,tsx}",
+        "resources/js/components/app/onboarding/**/*.{ts,tsx}",
+        "app/Http/Controllers/Api/User/OnboardingController.php"
+      ]
+    },
+    "theme": {
+      "description": "Theme customization and appearance",
+      "patterns": [
+        "resources/js/components/theme-customizer/**/*.{ts,tsx}",
+        "resources/js/components/app/appearance-tabs.tsx",
+        "resources/js/lib/themes.ts",
+        "resources/js/hooks/use-theme*.{ts,tsx}"
+      ]
+    },
+    "admin-products": {
+      "description": "Admin product management",
+      "patterns": [
+        "resources/js/pages/admin/products/**/*.{ts,tsx}",
+        "resources/js/components/admin/*product*.tsx",
+        "resources/js/components/admin/*platform*.tsx",
+        "resources/js/components/admin/*category*.tsx",
+        "app/Http/Controllers/Api/Admin/ProductController.php",
+        "app/Models/Product.php"
+      ]
+    },
+    "admin-bulk-operations": {
+      "description": "Admin bulk import and operations",
+      "patterns": [
+        "resources/js/components/admin/bulk-*.tsx",
+        "resources/js/components/admin/batch-*.tsx",
+        "app/Http/Controllers/Api/Admin/BulkImportController.php"
+      ]
+    },
+    "payments": {
+      "description": "Payment methods and billing",
+      "patterns": [
+        "resources/js/pages/app/payment-methods/**/*.{ts,tsx}",
+        "resources/js/components/app/payment-methods/**/*.{ts,tsx}",
+        "resources/js/components/common/payment-method-badge.tsx",
+        "app/Models/PaymentMethod.php"
+      ]
+    },
+    "notifications": {
+      "description": "Notification system and reminders",
+      "patterns": [
+        "resources/js/components/app/notifications/**/*.{ts,tsx}",
+        "app/Models/Notification.php",
+        "app/Services/NotificationService.php"
+      ]
+    },
+    "ui-components": {
+      "description": "Shared UI components (shadcn/ui)",
+      "patterns": [
+        "resources/js/components/ui/**/*.tsx",
+        "resources/js/components/common/**/*.tsx"
+      ]
+    }
+  },
+  "meta": {
+    "version": "1.0.0",
+    "last_updated": "2025-10-19",
+    "total_presets": 13
+  }
+}

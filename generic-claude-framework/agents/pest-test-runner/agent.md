@@ -1,5 +1,6 @@
 ---
 name: pest-test-runner
+category: Testing & QA
 description: Execute Pest PHP tests and generate comprehensive HTML coverage reports. Runs Unit, Feature, and Integration tests with detailed output, logs execution results, and creates visual coverage reports for code quality analysis.
 tools: Bash, Read, Write, Edit
 model: sonnet

@@ -1,3 +1,13 @@
+---
+name: file-watcher-automation
+category: Development Utilities
+description: Automate file watching and continuous testing workflows using watchexec for PHP tests, TypeScript builds, and auto-linting
+speed: 4
+complexity: Low
+tags: [automation, testing, development, watchexec, continuous-testing]
+version: 1.0.0
+---
+
 # File Watcher Automation Agent
 
 **Purpose:** Automate file watching and continuous testing workflows using `watchexec`

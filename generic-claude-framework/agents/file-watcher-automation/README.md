@@ -1,21 +1,21 @@
-# mockup-creation-agent
+# file-watcher-automation
 
-> Rapid HTML/CSS mockup generation with design system integration, dark/light mode support, and screenshot reference capabilities
+> Automate file watching and continuous testing workflows using watchexec for PHP tests, TypeScript builds, and auto-linting
 
-**Category**: UI/UX & Design | **Version**: 1.0.0
+**Category**: Development Utilities | **Version**: 1.0.0
 
 ## Quick Info
 
 | Property | Value |
 |----------|-------|
-| **Speed** | ⚡⚡⚡ (3/5) |
-| **Complexity** |  Medium |
+| **Speed** | ⚡⚡⚡⚡ (4/5) |
+| **Complexity** |  Low |
 | **Token Efficiency** | None% improvement |
-| **Tags** | N/A |
+| **Tags** | automation, testing, development, watchexec, continuous-testing |
 
 ## Overview
 
-Rapid HTML/CSS mockup generation with design system integration, dark/light mode support, and screenshot reference capabilities
+Automate file watching and continuous testing workflows using watchexec for PHP tests, TypeScript builds, and auto-linting
 
 ## Use Cases
 
@@ -32,10 +32,17 @@ Rapid HTML/CSS mockup generation with design system integration, dark/light mode
 
 ```bash
 # Copy entire agent directory to your project's .claude directory
-cp -r generic-claude-framework/agents/mockup-creation-agent /your-project/.claude/agents/
+cp -r generic-claude-framework/agents/file-watcher-automation /your-project/.claude/agents/
 ```
 
 ### Step 2: Install Dependencies
+
+**For Playwright testing agents:**
+```bash
+# Install Playwright
+npm install --save-dev @playwright/test
+npx playwright install
+```
 
 
 ### Step 3: Configure
@@ -69,7 +76,6 @@ See the agent file for configuration options and customization points.
 
 ## Related
 
-- [ui-design-implementer](ui-design-implementer.md) - Implement UI designs with automated visual comparison and validation
 
 
 ---

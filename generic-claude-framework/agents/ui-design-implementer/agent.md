@@ -1,6 +1,7 @@
 ---
 name: ui-design-implementer
-description: Use this agent when you need to implement UI designs by analyzing visual differences between current implementation and target designs using Playwright for automated comparison and validation. Examples: <example>Context: User has a design mockup and wants to implement it accurately in their React/TypeScript frontend. user: 'I have this design mockup for the subscription dashboard. Can you implement it and make sure it matches the design exactly?' assistant: 'I'll use the ui-design-implementer agent to analyze the design, implement the UI components, and validate the implementation using Playwright visual comparison.' <commentary>Since the user needs UI implementation with design validation, use the ui-design-implementer agent to handle the complete design-to-code workflow with automated verification.</commentary></example> <example>Context: User notices their current UI doesn't match the intended design and wants it fixed. user: 'The subscription cards on the dashboard look different from our design. Can you fix the styling to match?' assistant: 'I'll use the ui-design-implementer agent to compare the current implementation with the target design and fix the discrepancies.' <commentary>Since this involves UI design comparison and fixing, use the ui-design-implementer agent to analyze differences and implement corrections.</commentary></example>
+category: UI/UX & Design
+description: "Implement UI designs with automated visual comparison and validation"
 color: yellow
 ---
 

@@ -1,6 +1,7 @@
 ---
 name: task-creator
-description: Use this agent to create comprehensive project tasks in SubsHero's standardized format. Examples: <example>Context: User wants to document a new feature for implementation.<br>user: "I need to create a task for implementing user authentication with social login"<br>assistant: "I'll use the task-creator agent to create a comprehensive task document with proper metadata, implementation steps, and business analysis."<br><commentary>Since the user wants to create a structured project task, use the task-creator agent to generate a properly formatted task file.</commentary></example>
+category: Project Management
+description: "Create comprehensive project tasks in standardized format"
 color: blue
 ---
 

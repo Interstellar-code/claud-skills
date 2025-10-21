@@ -2,7 +2,7 @@
 
 > Comprehensive frontend testing for web applications using Playwright (primary) or Chrome DevTools MCP (backup)
 
-**Category**: Uncategorized | **Version**: 1.0.0
+**Category**: Testing & QA | **Version**: 1.0.0
 
 ## Quick Info
 
@@ -69,9 +69,9 @@ See the agent file for configuration options and customization points.
 
 ## Related
 
-- [agent](agent.md) - No description available
-- [agent](agent.md) - No description available
-- [mockup-creation-agent](mockup-creation-agent.md) - Rapid HTML/CSS mockup generation with design system integration, dark/light mode support, and screenshot reference capabilities
+- [pest-test-generator](pest-test-generator.md) - Auto-generate comprehensive Pest PHP tests by analyzing Laravel codebase. Creates Unit, Feature, and Integration tests for controllers, models, services, and other PHP classes. Maintains test registry and follows Pest best practices.
+- [pest-test-runner](pest-test-runner.md) - Execute Pest PHP tests and generate comprehensive HTML coverage reports. Runs Unit, Feature, and Integration tests with detailed output, logs execution results, and creates visual coverage reports for code quality analysis.
+- [playwright-test-generator](playwright-test-generator.md) - Create automated browser tests using Playwright from user interactions
 
 
 ---

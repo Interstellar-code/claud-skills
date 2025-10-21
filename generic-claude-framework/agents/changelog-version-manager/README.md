@@ -1,8 +1,8 @@
-# pest-test-runner
+# changelog-version-manager
 
-> Execute Pest PHP tests and generate comprehensive HTML coverage reports. Runs Unit, Feature, and Integration tests with detailed output, logs execution results, and creates visual coverage reports for code quality analysis.
+> Update project changelog with uncommitted changes and create version releases
 
-**Category**: Testing & QA | **Version**: 1.0.0
+**Category**: Project Management | **Version**: 2.0.0-python-optimized
 
 ## Quick Info
 
@@ -15,7 +15,7 @@
 
 ## Overview
 
-Execute Pest PHP tests and generate comprehensive HTML coverage reports. Runs Unit, Feature, and Integration tests with detailed output, logs execution results, and creates visual coverage reports for code quality analysis.
+Update project changelog with uncommitted changes and create version releases
 
 ## Use Cases
 
@@ -32,7 +32,7 @@ Execute Pest PHP tests and generate comprehensive HTML coverage reports. Runs Un
 
 ```bash
 # Copy entire agent directory to your project's .claude directory
-cp -r generic-claude-framework/agents/pest-test-runner /your-project/.claude/agents/
+cp -r generic-claude-framework/agents/changelog-version-manager /your-project/.claude/agents/
 ```
 
 ### Step 2: Install Dependencies
@@ -69,9 +69,7 @@ See the agent file for configuration options and customization points.
 
 ## Related
 
-- [pest-test-generator](pest-test-generator.md) - Auto-generate comprehensive Pest PHP tests by analyzing Laravel codebase. Creates Unit, Feature, and Integration tests for controllers, models, services, and other PHP classes. Maintains test registry and follows Pest best practices.
-- [playwright-test-generator](playwright-test-generator.md) - Create automated browser tests using Playwright from user interactions
-- [playwright-test-healer](playwright-test-healer.md) - Debug and fix failing Playwright tests systematically
+- [task-creator](task-creator.md) - Create comprehensive project tasks in standardized format
 
 
 ---

@@ -1,6 +1,7 @@
 ---
 name: changelog-version-manager
-description: Use this agent when you need to update the project's changelog with uncommitted changes and create a new version release. Examples: <example>Context: User has made several bug fixes and feature improvements and wants to prepare a release.<br>user: "I've finished implementing the new subscription filtering feature and fixed a few bugs. Can you update the changelog?"<br>assistant: "I'll use the changelog-version-manager agent to analyze your uncommitted changes, update the changelog with a new minor version, and create the appropriate commit and push."<br><commentary>Since the user wants to document changes for a release, use the changelog-version-manager agent to handle the version update process.</commentary></example> <example>Context: User has completed development work and wants to document changes for public release.<br>user: "Ready to release these changes to production"<br>assistant: "I'll use the changelog-version-manager agent to create a new changelog entry based on your uncommitted changes and handle the version bump and commit process."<br><commentary>The user is ready for a release, so use the changelog-version-manager agent to manage the changelog and versioning workflow.</commentary></example>
+category: Project Management
+description: "Update project changelog with uncommitted changes and create version releases"
 color: cyan
 version: 2.0.0-python-optimized
 ---

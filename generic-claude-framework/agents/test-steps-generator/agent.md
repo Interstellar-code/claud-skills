@@ -1,5 +1,6 @@
 ---
 name: test-steps-generator
+category: Testing & QA
 description: Generates comprehensive manual testing steps by analyzing code implementations and user workflows
 ---
 

@@ -1,5 +1,6 @@
 ---
 name: web-app-testing-agent
+category: Testing & QA
 description: Comprehensive frontend testing for web applications using Playwright (primary) or Chrome DevTools MCP (backup)
 ---
 

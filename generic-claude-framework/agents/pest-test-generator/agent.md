@@ -1,5 +1,6 @@
 ---
 name: pest-test-generator
+category: Testing & QA
 description: Auto-generate comprehensive Pest PHP tests by analyzing Laravel codebase. Creates Unit, Feature, and Integration tests for controllers, models, services, and other PHP classes. Maintains test registry and follows Pest best practices.
 tools: Read, Grep, Glob, Write, Bash, Edit
 model: sonnet

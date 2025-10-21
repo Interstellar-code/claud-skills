@@ -107,22 +107,47 @@ class DocumentationGenerator:
             content = file_path.read_text(encoding='utf-8')
             frontmatter = self.extract_frontmatter(content)
 
+            # Get agent name from parent directory (since file is agent.md)
+            agent_dir_name = file_path.parent.name
+
+            # If frontmatter parsing failed, try to extract from file content
             if not frontmatter:
-                # Create default metadata if no frontmatter
-                frontmatter = {
-                    'name': file_path.stem,
-                    'category': 'Uncategorized',
-                    'description': 'No description available',
-                    'speed': 3,
-                    'complexity': 'Medium'
-                }
+                frontmatter = {}
+
+            # Extract simple description from first paragraph if YAML description is missing/complex
+            if not frontmatter.get('description') or len(frontmatter.get('description', '')) > 300:
+                # Try to get description from **Purpose** or first paragraph
+                import re
+                purpose_match = re.search(r'\*\*Purpose:\*\*\s*(.+?)(?:\n|$)', content)
+                if purpose_match:
+                    frontmatter['description'] = purpose_match.group(1).strip()
+                else:
+                    # Get first sentence after frontmatter
+                    content_after_fm = re.sub(r'^---.*?---\s*', '', content, flags=re.DOTALL)
+                    sentences = re.split(r'[.!?]\s+', content_after_fm)
+                    if sentences:
+                        first_sentence = sentences[0].replace('\n', ' ').replace('#', '').strip()
+                        if len(first_sentence) > 10:
+                            frontmatter['description'] = first_sentence
+
+            # Set defaults for missing fields
+            if not frontmatter.get('name'):
+                frontmatter['name'] = agent_dir_name
+            if not frontmatter.get('category'):
+                frontmatter['category'] = 'Uncategorized'
+            if not frontmatter.get('description'):
+                frontmatter['description'] = 'No description available'
+            if not frontmatter.get('speed'):
+                frontmatter['speed'] = 3
+            if not frontmatter.get('complexity'):
+                frontmatter['complexity'] = 'Medium'
 
             # Extract benchmarks from content
             benchmarks = self.extract_benchmarks(content)
             use_cases = self.extract_use_cases(content)
 
             return Agent(
-                name=frontmatter.get('name', file_path.stem),
+                name=frontmatter.get('name', agent_dir_name),
                 category=frontmatter.get('category', 'Uncategorized'),
                 description=frontmatter.get('description', 'No description'),
                 speed=frontmatter.get('speed', 3),

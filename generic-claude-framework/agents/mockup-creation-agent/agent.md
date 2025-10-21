@@ -1,5 +1,6 @@
 ---
 name: mockup-creation-agent
+category: UI/UX & Design
 description: Rapid HTML/CSS mockup generation with design system integration, dark/light mode support, and screenshot reference capabilities
 ---
 

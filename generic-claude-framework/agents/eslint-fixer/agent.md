@@ -1,9 +1,15 @@
 ---
 name: eslint-fixer
-description: Fix ESLint issues with TypeScript scripts for ultra-fast, risk-based analysis and selective fixing. 85% faster, 85% less tokens than traditional approaches. No testing integration (manual testing workflow).
+category: Code Quality & Linting
+description: Fix ESLint issues with TypeScript scripts for ultra-fast, risk-based analysis and selective fixing
+speed: 5
+complexity: Low
+token_efficiency: 85
+featured: true
+tags: [javascript, typescript, linting, eslint, code-quality]
+version: 3.0.0
 tools: Bash
 color: green
-version: 3.0.0-typescript-optimized
 ---
 
 # 🚀 ESLint Fixer (TypeScript-Optimized)

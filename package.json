@@ -1,9 +1,11 @@
 {
   "name": "generic-claude-code-framework",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A comprehensive, reusable framework for Claude Code with production-ready agents, commands, skills, and scripts",
   "main": "index.js",
   "scripts": {
+    "docs:generate": "python scripts/generate_docs.py",
+    "docs:watch": "echo \"Watch mode not yet implemented\"",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [

@@ -7,6 +7,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2025-10-21
+
+### Added
+- **Self-Contained Agent Directories** - Each agent now has its own directory with `agent.md` (definition) and `README.md` (auto-generated documentation)
+- **Self-Contained Skill Directories** - Each skill now has its own directory with complete documentation and implementation files
+- **Root-Level Documentation** - Moved `docs/` to repository root for better organization and GitHub browsing
+
+### Changed
+- **Framework Structure** - Reorganized `generic-claude-framework/` to match `.claude` directory layout exactly
+- **Documentation Organization** - Each agent/skill now contains its own README.md inside its directory
+- **Catalog Links** - Updated all catalog links to point to new agent/skill directory structure
+- **Examples Location** - Moved `examples/` into `generic-claude-framework/examples/` for better organization
+- **Documentation Generator** - Updated to generate README.md files inside each agent/skill directory
+
+### Improved
+- **Discoverability** - README.md files are immediately visible when browsing agent/skill directories
+- **Self-Documentation** - Each component is now self-contained with its own complete documentation
+- **Deployment Ready** - Framework structure perfectly mirrors `.claude` directory for seamless deployment
+- **Navigation** - Clearer separation between repository documentation (root `docs/`) and deployable framework
+
 ## [1.0.0] - 2025-10-21
 
 ### Added
@@ -42,5 +62,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - N/A (Initial release)
 
-[Unreleased]: https://github.com/yourusername/claude-code-framework/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/yourusername/claude-code-framework/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/yourusername/claude-code-framework/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/yourusername/claude-code-framework/releases/tag/v1.0.0

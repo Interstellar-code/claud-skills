@@ -7,6 +7,41 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2025-10-21
+
+### Added
+- **Ecosystem Reference System** - Comprehensive directory of 13+ Claude Code repositories at `docs/ECOSYSTEM.md`
+  - Auto-generated with GitHub API integration
+  - Alphabetical organization with category tags
+  - Installation instructions for key repositories
+  - Ecosystem badge showing 13 repos in README
+- **Ecosystem Generator Script** - `scripts/generate_ecosystem.py` fetches live GitHub metadata
+- **Repository Curator** - `scripts/ecosystem_repos.json` with curated list of essential repositories
+- **NPM Scripts** - `npm run docs:ecosystem` and `npm run docs:all` for ecosystem generation
+
+### Changed
+- **Active Skills Cleanup** - Removed 6 irrelevant skills from `.claude/skills/`:
+  - Removed lark-agent and lark-agent-simple (not relevant for framework repo)
+  - Removed sql-cli and webapp-testing (no database or web app in this repo)
+  - Removed document-skills (docx/pdf/pptx/xlsx - not needed)
+  - Removed eslint-fixer (no TypeScript/JavaScript in framework)
+- **Repository URL** - Updated package.json to actual GitHub repository URL
+- **Skill Count** - From 9 skills to 5 relevant skills for framework development
+
+### Fixed
+- **Catalog Table Formatting** - Fixed broken markdown tables in AGENT_CATALOG.md and SKILL_CATALOG.md
+  - Descriptions with newlines were breaking table rows across multiple lines
+  - Updated generator to sanitize descriptions before truncation
+  - All catalogs now render properly on GitHub
+- **Agent Metadata** - Fixed agent catalog generation with proper name extraction from directory names
+- **Documentation Links** - Fixed remaining old links in README.md
+
+### Improved
+- **Framework Positioning** - Now serves as ecosystem discovery hub with comprehensive references
+- **Documentation Quality** - Professional table rendering without formatting issues
+- **Workspace Hygiene** - Clean, focused `.claude/` setup with only framework-relevant skills
+- **Repository Discoverability** - Added purple ecosystem badge to README for visibility
+
 ## [1.1.0] - 2025-10-21
 
 ### Added
@@ -62,6 +97,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - N/A (Initial release)
 
-[Unreleased]: https://github.com/yourusername/claude-code-framework/compare/v1.1.0...HEAD
-[1.1.0]: https://github.com/yourusername/claude-code-framework/compare/v1.0.0...v1.1.0
-[1.0.0]: https://github.com/yourusername/claude-code-framework/releases/tag/v1.0.0
+[Unreleased]: https://github.com/Interstellar-code/claud-skills/compare/v1.2.0...HEAD
+[1.2.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.1.0...v1.2.0
+[1.1.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.0.0...v1.1.0
+[1.0.0]: https://github.com/Interstellar-code/claud-skills/releases/tag/v1.0.0

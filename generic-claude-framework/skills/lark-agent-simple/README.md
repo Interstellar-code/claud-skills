@@ -106,6 +106,7 @@ See the skill documentation for detailed usage instructions.
 ## Related
 
 - [changelog-manager](changelog-manager.md) - Update project changelog with uncommitted changes, synchronize package versions, and create version releases with automatic commit and push
+- [cli-modern-tools](cli-modern-tools.md) - Auto-suggest modern CLI tool alternatives (bat, eza, fd, ripgrep) for faster, more efficient command-line operations with 50%+ speed improvements
 - [lark-agent](lark-agent.md) - Create hierarchical Lark tasks from markdown test plans.
 
 ACTIVATE THIS SKILL when user:
@@ -124,7 +125,6 @@ WORKFLOW:
 
 DO NOT create test plans yourself - only process existing markdown files unless explicitly asked.
 
-- [markdown-helper](markdown-helper.md) - Token-efficient markdown parsing, editing, and diagram generation using native CLI tools (Windows/Mac/Linux compatible)
 
 
 ---

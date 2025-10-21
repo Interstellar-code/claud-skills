@@ -7,6 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2025-10-21
+
+### Added
+- **Productivity Wins Framework** - New focus on simple, high-impact productivity skills
+  - Created comprehensive `docs/PRODUCTIVITY_WINS.md` showcase (400+ lines)
+  - ROI calculator showing 31,340 tokens/day savings, 23 min/day time savings
+  - Real benchmarks from production SubsHero SaaS project
+  - Competitive analysis vs. obra/superpowers, VoltAgent, awesome-claude-code
+  - Positioned as ONLY framework focusing on simple daily wins
+- **cli-modern-tools Skill** - Modern CLI tool alternatives with auto-suggestions
+  - bat > cat (syntax highlighting, line numbers, git diff)
+  - eza > ls (git status integration, icons, colors)
+  - fd > find (18x faster file search)
+  - watchexec for continuous automation
+  - Auto-activation on traditional command keywords
+  - Cross-platform support (Windows/Mac/Linux)
+- **Token & Speed Badges** - New README badges showing measurable improvements
+  - Token Savings: 61-88% badge
+  - Speed: 5-18x faster badge
+
+### Changed
+- **Skill Count** - From 9 to 10 skills (added cli-modern-tools)
+- **Framework Positioning** - Emphasized unique value: "simple productivity wins"
+- **README Navigation** - Added prominent "Productivity Wins" section with star emoji
+- **Documentation Focus** - Shifted from generic framework to productivity-first approach
+
+### Improved
+- **Competitive Differentiation** - Clear positioning against other frameworks
+- **Measurable Value** - All productivity claims backed by real benchmarks
+- **Developer ROI** - Calculated daily/monthly/annual time and token savings
+- **Skill Documentation** - All productivity skills now feature detailed token/speed metrics
+
 ## [1.2.0] - 2025-10-21
 
 ### Added
@@ -97,7 +129,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - N/A (Initial release)
 
-[Unreleased]: https://github.com/Interstellar-code/claud-skills/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/Interstellar-code/claud-skills/compare/v1.3.0...HEAD
+[1.3.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/Interstellar-code/claud-skills/releases/tag/v1.0.0

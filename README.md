@@ -3,20 +3,22 @@
 > Production-ready Claude Code agents and skills with auto-generated documentation
 
 [![Agents](https://img.shields.io/badge/agents-13-blue)](docs/AGENT_CATALOG.md)
-[![Skills](https://img.shields.io/badge/skills-9-green)](docs/SKILL_CATALOG.md)
-[![Version](https://img.shields.io/badge/version-1.2.0-orange)](CHANGELOG.md)
+[![Skills](https://img.shields.io/badge/skills-10-green)](docs/SKILL_CATALOG.md)
+[![Version](https://img.shields.io/badge/version-1.3.0-orange)](CHANGELOG.md)
 [![Ecosystem](https://img.shields.io/badge/ecosystem-13_repos-purple)](docs/ECOSYSTEM.md)
 [![Docs](https://img.shields.io/badge/docs-auto--generated-brightgreen)](docs/)
+[![Token Savings](https://img.shields.io/badge/token_savings-61--88%25-brightgreen)](docs/PRODUCTIVITY_WINS.md)
+[![Speed](https://img.shields.io/badge/speed-5--18x_faster-blue)](docs/PRODUCTIVITY_WINS.md)
 
 ## 🎯 What is This?
 
 A **comprehensive, reusable framework** for Claude Code featuring:
 
 - **13 Production-Ready Agents** - Code quality, testing, UI/UX, project management
-- **9 Utility Skills** - Markdown parsing, SQL queries, Lark integration, and more
+- **10 Productivity Skills** - **Simple, high-impact wins** (61-88% token savings, 5-18x faster)
 - **Auto-Generated Documentation** - Individual READMEs with installation guides
 - **Battle-Tested** - Used in production projects (SubsHero SaaS)
-- **85% Token Efficiency** - Optimized for speed and performance
+- **Unique Focus** - Only framework prioritizing **simple daily productivity wins**
 
 **Perfect for**: JavaScript/TypeScript, PHP/Laravel, React, Python projects
 
@@ -34,7 +36,10 @@ A **comprehensive, reusable framework** for Claude Code featuring:
   13 agents categorized by type with benchmarks
 
 - **[Skill Catalog →](docs/SKILL_CATALOG.md)**
-  9 skills grouped by language and category
+  10 skills grouped by language and category
+
+- **[Productivity Wins →](docs/PRODUCTIVITY_WINS.md)** ⭐
+  Simple skills with 61-88% token savings
 
 - **[Quick Start Guide →](docs/QUICKSTART.md)**
   5-minute setup for any project

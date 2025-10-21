@@ -1,6 +1,6 @@
-# time-helper
+# cli-modern-tools
 
-> Get current time, convert timezones, and perform time calculations using native PHP (Windows/Mac/Linux compatible)
+> Auto-suggest modern CLI tool alternatives (bat, eza, fd, ripgrep) for faster, more efficient command-line operations with 50%+ speed improvements
 
 **Category**: Utilities | **Language**: Unknown | **Version**: 1.0.0
 
@@ -11,11 +11,11 @@
 | **Language** | Unknown |
 | **Token Savings** | None% |
 | **Category** | Utilities |
-| **Tags** | time, timezone, datetime, utility, cross-platform, token-efficient |
+| **Tags** | cli, productivity, performance, tools, bat, eza, fd, ripgrep, watchexec |
 
 ## Overview
 
-Get current time, convert timezones, and perform time calculations using native PHP (Windows/Mac/Linux compatible)
+Auto-suggest modern CLI tool alternatives (bat, eza, fd, ripgrep) for faster, more efficient command-line operations with 50%+ speed improvements
 
 ## Use Cases
 
@@ -40,10 +40,10 @@ Get current time, convert timezones, and perform time calculations using native 
 
 ```bash
 # Skill is included in the framework at:
-# generic-claude-framework\skills\time-helper
+# generic-claude-framework\skills\cli-modern-tools
 
 # If not present, copy from framework:
-cp -r .claude/skills/time-helper /your-project/.claude/skills/
+cp -r .claude/skills/cli-modern-tools /your-project/.claude/skills/
 ```
 
 ### Step 2: Install Dependencies
@@ -78,7 +78,6 @@ See the skill documentation for detailed usage instructions.
 ## Related
 
 - [changelog-manager](changelog-manager.md) - Update project changelog with uncommitted changes, synchronize package versions, and create version releases with automatic commit and push
-- [cli-modern-tools](cli-modern-tools.md) - Auto-suggest modern CLI tool alternatives (bat, eza, fd, ripgrep) for faster, more efficient command-line operations with 50%+ speed improvements
 - [lark-agent](lark-agent.md) - Create hierarchical Lark tasks from markdown test plans.
 
 ACTIVATE THIS SKILL when user:
@@ -96,6 +95,21 @@ WORKFLOW:
 6. Report results
 
 DO NOT create test plans yourself - only process existing markdown files unless explicitly asked.
+
+- [lark-agent-simple](lark-agent-simple.md) - Token-efficient Lark task creation from markdown test files.
+Uses 60-70% fewer tokens than lark-agent by executing MCP calls directly.
+
+ACTIVATE THIS SKILL when user:
+- Says "create lark tasks" or "lark agent simple" or "efficient lark"
+- Wants token-efficient Lark task creation
+- Has a test file and wants it in Lark with minimal overhead
+
+WORKFLOW:
+1. Parse markdown file to compact JSON (data only, no workflow)
+2. Execute Lark MCP calls directly from slash command
+3. Report results
+
+DO NOT create test plans yourself - only process existing markdown files.
 
 
 

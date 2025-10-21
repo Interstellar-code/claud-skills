@@ -1,10 +1,73 @@
 ---
 name: changelog-manager
-description: Update project changelog with uncommitted changes, synchronize package versions, and create version releases with automatic commit and push
-version: 2.0.0
+description: Update project changelog with uncommitted changes, synchronize package versions, and create version releases with automatic commit, git tags, and push
+version: 2.2.0
 author: Claude Code
-tags: [changelog, versioning, git, release-management, package-management]
+tags: [changelog, versioning, git, release-management, package-management, git-tags]
+auto-activate: true
 ---
+
+# 🤖 **AUTO-ACTIVATION TRIGGERS**
+
+**This skill AUTOMATICALLY activates when Claude detects ANY of these keywords or phrases:**
+
+### 🎯 **Release & Version Keywords**
+- "update changelog"
+- "prepare release"
+- "create release"
+- "bump version"
+- "new version"
+- "release v" or "version v" (e.g., "release v1.2.3")
+- "major release" / "minor release" / "patch release"
+- "ready to release"
+- "push to production"
+- "tag release"
+
+### 📝 **Changelog Keywords**
+- "update the changelog"
+- "add to changelog"
+- "document changes"
+- "changelog entry"
+- "version history"
+
+### 🚀 **Git Keywords**
+- "create git tag"
+- "tag version"
+- "push release"
+- "release to github"
+
+### 💡 **Natural Language Triggers**
+- "I'm done with [feature], update changelog"
+- "Finished implementing [feature], prepare release"
+- "Ready to push these changes"
+- "Let's release this"
+- "Can you update the changelog?"
+
+**When activated, Claude will:**
+1. ✅ Analyze all uncommitted changes
+2. ✅ Generate changelog entries automatically
+3. ✅ Determine appropriate version bump (patch/minor/major)
+4. ✅ Update CHANGELOG.md, package.json, README.md badges
+5. ✅ Commit all changes with comprehensive message
+6. ✅ **Create annotated git tag with version number (MANDATORY)**
+7. ✅ **Push both commit AND tag to remote repository**
+8. ✅ Confirm successful release with GitHub URL
+
+**No manual invocation needed!** Just mention any release-related intent.
+
+## ⚠️ CRITICAL REQUIREMENTS
+
+**Git Tag Creation is MANDATORY** - Every release MUST include:
+1. **Annotated git tag**: `git tag -a vX.X.X -m "Release vX.X.X - [Summary]"`
+2. **Push tag to remote**: `git push origin vX.X.X`
+3. **Verify tag on GitHub**: Confirm tag appears at github.com/USER/REPO/releases/tag/vX.X.X
+
+**Never skip git tagging!** Tags are essential for:
+- GitHub Releases page
+- Semantic versioning tracking
+- Rollback capabilities
+- CI/CD triggers
+- Version history integrity
 
 # Changelog Manager Skill
 
@@ -157,15 +220,239 @@ After updating CHANGELOG.md, the skill MUST update package version numbers to ma
 - Both files MUST match the CHANGELOG.md version number
 - Version format: semantic versioning (MAJOR.MINOR.PATCH)
 
-### 6. Git Operations
+### 6. README.md Badge Updates
 
-Commit Process:
-- Stage all changes (including CHANGELOG.md, package.json, composer.json)
-- Create comprehensive commit message including version updates
-- Push to remote repository
-- Verify successful completion
+**Automatic Version Badge Synchronization**
+
+After updating version in CHANGELOG.md and package.json, update README.md badges:
+
+- Search for version badge pattern: `[![Version](https://img.shields.io/badge/version-X.X.X-orange)]`
+- Update version number to match new release
+- Ensures README displays correct version at all times
+
+Example:
+```markdown
+# Before
+[![Version](https://img.shields.io/badge/version-1.1.0-orange)](CHANGELOG.md)
+
+# After
+[![Version](https://img.shields.io/badge/version-1.2.0-orange)](CHANGELOG.md)
+```
+
+### 7. Git Operations
+
+**Complete Release Workflow:**
+
+1. **Stage All Changes**
+   ```bash
+   git add CHANGELOG.md package.json README.md [composer.json if exists]
+   ```
+
+2. **Create Comprehensive Commit**
+   ```bash
+   git commit -m "Release vX.X.X - [Brief summary]
+
+   ## Version X.X.X
+
+   Updated CHANGELOG.md, package.json, and README.md to reflect version X.X.X.
+
+   ### Highlights
+   [Key changes from changelog]
+
+   🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+   Co-Authored-By: Claude <noreply@anthropic.com>"
+   ```
+
+3. **Create Git Tag**
+   ```bash
+   git tag -a vX.X.X -m "Release vX.X.X - [Brief summary]"
+   ```
+
+4. **Push to Remote**
+   ```bash
+   git push origin main && git push origin vX.X.X
+   ```
+
+5. **Verify Success**
+   - Confirm commit pushed successfully
+   - Confirm tag created on remote
+   - Provide GitHub release URL
+
+## 🎬 **COMPLETE AUTOMATED WORKFLOW**
+
+**When user says: "update changelog" or "prepare release"**
+
+### Step 1: Analyze Changes
+- Run `git status` to find uncommitted changes
+- Run `git diff` to understand code changes
+- Run `git log --oneline -5` to see recent commit patterns
+
+### Step 2: Intelligent Version Bump Detection
+
+**Automatic Detection Rules:**
+- **MAJOR bump** (X.0.0) if:
+  - User says "major release" OR "breaking changes"
+  - CHANGELOG mentions "BREAKING" or "Breaking Changes"
+  - Files deleted or major refactoring detected
+
+- **MINOR bump** (X.Y.0) if:
+  - User says "minor release" OR "new feature"
+  - New directories/files created
+  - Significant additions detected (>100 lines added)
+  - CHANGELOG mentions "Added" or "New Feature"
+
+- **PATCH bump** (X.Y.Z) if:
+  - User says "patch release" OR "bug fix"
+  - Only modifications to existing files
+  - Small changes (<100 lines)
+  - CHANGELOG mentions "Fixed" or "Bug Fix"
+  - **DEFAULT if unclear**
+
+### Step 3: Generate Changelog Entry
+
+**Structure:**
+```markdown
+## [X.X.X] - YYYY-MM-DD
+
+### Added
+- [New features based on git diff analysis]
+
+### Changed
+- [Modifications based on git diff analysis]
+
+### Fixed
+- [Bug fixes based on git diff analysis]
+
+### Improved
+- [Performance/UX improvements]
+```
+
+**Content Analysis:**
+- Parse git diff for file changes
+- Identify new files → "Added" section
+- Identify modified files → "Changed" section
+- Look for "fix" in commit messages → "Fixed" section
+- Look for "improve" → "Improved" section
+
+### Step 4: Update All Version Files
+
+**Files to Update (in order):**
+1. `CHANGELOG.md` - Add new version entry
+2. `package.json` - Update "version" field
+3. `README.md` - Update version badge
+4. `composer.json` - Update "version" field (if exists)
+
+**Version Link Updates (CHANGELOG.md bottom):**
+```markdown
+[Unreleased]: https://github.com/USER/REPO/compare/vX.X.X...HEAD
+[X.X.X]: https://github.com/USER/REPO/compare/vX.Y.Z...vX.X.X
+```
+
+### Step 5: Git Commit & Release
+
+**Single Atomic Commit:**
+```bash
+# Stage all version-related files
+git add CHANGELOG.md package.json README.md composer.json
+
+# Commit with detailed message
+git commit -m "Release vX.X.X - [Summary]
+
+## Version X.X.X
+
+Updated CHANGELOG.md, package.json, and README.md to reflect version X.X.X.
+
+### Highlights
+[Top 3 changes from changelog]
+
+🤖 Generated with [Claude Code](https://claude.com/claude-code)
+
+Co-Authored-By: Claude <noreply@anthropic.com>"
+
+# Create annotated tag
+git tag -a vX.X.X -m "Release vX.X.X - [Summary]"
+
+# Push both commit and tag
+git push origin main && git push origin vX.X.X
+```
+
+### Step 6: Confirm & Report
+
+**Success Message:**
+```
+✅ Release v1.2.0 Complete!
+
+📋 Updated Files:
+- CHANGELOG.md (added v1.2.0 entry)
+- package.json (1.1.0 → 1.2.0)
+- README.md (version badge updated)
+
+🏷️  Git Tag: v1.2.0 created
+🚀 Pushed to: origin/main
+
+🔗 View on GitHub:
+https://github.com/USER/REPO/releases/tag/v1.2.0
+
+📝 Summary:
+- Added: [Count] new features
+- Changed: [Count] improvements
+- Fixed: [Count] bug fixes
+```
+
+## 🔄 **INTEGRATION WITH COMMIT WORKFLOW**
+
+**Proactive Auto-Detection:**
+
+Claude should **automatically invoke this skill** when:
+
+1. **After Making Code Changes**: User completes task and says:
+   - "I'm done"
+   - "Finished implementing [feature]"
+   - "All done with [task]"
+   - **→ Claude asks: "Would you like me to update the changelog and create a release?"**
+
+2. **Before Major Commits**: User has significant uncommitted changes
+   - **→ Claude suggests: "I notice you have significant changes. Should I prepare a changelog entry?"**
+
+3. **User Mentions Release Intent**:
+   - Any of the trigger keywords detected
+   - **→ Claude automatically activates changelog-manager**
+
+**Example Conversation:**
+```
+User: "I've finished adding the ecosystem reference feature"
+
+Claude: "Great! I notice you have uncommitted changes. Would you like me to:
+1. Update the changelog with these changes
+2. Bump the version (this looks like a minor release)
+3. Create a git tag and push to GitHub?
+
+This will create version 1.2.0 based on the ecosystem reference feature."
+
+User: "Yes, do it"
+
+Claude: [Automatically invokes changelog-manager skill]
+→ Analyzes changes
+→ Updates CHANGELOG.md with v1.2.0
+→ Updates package.json to 1.2.0
+→ Updates README.md badge
+→ Commits all changes
+→ Creates git tag v1.2.0
+→ Pushes to GitHub
+→ Reports success
+```
 
 ## Version History
+
+### v2.1.0
+- **AUTO-ACTIVATION**: Skill now automatically activates on release keywords
+- **COMPLETE WORKFLOW**: Added comprehensive 6-step automated workflow
+- **README BADGE SYNC**: Automatically updates version badges in README.md
+- **GIT TAG AUTOMATION**: Creates and pushes git tags automatically
+- **INTELLIGENT VERSION DETECTION**: Analyzes changes to suggest MAJOR/MINOR/PATCH
+- **PROACTIVE SUGGESTIONS**: Claude asks about changelog when task completed
+- **COMPREHENSIVE DOCS**: Detailed workflow steps and integration examples
 
 ### v2.0.0
 - BREAKING: Now automatically updates package.json and composer.json versions

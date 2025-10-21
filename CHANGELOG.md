@@ -7,6 +7,34 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2025-10-21
+
+### Added
+- **Enhanced changelog-manager Skill** - Now with mandatory git tag automation (v2.2.0)
+  - Added "⚠️ CRITICAL REQUIREMENTS" section enforcing git tagging
+  - Explicit documentation of annotated tag creation workflow
+  - Mandatory push of both commit AND tag to remote
+  - GitHub release URL confirmation in success message
+  - Enhanced description to mention "git tags" explicitly
+- **Comprehensive Installation Guide** - Updated QUICKSTART.md with auto-activation examples
+  - New section: "How Skills & Agents Auto-Activate"
+  - Table showing trigger keywords for all productivity skills
+  - Real-world examples of auto-activation (markdown-helper, sql-cli, changelog-manager)
+  - Emphasis on "No manual invocation needed"
+- **Local Skill Installation** - Added changelog-manager to `.claude/skills/` for project use
+  - Now available locally for immediate use in this repository
+  - Demonstrates proper skill installation pattern for users
+
+### Changed
+- **changelog-manager Version** - Upgraded from v2.1.0 to v2.2.0
+- **Framework Documentation** - Updated installation instructions to emphasize skill auto-activation
+- **QUICKSTART.md** - Expanded from basic setup to comprehensive activation guide
+
+### Improved
+- **Release Workflow Reliability** - Git tagging now explicitly documented as non-optional
+- **User Onboarding** - Clearer understanding of how skills activate automatically
+- **Framework Completeness** - All productivity skills now properly documented with triggers
+
 ## [1.3.0] - 2025-10-21
 
 ### Added
@@ -129,7 +157,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - N/A (Initial release)
 
-[Unreleased]: https://github.com/Interstellar-code/claud-skills/compare/v1.3.0...HEAD
+[Unreleased]: https://github.com/Interstellar-code/claud-skills/compare/v1.4.0...HEAD
+[1.4.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.1.0...v1.2.0
 [1.1.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.0.0...v1.1.0

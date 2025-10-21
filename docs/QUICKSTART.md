@@ -18,7 +18,7 @@ git clone <this-repository> my-claude-framework
 cd my-claude-framework
 ```
 
-### Step 2: Copy to Your Project (1 minute)
+### Step 2: Copy to Your Project (2 minutes)
 
 ```bash
 # Navigate to your project
@@ -27,9 +27,17 @@ cd /path/to/your/project
 # Create .claude directory if it doesn't exist
 mkdir -p .claude
 
-# Copy the generic framework
+# Copy the entire framework structure
 cp -r /path/to/my-claude-framework/generic-claude-framework/* .claude/
+
+# This will copy:
+# - .claude/agents/          (13 production-ready agents)
+# - .claude/skills/          (10 productivity skills)
+# - .claude/commands/        (Slash commands if any)
+# - .claude/scripts/         (Helper scripts)
 ```
+
+**Important**: After copying, all agents and skills will be available in your project's `.claude/` directory and will auto-activate based on their trigger keywords.
 
 ### Step 3: Quick Test with ESLint Fixer (2 minutes)
 
@@ -106,6 +114,39 @@ Claude will:
 ```
 
 **Expected Time**: 5-10 minutes
+
+## 🎯 How Skills & Agents Auto-Activate
+
+Once installed in `.claude/`, skills and agents automatically activate based on keywords:
+
+### Productivity Skills (Auto-Activate)
+
+| Skill | Triggers | What It Does |
+|-------|----------|--------------|
+| **markdown-helper** | "extract headers", "parse tables", "markdown stats" | Save 61-85% tokens on markdown operations |
+| **sql-cli** | "database", "query", "show tables", "count rows" | 87% faster than Artisan Tinker for SQL queries |
+| **cli-modern-tools** | "cat", "ls", "find" (when using Bash) | Auto-suggest bat, eza, fd alternatives |
+| **changelog-manager** | "update changelog", "prepare release", "bump version" | Automate version releases with git tags |
+
+### Example Auto-Activation
+
+```
+User: "Extract headers from README.md"
+→ markdown-helper skill activates automatically
+→ Runs: node .claude/skills/markdown-helper/md-helper.js extract-headers README.md
+→ Shows headers without reading full file (85% token savings)
+
+User: "How many active subscriptions do we have?"
+→ sql-cli skill activates automatically
+→ Runs: bash .claude/skills/sql-cli/sql-cli.sh count subscriptions "status='active'"
+→ Shows result instantly (87% faster than Tinker)
+
+User: "Update changelog and prepare release"
+→ changelog-manager skill activates automatically
+→ Analyzes changes → Updates files → Creates tag → Pushes to GitHub
+```
+
+**No manual invocation needed** - just use natural language!
 
 ## 📚 Essential Configurations
 

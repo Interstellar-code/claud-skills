@@ -77,7 +77,7 @@ See the skill documentation for detailed usage instructions.
 
 ## Related
 
-- [changelog-manager](changelog-manager.md) - Update project changelog with uncommitted changes, synchronize package versions, and create version releases with automatic commit and push
+- [changelog-manager](changelog-manager.md) - Update project changelog with uncommitted changes, synchronize package versions, and create version releases with automatic commit, git tags, and push
 - [lark-agent](lark-agent.md) - Create hierarchical Lark tasks from markdown test plans.
 
 ACTIVATE THIS SKILL when user:

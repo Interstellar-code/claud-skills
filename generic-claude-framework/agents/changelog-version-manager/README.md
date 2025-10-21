@@ -1,8 +1,8 @@
 # changelog-version-manager
 
-> Update project changelog with uncommitted changes and create version releases
+> Intelligent changelog agent that uses changelog-manager skill for automated version releases with context-aware analysis
 
-**Category**: Project Management | **Version**: 2.0.0-python-optimized
+**Category**: Project Management | **Version**: 3.0.0-skill-integrated
 
 ## Quick Info
 
@@ -15,7 +15,7 @@
 
 ## Overview
 
-Update project changelog with uncommitted changes and create version releases
+Intelligent changelog agent that uses changelog-manager skill for automated version releases with context-aware analysis
 
 ## Use Cases
 

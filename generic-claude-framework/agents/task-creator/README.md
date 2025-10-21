@@ -69,7 +69,7 @@ See the agent file for configuration options and customization points.
 
 ## Related
 
-- [changelog-version-manager](changelog-version-manager.md) - Update project changelog with uncommitted changes and create version releases
+- [changelog-version-manager](changelog-version-manager.md) - Intelligent changelog agent that uses changelog-manager skill for automated version releases with context-aware analysis
 
 
 ---

@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.6.0] - 2025-10-21
+
+### Changed
+- **Refactored changelog-version-manager Agent to v3.0.0-skill-integrated**
+  - Now delegates to changelog-manager skill instead of Python scripts
+  - Follows DRY principle with single source of truth
+  - Agent provides intelligence layer (analysis, categorization, recommendations)
+  - Skill handles execution layer (git operations, file updates, tagging, pushing)
+  - Removed Python 3.7+ dependency requirement
+  - Simplified architecture diagram showing clear separation of concerns
+  - Maintains same user experience with improved maintainability
+
+### Documentation
+- Updated AGENT_CATALOG.md and SKILL_CATALOG.md with new agent description
+- Auto-generated changelog-version-manager README.md with v3.0.0 architecture
+- Minor updates to task-creator README.md with latest timestamp
+
+### Architecture Improvement
+- Demonstrated **Agent + Skill Integration Pattern**
+  - Agents handle context-aware intelligence and decision-making
+  - Skills handle execution and automation
+  - Clear separation enables better testing, maintenance, and reusability
+  - No breaking changes to user-facing functionality
+
 ## [1.5.0] - 2025-10-21
 
 ### Added

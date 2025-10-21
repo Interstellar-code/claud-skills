@@ -1,6 +1,6 @@
 # Agent Catalog
 
-**Last Updated**: 2025-10-21 21:57:27
+**Last Updated**: 2025-10-21 22:21:41
 **Total Agents**: 14
 
 ## Quick Navigation
@@ -30,7 +30,7 @@
 
 | Agent | Description | Speed | Complexity | Efficiency |
 |-------|-------------|-------|------------|------------|
-| [changelog-version-manager](generic-claude-framework/agents/changelog-version-manager/README.md) | Update project changelog with uncommitted changes and create... | ⚡⚡⚡ |  Medium | N/A |
+| [changelog-version-manager](generic-claude-framework/agents/changelog-version-manager/README.md) | Intelligent changelog agent that uses changelog-manager skil... | ⚡⚡⚡ |  Medium | N/A |
 | [task-creator](generic-claude-framework/agents/task-creator/README.md) | Create comprehensive project tasks in standardized format... | ⚡⚡⚡ |  Medium | N/A |
 
 ### Testing & QA (7 agents)
@@ -65,7 +65,7 @@
 
 | Agent | Category | Speed | Complexity | Description |
 |-------|----------|-------|------------|-------------|
-| [changelog-version-manager](generic-claude-framework/agents/changelog-version-manager/README.md) | Project Management | ⚡⚡⚡ |  Medium | Update project changelog with uncommitted changes and create version releases... |
+| [changelog-version-manager](generic-claude-framework/agents/changelog-version-manager/README.md) | Project Management | ⚡⚡⚡ |  Medium | Intelligent changelog agent that uses changelog-manager skill for automated vers... |
 | [eslint-fixer](generic-claude-framework/agents/eslint-fixer/README.md) | Code Quality & Linting | ⚡⚡⚡⚡⚡ |  Low | Fix ESLint issues with TypeScript scripts for ultra-fast, risk-based analysis an... |
 | [file-watcher-automation](generic-claude-framework/agents/file-watcher-automation/README.md) | Development Utilities | ⚡⚡⚡⚡ |  Low | Automate file watching and continuous testing workflows using watchexec for PHP ... |
 | [log-analyzer](generic-claude-framework/agents/log-analyzer/README.md) | debugging | ⚡⚡⚡⚡ | ⚪ medium | Intelligent log analysis agent that uses log-analysis-tools skill to extract err... |

@@ -1,9 +1,9 @@
 ---
 name: changelog-manager
-description: Update project changelog with uncommitted changes, synchronize package versions, and create version releases with automatic commit, git tags, and push
-version: 2.2.0
+description: Update project changelog with uncommitted changes, synchronize package versions, and create version releases with automatic commit, conditional git tags, and push
+version: 2.3.0
 author: Claude Code
-tags: [changelog, versioning, git, release-management, package-management, git-tags]
+tags: [changelog, versioning, git, release-management, package-management, git-tags, conditional-tagging]
 auto-activate: true
 ---
 
@@ -55,19 +55,72 @@ auto-activate: true
 
 **No manual invocation needed!** Just mention any release-related intent.
 
-## ⚠️ CRITICAL REQUIREMENTS
+## ⚠️ CONDITIONAL REQUIREMENTS
 
-**Git Tag Creation is MANDATORY** - Every release MUST include:
-1. **Annotated git tag**: `git tag -a vX.X.X -m "Release vX.X.X - [Summary]"`
-2. **Push tag to remote**: `git push origin vX.X.X`
-3. **Verify tag on GitHub**: Confirm tag appears at github.com/USER/REPO/releases/tag/vX.X.X
+### Git Tag Creation - Context-Aware Decision
 
-**Never skip git tagging!** Tags are essential for:
-- GitHub Releases page
-- Semantic versioning tracking
-- Rollback capabilities
-- CI/CD triggers
-- Version history integrity
+**Git tags are CONDITIONAL based on project type:**
+
+#### ✅ CREATE GIT TAGS (Public/Open-Source Projects):
+- **Public GitHub repositories**
+- **Open-source projects** with contributors
+- **Published packages** (npm, composer, PyPI)
+- **Framework/library releases**
+- **Projects with semantic versioning requirements**
+
+**Why tags are essential here:**
+- GitHub Releases page for users
+- Package registry integration (npm, composer)
+- Semantic versioning tracking for consumers
+- Rollback capabilities for public releases
+- CI/CD triggers for automated publishing
+- Version history integrity for contributors
+
+#### ❌ SKIP GIT TAGS (Private/Internal Projects):
+- **Private repositories** for internal use
+- **Client projects** without public releases
+- **Internal tools** and automation scripts
+- **Prototype/experimental projects**
+- **Projects without external consumers**
+
+**Why tags may not be needed:**
+- No public release process
+- Internal versioning sufficient
+- CHANGELOG.md + package.json enough
+- Reduces git history noise
+- Simpler workflow for internal teams
+
+### 🎯 Detection Strategy
+
+**Auto-detect project type by checking:**
+```bash
+# 1. Check if remote is public GitHub
+git remote -v | grep "github.com" && check if repo is public
+
+# 2. Check for package registry files
+- package.json with "private": false → Public npm package → USE TAGS
+- composer.json with public packagist → USE TAGS
+- pyproject.toml with PyPI config → USE TAGS
+
+# 3. Check repository visibility
+- GitHub API: Check if repo.private === false → USE TAGS
+- GitLab/Bitbucket: Check visibility settings
+
+# 4. Ask user if unclear
+"This appears to be a [public/private] project. Should I create git tags for releases? (Y/n)"
+```
+
+### 📋 Decision Table
+
+| Project Type | Git Tags | Example |
+|--------------|----------|---------|
+| **Public GitHub repo** | ✅ YES | Open-source framework (this repo) |
+| **Published npm package** | ✅ YES | React library on npm registry |
+| **Public composer package** | ✅ YES | Laravel package on Packagist |
+| **Private client project** | ❌ NO | Custom website for client |
+| **Internal SaaS** | ❌ NO | Company's private application |
+| **Prototype/experiment** | ❌ NO | Testing new architecture |
+| **Unclear/ambiguous** | ❓ ASK | User confirms preference |
 
 # Changelog Manager Skill
 
@@ -349,7 +402,30 @@ Example:
 [X.X.X]: https://github.com/USER/REPO/compare/vX.Y.Z...vX.X.X
 ```
 
-### Step 5: Git Commit & Release
+### Step 5: Detect Project Type & Decide on Git Tags
+
+**Auto-Detection Process:**
+```bash
+# 1. Check package.json for "private" field
+PRIVATE=$(cat package.json | grep '"private": true')
+
+# 2. Check git remote for public GitHub
+GITHUB_PUBLIC=$(git remote -v | grep "github.com")
+
+# 3. Decision logic
+if [[ -z "$PRIVATE" && -n "$GITHUB_PUBLIC" ]]; then
+    USE_TAGS=true   # Public GitHub repo → Use tags
+else
+    USE_TAGS=false  # Private/internal → Skip tags
+fi
+```
+
+**Ask user if unclear:**
+```
+"This project appears to be [public/private]. Should I create git tags for this release? (Y/n)"
+```
+
+### Step 6: Git Commit & Conditional Release
 
 **Single Atomic Commit:**
 ```bash
@@ -369,17 +445,26 @@ Updated CHANGELOG.md, package.json, and README.md to reflect version X.X.X.
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 
 Co-Authored-By: Claude <noreply@anthropic.com>"
-
-# Create annotated tag
-git tag -a vX.X.X -m "Release vX.X.X - [Summary]"
-
-# Push both commit and tag
-git push origin main && git push origin vX.X.X
 ```
 
-### Step 6: Confirm & Report
+**Conditional Git Tag (Public Projects Only):**
+```bash
+# IF project is public/open-source
+if [[ "$USE_TAGS" == true ]]; then
+    # Create annotated tag
+    git tag -a vX.X.X -m "Release vX.X.X - [Summary]"
 
-**Success Message:**
+    # Push both commit and tag
+    git push origin main && git push origin vX.X.X
+else
+    # Private project - only push commit
+    git push origin main
+fi
+```
+
+### Step 7: Confirm & Report
+
+**Success Message (Public Project with Tags):**
 ```
 ✅ Release v1.2.0 Complete!
 
@@ -398,6 +483,25 @@ https://github.com/USER/REPO/releases/tag/v1.2.0
 - Added: [Count] new features
 - Changed: [Count] improvements
 - Fixed: [Count] bug fixes
+```
+
+**Success Message (Private Project without Tags):**
+```
+✅ Release v1.2.0 Complete!
+
+📋 Updated Files:
+- CHANGELOG.md (added v1.2.0 entry)
+- package.json (1.1.0 → 1.2.0)
+- README.md (version badge updated)
+
+🚀 Pushed to: origin/main
+
+📝 Summary:
+- Added: [Count] new features
+- Changed: [Count] improvements
+- Fixed: [Count] bug fixes
+
+💡 Note: Git tags skipped (private project)
 ```
 
 ## 🔄 **INTEGRATION WITH COMMIT WORKFLOW**

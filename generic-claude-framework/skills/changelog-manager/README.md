@@ -1,8 +1,8 @@
 # changelog-manager
 
-> Update project changelog with uncommitted changes, synchronize package versions, and create version releases with automatic commit, git tags, and push
+> Update project changelog with uncommitted changes, synchronize package versions, and create version releases with automatic commit, conditional git tags, and push
 
-**Category**: Utilities | **Language**: Unknown | **Version**: 2.2.0
+**Category**: Utilities | **Language**: Unknown | **Version**: 2.3.0
 
 ## Quick Info
 
@@ -11,11 +11,11 @@
 | **Language** | Unknown |
 | **Token Savings** | None% |
 | **Category** | Utilities |
-| **Tags** | changelog, versioning, git, release-management, package-management, git-tags |
+| **Tags** | changelog, versioning, git, release-management, package-management, git-tags, conditional-tagging |
 
 ## Overview
 
-Update project changelog with uncommitted changes, synchronize package versions, and create version releases with automatic commit, git tags, and push
+Update project changelog with uncommitted changes, synchronize package versions, and create version releases with automatic commit, conditional git tags, and push
 
 ## Use Cases
 

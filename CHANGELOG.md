@@ -7,6 +7,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.5.0] - 2025-10-21
+
+### Added
+- **New log-analysis-tools Skill** - Comprehensive log analysis with 99.8% token savings
+  - Multi-framework support (12 frameworks: Laravel, CodeIgniter 3/4, Symfony, Next.js, Express, Django, Flask, Apache, Nginx, etc.)
+  - Modern CLI tools integration (lnav, fd, ripgrep, bat) with graceful fallbacks
+  - Log pruning capability with gzip archival (keep today's logs, archive older)
+  - Cross-platform compatibility (macOS, Linux, Windows WSL) with platform-specific install instructions
+  - 7 commands: view, errors, tail, search, prune, stats, merge
+  - Full bash implementation (log-tools.sh, 600+ lines) achieving 400 tokens vs 180,000 tokens
+  - Framework auto-detection for seamless integration
+  - Dependency checking with helpful installation guidance
+
+- **New log-analyzer Agent** - Intelligent log analysis automation
+  - Pattern analysis (frequency, timing, severity, impact scoring)
+  - Root cause identification (database, filesystem, API, code issues)
+  - Automated prioritization by impact score (Frequency × Severity × User Impact)
+  - Specific code fix recommendations with immediate/short-term/long-term solutions
+  - Validation steps and deployment guidance
+  - 12x faster than manual log analysis
+  - Seamless integration with log-analysis-tools skill for data extraction
+  - 99%+ token efficiency by delegating extraction to skill
+
+### Changed
+- **Enhanced changelog-manager Skill** - Updated to v2.3.0
+  - Conditional git tagging based on repository type (public vs private)
+  - Auto-detection via package.json "private" field and GitHub remote URL
+  - Better privacy controls for internal/private projects
+  - Dual workflow support (tags for public repos, no tags for private repos)
+  - Clear decision table and detection strategy
+
+### Documentation
+- Updated AGENT_CATALOG.md with log-analyzer agent (14 agents total)
+- Updated SKILL_CATALOG.md with log-analysis-tools skill (11 skills total)
+- Updated README.md with latest framework stats (99.8% token savings, 14 agents, 11 skills)
+- Auto-generated individual READMEs for log-analyzer agent and log-analysis-tools skill
+- Added comprehensive platform compatibility documentation for log-analysis-tools
+
 ## [1.4.0] - 2025-10-21
 
 ### Added

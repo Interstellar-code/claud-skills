@@ -1,7 +1,7 @@
 # Agent Catalog
 
-**Last Updated**: 2025-10-21 21:19:43
-**Total Agents**: 13
+**Last Updated**: 2025-10-21 21:57:27
+**Total Agents**: 14
 
 ## Quick Navigation
 
@@ -52,6 +52,12 @@
 | [mockup-creation-agent](generic-claude-framework/agents/mockup-creation-agent/README.md) | Rapid HTML/CSS mockup generation with design system integrat... | ⚡⚡⚡ |  Medium | N/A |
 | [ui-design-implementer](generic-claude-framework/agents/ui-design-implementer/README.md) | Implement UI designs with automated visual comparison and va... | ⚡⚡⚡ |  Medium | N/A |
 
+### debugging (1 agent)
+
+| Agent | Description | Speed | Complexity | Efficiency |
+|-------|-------------|-------|------------|------------|
+| [log-analyzer](generic-claude-framework/agents/log-analyzer/README.md) | Intelligent log analysis agent that uses log-analysis-tools ... | ⚡⚡⚡⚡ | ⚪ medium | N/A |
+
 
 ---
 
@@ -62,6 +68,7 @@
 | [changelog-version-manager](generic-claude-framework/agents/changelog-version-manager/README.md) | Project Management | ⚡⚡⚡ |  Medium | Update project changelog with uncommitted changes and create version releases... |
 | [eslint-fixer](generic-claude-framework/agents/eslint-fixer/README.md) | Code Quality & Linting | ⚡⚡⚡⚡⚡ |  Low | Fix ESLint issues with TypeScript scripts for ultra-fast, risk-based analysis an... |
 | [file-watcher-automation](generic-claude-framework/agents/file-watcher-automation/README.md) | Development Utilities | ⚡⚡⚡⚡ |  Low | Automate file watching and continuous testing workflows using watchexec for PHP ... |
+| [log-analyzer](generic-claude-framework/agents/log-analyzer/README.md) | debugging | ⚡⚡⚡⚡ | ⚪ medium | Intelligent log analysis agent that uses log-analysis-tools skill to extract err... |
 | [mockup-creation-agent](generic-claude-framework/agents/mockup-creation-agent/README.md) | UI/UX & Design | ⚡⚡⚡ |  Medium | Rapid HTML/CSS mockup generation with design system integration, dark/light mode... |
 | [pest-test-generator](generic-claude-framework/agents/pest-test-generator/README.md) | Testing & QA | ⚡⚡⚡ |  Medium | Auto-generate comprehensive Pest PHP tests by analyzing Laravel codebase. Create... |
 | [pest-test-runner](generic-claude-framework/agents/pest-test-runner/README.md) | Testing & QA | ⚡⚡⚡ |  Medium | Execute Pest PHP tests and generate comprehensive HTML coverage reports. Runs Un... |

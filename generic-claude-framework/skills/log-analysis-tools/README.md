@@ -1,6 +1,6 @@
-# markdown-helper
+# log-analysis-tools
 
-> Token-efficient markdown parsing, editing, and diagram generation using native CLI tools (Windows/Mac/Linux compatible)
+> Fast log file analysis with lnav, multi-framework support (Laravel, CodeIgniter, React, Next.js), automatic log pruning, and 70-80% token savings vs reading entire logs
 
 **Category**: Utilities | **Language**: Unknown | **Version**: 1.0.0
 
@@ -11,15 +11,15 @@
 | **Language** | Unknown |
 | **Token Savings** | None% |
 | **Category** | Utilities |
-| **Tags** | markdown, parsing, mermaid, diagrams, linting, token-efficient |
+| **Tags** | logs, debugging, lnav, laravel, codeigniter, react, nextjs, log-pruning, error-analysis |
 
 ## Overview
 
-Token-efficient markdown parsing, editing, and diagram generation using native CLI tools (Windows/Mac/Linux compatible)
+Fast log file analysis with lnav, multi-framework support (Laravel, CodeIgniter, React, Next.js), automatic log pruning, and 70-80% token savings vs reading entire logs
 
 ## Use Cases
 
-- Utility operations
+- Correlate application errors with server errors
 
 
 ## Benchmarks
@@ -40,10 +40,10 @@ Token-efficient markdown parsing, editing, and diagram generation using native C
 
 ```bash
 # Skill is included in the framework at:
-# generic-claude-framework\skills\markdown-helper
+# generic-claude-framework\skills\log-analysis-tools
 
 # If not present, copy from framework:
-cp -r .claude/skills/markdown-helper /your-project/.claude/skills/
+cp -r .claude/skills/log-analysis-tools /your-project/.claude/skills/
 ```
 
 ### Step 2: Install Dependencies

@@ -111,7 +111,7 @@ See the skill documentation for detailed usage instructions.
 
 ## Related
 
-- [changelog-manager](changelog-manager.md) - Update project changelog with uncommitted changes, synchronize package versions, and create version releases with automatic commit, git tags, and push
+- [changelog-manager](changelog-manager.md) - Update project changelog with uncommitted changes, synchronize package versions, and create version releases with automatic commit, conditional git tags, and push
 - [cli-modern-tools](cli-modern-tools.md) - Auto-suggest modern CLI tool alternatives (bat, eza, fd, ripgrep) for faster, more efficient command-line operations with 50%+ speed improvements
 - [lark-agent-simple](lark-agent-simple.md) - Token-efficient Lark task creation from markdown test files.
 Uses 60-70% fewer tokens than lark-agent by executing MCP calls directly.

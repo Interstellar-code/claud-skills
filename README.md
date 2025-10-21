@@ -2,8 +2,8 @@
 
 > Production-ready Claude Code agents and skills with auto-generated documentation
 
-[![Agents](https://img.shields.io/badge/agents-13-blue)](docs/AGENT_CATALOG.md)
-[![Skills](https://img.shields.io/badge/skills-10-green)](docs/SKILL_CATALOG.md)
+[![Agents](https://img.shields.io/badge/agents-14-blue)](docs/AGENT_CATALOG.md)
+[![Skills](https://img.shields.io/badge/skills-11-green)](docs/SKILL_CATALOG.md)
 [![Version](https://img.shields.io/badge/version-1.4.0-orange)](CHANGELOG.md)
 [![Ecosystem](https://img.shields.io/badge/ecosystem-13_repos-purple)](docs/ECOSYSTEM.md)
 [![Docs](https://img.shields.io/badge/docs-auto--generated-brightgreen)](docs/)
@@ -14,8 +14,8 @@
 
 A **comprehensive, reusable framework** for Claude Code featuring:
 
-- **13 Production-Ready Agents** - Code quality, testing, UI/UX, project management
-- **10 Productivity Skills** - **Simple, high-impact wins** (61-88% token savings, 5-18x faster)
+- **14 Production-Ready Agents** - Code quality, testing, UI/UX, project management, debugging
+- **11 Productivity Skills** - **Simple, high-impact wins** (61-99.8% token savings, 5-20x faster)
 - **Auto-Generated Documentation** - Individual READMEs with installation guides
 - **Battle-Tested** - Used in production projects (SubsHero SaaS)
 - **Unique Focus** - Only framework prioritizing **simple daily productivity wins**
@@ -128,9 +128,9 @@ Automated changelog updates and version releases with semantic versioning.
 
 | Metric | Value | Details |
 |--------|-------|---------|
-| **Agents** | 13 production-ready | [View Catalog →](docs/AGENT_CATALOG.md) |
-| **Skills** | 9 utilities | [View Catalog →](docs/SKILL_CATALOG.md) |
-| **Token Efficiency** | Up to 85% reduction | Optimized prompts & scripts |
+| **Agents** | 14 production-ready | [View Catalog →](docs/AGENT_CATALOG.md) |
+| **Skills** | 11 utilities | [View Catalog →](docs/SKILL_CATALOG.md) |
+| **Token Efficiency** | Up to 99.8% reduction | Optimized prompts & scripts |
 | **Speed Improvement** | Up to 95% faster | Direct API access |
 | **Documentation** | Auto-generated | [How it works →](docs/DOCUMENTATION_SYSTEM.md) |
 | **Cross-Platform** | Windows, Mac, Linux | Tested on all platforms |

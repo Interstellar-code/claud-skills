@@ -1,0 +1,94 @@
+{
+  "repositories": [
+    {
+      "repo": "anthropics/skills",
+      "category": ["official", "skills", "marketplace"],
+      "priority": "essential",
+      "notes": "Official Anthropic skills repository and marketplace"
+    },
+    {
+      "repo": "anthropics/claude-code",
+      "category": ["official", "platform", "cli"],
+      "priority": "essential",
+      "notes": "Core Claude Code agentic coding platform"
+    },
+    {
+      "repo": "travisvn/awesome-claude-skills",
+      "category": ["community", "skills", "curated"],
+      "priority": "essential",
+      "notes": "Actively maintained awesome list with community contributions"
+    },
+    {
+      "repo": "obra/superpowers",
+      "category": ["community", "skills", "tdd", "debugging"],
+      "priority": "essential",
+      "notes": "Core skills library with 20+ battle-tested skills for TDD and debugging"
+    },
+    {
+      "repo": "VoltAgent/awesome-claude-code-subagents",
+      "category": ["community", "agents", "production"],
+      "priority": "recommended",
+      "notes": "100+ production-ready subagents for full-stack development, DevOps, and data science"
+    },
+    {
+      "repo": "hesreallyhim/awesome-claude-code",
+      "category": ["community", "plugins", "workflows"],
+      "priority": "essential",
+      "notes": "Curated collection of commands, plugins, and workflows"
+    },
+    {
+      "repo": "BehiSecc/awesome-claude-skills",
+      "category": ["community", "skills", "curated"],
+      "priority": "recommended",
+      "notes": "Community-curated collection with usage patterns and guides"
+    },
+    {
+      "repo": "abubakarsiddik31/claude-skills-collection",
+      "category": ["community", "skills", "organized"],
+      "priority": "recommended",
+      "notes": "Organized collection of official and community skills by category"
+    },
+    {
+      "repo": "simonw/claude-skills",
+      "category": ["reference", "documentation"],
+      "priority": "specialized",
+      "notes": "Skills archive and pointers to official content by Simon Willison"
+    },
+    {
+      "repo": "obra/superpowers-marketplace",
+      "category": ["community", "marketplace", "plugins"],
+      "priority": "recommended",
+      "notes": "Curated Claude Code plugin marketplace"
+    },
+    {
+      "repo": "obra/superpowers-skills",
+      "category": ["community", "skills", "collaborative"],
+      "priority": "recommended",
+      "notes": "Community-editable skills for Claude Code superpowers plugin"
+    },
+    {
+      "repo": "hesreallyhim/awesome-claude-code-agents",
+      "category": ["community", "agents", "subagents"],
+      "priority": "specialized",
+      "notes": "Curated list of Claude Code Sub-Agents"
+    },
+    {
+      "repo": "Interstellar-code/claud-skills",
+      "category": ["community", "framework", "laravel", "php"],
+      "priority": "essential",
+      "notes": "This repository - Production-ready framework with 13 agents and auto-generated documentation"
+    }
+  ],
+  "metadata": {
+    "last_manual_update": "2025-10-21",
+    "curator": "Generic Claude Code Framework",
+    "description": "Curated list of Claude Code ecosystem repositories",
+    "inclusion_criteria": [
+      "Official Anthropic repositories",
+      "High-quality community awesome lists",
+      "Production-ready agent/skill collections",
+      "Notable tools and frameworks",
+      "Active maintenance (updated within 6 months)"
+    ]
+  }
+}

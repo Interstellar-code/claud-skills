@@ -5,6 +5,7 @@
 [![Agents](https://img.shields.io/badge/agents-13-blue)](docs/AGENT_CATALOG.md)
 [![Skills](https://img.shields.io/badge/skills-9-green)](docs/SKILL_CATALOG.md)
 [![Version](https://img.shields.io/badge/version-1.1.0-orange)](CHANGELOG.md)
+[![Ecosystem](https://img.shields.io/badge/ecosystem-13_repos-purple)](docs/ECOSYSTEM.md)
 [![Docs](https://img.shields.io/badge/docs-auto--generated-brightgreen)](docs/)
 
 ## 🎯 What is This?
@@ -48,6 +49,9 @@ A **comprehensive, reusable framework** for Claude Code featuring:
 
 - **[Documentation System →](docs/DOCUMENTATION_SYSTEM.md)**
   How auto-generation works
+
+- **[Ecosystem Reference →](docs/ECOSYSTEM.md)**
+  Discover other Claude Code repositories
 
 - **[Changelog →](CHANGELOG.md)**
   Version history and releases

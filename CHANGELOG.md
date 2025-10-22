@@ -8,12 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Changed
-- **changelog-manager Skill v2.4.0** - Enhanced README automation
-  - Auto-calculates and updates agent/skill count badges
-  - Auto-creates "Latest Release" section with CHANGELOG excerpt
-  - Extracts latest version content from CHANGELOG.md automatically
-  - Maintains single source of truth for all documentation
-  - Eliminates manual README updates during releases
+- **changelog-manager Skill v2.5.0** - Integrated documentation generation
+  - Auto-detects changed agent.md and skill.md files during releases
+  - Selectively regenerates README files for modified agents/skills only
+  - Always updates AGENT_CATALOG.md and SKILL_CATALOG.md with current counts
+  - Zero manual intervention - docs stay synchronized automatically
+  - Smart detection prevents unnecessary regeneration
+  - **v2.4.0**: Added README badge automation and latest release section
+  - **v2.5.0**: Added automatic documentation generation integration
 
 ## [1.7.0] - 2025-10-22
 

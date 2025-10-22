@@ -1,9 +1,9 @@
 ---
 name: changelog-manager
 description: Update project changelog with uncommitted changes, synchronize package versions, and create version releases with automatic commit, conditional git tags, and push
-version: 2.4.0
+version: 2.5.0
 author: Claude Code
-tags: [changelog, versioning, git, release-management, package-management, git-tags, conditional-tagging, readme-automation]
+tags: [changelog, versioning, git, release-management, package-management, git-tags, conditional-tagging, readme-automation, docs-automation]
 auto-activate: true
 ---
 
@@ -361,13 +361,89 @@ Insert after badges, before main content (after line with badges, before "## �
 - Auto-extracted from CHANGELOG (single source of truth)
 - Always shows current version
 
+#### 6.4 Smart Documentation Generation
+
+**Automatic Agent/Skill Documentation Updates**
+
+Before committing, intelligently regenerate documentation for changed agents/skills:
+
+**Detection Logic:**
+
+```bash
+# Detect changed agent files
+CHANGED_AGENTS=$(git diff --name-only --cached | grep "generic-claude-framework/agents/.*/agent.md" | sed 's|generic-claude-framework/agents/\(.*\)/agent.md|\1|')
+
+# Detect changed skill files
+CHANGED_SKILLS=$(git diff --name-only --cached | grep "generic-claude-framework/skills/.*/skill.md" | sed 's|generic-claude-framework/skills/\(.*\)/skill.md|\1|')
+```
+
+**Selective Documentation Generation:**
+
+1. **If agent files changed:**
+   ```bash
+   for agent in $CHANGED_AGENTS; do
+     python scripts/generate_docs.py --agent "$agent"
+   done
+   ```
+
+2. **If skill files changed:**
+   ```bash
+   for skill in $CHANGED_SKILLS; do
+     python scripts/generate_docs.py --skill "$skill"
+   done
+   ```
+
+3. **Always update catalogs** (to reflect new counts):
+   ```bash
+   # Catalogs are auto-updated by selective generation
+   # They include updated counts and links
+   ```
+
+**What Gets Regenerated:**
+
+- **Agent changed**: `generic-claude-framework/agents/<agent-name>/README.md`
+- **Skill changed**: `generic-claude-framework/skills/<skill-name>/README.md`
+- **Always**: `docs/AGENT_CATALOG.md` and `docs/SKILL_CATALOG.md`
+
+**Benefits:**
+- ✅ **Zero mental overhead** - Docs auto-update during releases
+- ✅ **Smart & selective** - Only regenerates changed items
+- ✅ **Always in sync** - Documentation matches code state
+- ✅ **Faster commits** - Selective generation is quick
+- ✅ **Clean git diffs** - Only relevant docs change
+
+**Example Flow:**
+
+```
+User: "Prepare release v1.8.0"
+
+Detected changes:
+- generic-claude-framework/skills/cli-modern-tools/skill.md (modified)
+
+Actions:
+1. Update CHANGELOG, package.json, README badges
+2. Run: python scripts/generate_docs.py --skill cli-modern-tools
+   → Regenerates: cli-modern-tools/README.md
+   → Updates: SKILL_CATALOG.md, AGENT_CATALOG.md
+3. Stage all updated files
+4. Commit + tag + push
+
+Result: All documentation automatically synchronized!
+```
+
 ### 7. Git Operations
 
 **Complete Release Workflow:**
 
 1. **Stage All Changes**
    ```bash
+   # Stage release files
    git add CHANGELOG.md package.json README.md [composer.json if exists]
+
+   # Stage generated documentation (if any)
+   git add docs/AGENT_CATALOG.md docs/SKILL_CATALOG.md
+   git add generic-claude-framework/agents/*/README.md
+   git add generic-claude-framework/skills/*/README.md
    ```
 
 2. **Create Comprehensive Commit**

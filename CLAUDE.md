@@ -235,6 +235,28 @@ if (command.includes("ls")) {
 
 ## Git Workflow for This Project
 
+### 🚨 BEFORE ANY `git commit` COMMAND - READ THIS! 🚨
+
+**⚠️ MANDATORY CHECK - CANNOT BE SKIPPED:**
+
+```bash
+# MUST RUN THESE 3 COMMANDS BEFORE git commit:
+git diff --name-only                    # What files changed?
+git diff | grep "^[+-]version:"         # Any version changes?
+git diff --name-only | wc -l            # How many files?
+```
+
+**If ANY of these are true → USE changelog-manager (NOT git commit):**
+- ✋ 3+ files modified
+- ✋ version: line changed in skill.md or agent.md
+- ✋ CHANGELOG.md modified
+- ✋ package.json version changed
+- ✋ README.md badge changed
+
+**See "MANDATORY PRE-COMMIT CHECKS" section below for full details.**
+
+---
+
 ### Release Management
 **🔴 CRITICAL**: All releases MUST use the changelog-manager skill
 
@@ -332,16 +354,108 @@ Scenario 4: Enhanced a skill (e.g., changelog-manager v2.4.0 → v2.5.0)
 ✅ RIGHT: "This is a skill enhancement. Should I prepare a release?"
 ```
 
-**Detection Pattern for Claude**:
+**🚨 MANDATORY PRE-COMMIT CHECKS (CANNOT BE SKIPPED!)**:
+
+**⚠️ CRITICAL: Before executing ANY `git commit` command, Claude MUST run these checks:**
+
+### Step 1: Check for Release Indicators
+
+**MUST execute these commands FIRST:**
+
+```bash
+# 1. Check what files are modified
+git diff --name-only
+
+# 2. Check for version changes in skill/agent files
+git diff | grep "^[+-]version:"
+
+# 3. Count modified files
+git diff --name-only | wc -l
 ```
-if (git diff shows multiple files OR skill.md version change OR CHANGELOG.md change):
-    ASK: "Should I use changelog-manager for this release?"
-    WAIT for user response
-    if user says yes:
-        Use Skill tool to invoke changelog-manager
-    else:
-        Proceed with manual commit (user confirmed)
+
+### Step 2: Evaluate Release Indicators
+
+**If ANY of these are true, STOP and use changelog-manager:**
+
+- ✋ **3+ files modified** → RELEASE! Use changelog-manager
+- ✋ **skill.md or agent.md contains version change** (grep shows +version:) → RELEASE! Use changelog-manager
+- ✋ **CHANGELOG.md is modified** → RELEASE! Use changelog-manager
+- ✋ **package.json version changed** → RELEASE! Use changelog-manager
+- ✋ **README.md badge changed** → RELEASE! Use changelog-manager
+
+### Step 3: Decision
+
+**If ANY release indicator found:**
 ```
+🛑 STOP! This is a RELEASE!
+
+Claude MUST:
+1. Output: "Detected release indicators: [list what was found]"
+2. Use Skill tool to invoke changelog-manager
+3. DO NOT proceed with manual git commit
+4. DO NOT ask user - just invoke changelog-manager directly
+```
+
+**If NO release indicators:**
+```
+✅ Safe to commit manually
+
+This appears to be a simple change (1-2 files, no version changes).
+Proceed with git commit.
+```
+
+### Step 4: Automatic Detection Examples
+
+**Example 1: skill.md version change (RELEASE)**
+```bash
+$ git diff | grep "^[+-]version:"
+-version: 2.7.0
++version: 2.8.0
+
+🛑 DETECTED: Version change in skill.md
+→ ACTION: Use changelog-manager (automatic, no user confirmation)
+```
+
+**Example 2: Multiple files (RELEASE)**
+```bash
+$ git diff --name-only | wc -l
+5
+
+🛑 DETECTED: 5 files modified (threshold: 3+)
+→ ACTION: Use changelog-manager (automatic, no user confirmation)
+```
+
+**Example 3: Single file typo fix (SAFE)**
+```bash
+$ git diff --name-only
+README.md
+
+$ git diff README.md
+-This is a typo
++This is a fix
+
+✅ SAFE: 1 file, no version change, simple fix
+→ ACTION: Proceed with git commit
+```
+
+### Why This is Mandatory
+
+**The Problem:**
+- Old pattern was easy to forget (just a mental check)
+- Claude could skip the check and go straight to git commit
+- No actual commands were executed to verify
+
+**The Solution:**
+- MUST run actual bash commands before ANY git commit
+- Commands produce concrete output Claude can analyze
+- If release indicators found, changelog-manager is invoked AUTOMATICALLY
+- No user confirmation needed - indicators are proof enough
+
+**This prevents:**
+- ❌ Bypassing changelog-manager when committing skill version changes
+- ❌ Forgetting to run documentation generation
+- ❌ Token-saving shortcuts that skip critical steps
+- ❌ Manual commits for what should be releases
 
 ## Colored Output Guidelines
 

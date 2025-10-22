@@ -21,6 +21,22 @@ This skill provides timezone and time operations WITHOUT requiring MCP servers, 
 - This skill: ~130 tokens
 - **Savings: 270 tokens per query (67.5%)**
 
+## 🔧 **BASH COMMAND ATTRIBUTION PATTERN**
+
+**CRITICAL: Before executing EACH php/bash command, MUST output:**
+```
+🔧 [time-helper] Running: <command>
+```
+
+**Examples:**
+```
+🔧 [time-helper] Running: php -r "echo (new DateTime('now', new DateTimeZone('Asia/Tokyo')))->format('Y-m-d H:i:s T');"
+🔧 [time-helper] Running: php -r "date_default_timezone_set('America/New_York'); echo date('Y-m-d H:i:s T');"
+🔧 [time-helper] Running: bash .claude/skills/colored-output/color.sh skill-header "time-helper" "Getting time..."
+```
+
+**Why:** This pattern helps users identify which skill is executing which command, improving transparency and debugging.
+
 ---
 
 ## 🎨 **VISUAL OUTPUT FORMATTING**

@@ -38,6 +38,49 @@ claud-skills/
 └── README.md                  # Getting started guide
 ```
 
+## 💬 Communication Style
+
+**CRITICAL: Minimal commentary when executing commands**
+
+### Command Execution Pattern
+
+**❌ DON'T do this (verbose):**
+```
+"I'll perform a directory listing of the .claude directory using the cli-modern-tools skill with bash attribution."
+
+🔧 [cli-modern-tools] Running: eza --long --git .claude
+[output]
+```
+
+**✅ DO this (minimal):**
+```
+🔧 [cli-modern-tools] Running: eza --long --git .claude
+[output]
+```
+
+### Rules
+- **Skip verbose announcements** like "I'll perform...", "Let me...", "I'm going to..."
+- **Just show attribution prefix and execute** the command immediately
+- **Only provide context** when:
+  - User explicitly asks for explanation
+  - Command might be unexpected or confusing
+  - Error occurs and needs clarification
+
+### Examples
+
+**User asks: "list files in .claude"**
+- ❌ Bad: "I'll use eza to list the files in the .claude directory with git status..."
+- ✅ Good: `🔧 [cli-modern-tools] Running: eza --long --git .claude` (then output)
+
+**User asks: "show me the tree view"**
+- ❌ Bad: "Let me generate a tree view of the directory structure..."
+- ✅ Good: `🔧 [cli-modern-tools] Running: eza --tree --level=3` (then output)
+
+**User asks: "why did you use eza instead of ls?"**
+- ✅ Good: Now provide explanation (user asked for context)
+
+---
+
 ## 🔧 Tool Usage Guidelines (CRITICAL)
 
 **⚠️ MANDATORY: Before using ANY bash command, Claude MUST check this replacement table:**

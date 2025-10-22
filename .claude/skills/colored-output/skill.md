@@ -20,6 +20,22 @@ This skill provides a **single source of truth** for colored terminal output. In
 - ✅ **Easy Updates** - Change colors in one place
 - ✅ **Zero Duplication** - No repeated ANSI codes
 
+## 🔧 **BASH COMMAND ATTRIBUTION PATTERN**
+
+**CRITICAL: Before executing EACH bash command, MUST output:**
+```
+🔧 [colored-output] Running: <command>
+```
+
+**Examples:**
+```
+🔧 [colored-output] Running: bash .claude/skills/colored-output/color.sh skill-header "skill-name" "Starting..."
+🔧 [colored-output] Running: bash .claude/skills/colored-output/color.sh success "" "Complete!"
+🔧 [colored-output] Running: bash .claude/skills/colored-output/color.sh error "" "Failed!"
+```
+
+**Why:** This pattern helps users identify which skill is executing which command, improving transparency and debugging.
+
 ---
 
 ## 🎯 **USAGE GUIDELINES** (CRITICAL)

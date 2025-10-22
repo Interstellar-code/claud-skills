@@ -47,6 +47,23 @@ Replace traditional Unix commands with modern, faster, feature-rich alternatives
 - **ripgrep** > grep (10x faster) *[Note: Use Grep tool in Claude Code]*
 - **watchexec** for automation
 
+## 🔧 **BASH COMMAND ATTRIBUTION PATTERN**
+
+**CRITICAL: Before executing EACH bash command, MUST output:**
+```
+🔧 [cli-modern-tools] Running: <command>
+```
+
+**Examples:**
+```
+🔧 [cli-modern-tools] Running: bat app.js
+🔧 [cli-modern-tools] Running: eza --long --git
+🔧 [cli-modern-tools] Running: fd "\.tsx$"
+🔧 [cli-modern-tools] Running: watchexec -e php ./vendor/bin/pest
+```
+
+**Why:** This pattern helps users identify which skill is executing which command, improving transparency and debugging.
+
 ## 🎨 **VISUAL OUTPUT FORMATTING**
 
 **IMPORTANT: Use MINIMAL colored output (2-3 calls max) to prevent screen flickering!**

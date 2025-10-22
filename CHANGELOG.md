@@ -7,6 +7,37 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.12.1] - 2025-10-22
+
+### Added
+- **Bash Command Attribution Pattern** - Replicated to all remaining skills
+  - cli-modern-tools: Added attribution section with command examples
+  - colored-output: Added attribution for color.sh script calls
+  - markdown-helper: Added attribution for Node.js md-helper.js commands
+  - time-helper: Added attribution for PHP time operations
+  - skill-creator: Added attribution for skill creation bash commands
+  - skill-manager: Added attribution for Python skill-manager.py commands
+  - All skills now consistently show `🔧 [skill-name] Running: <command>` before execution
+
+- **Communication Style Guidelines** - Added to CLAUDE.md
+  - Minimal commentary when executing commands (no verbose announcements)
+  - Clear rules: Skip "I'll perform...", "Let me...", "I'm going to..." prefixes
+  - Only provide context when user explicitly asks or error occurs
+  - Examples of correct vs incorrect command execution patterns
+  - Improves user experience by reducing visual clutter
+
+### Changed
+- **Framework Synchronization** - All updated skills copied to generic-claude-framework
+  - Ensures framework directory matches active .claude directory
+  - Maintains consistency between local and framework versions
+  - All 6 skills synchronized with bash attribution pattern
+
+### Improved
+- **Skill Documentation Consistency** - Uniform attribution pattern across all skills
+  - Each skill has dedicated attribution section with examples
+  - Clear "why" explanation for transparency and debugging benefits
+  - Consistent formatting and structure across all skill.md files
+
 ## [1.12.0] - 2025-10-22
 
 ### Added
@@ -468,7 +499,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - N/A (Initial release)
 
-[Unreleased]: https://github.com/Interstellar-code/claud-skills/compare/v1.12.0...HEAD
+[Unreleased]: https://github.com/Interstellar-code/claud-skills/compare/v1.12.1...HEAD
+[1.12.1]: https://github.com/Interstellar-code/claud-skills/compare/v1.12.0...v1.12.1
 [1.12.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.11.0...v1.12.0
 [1.11.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.10.1...v1.11.0
 [1.10.1]: https://github.com/Interstellar-code/claud-skills/compare/v1.10.0...v1.10.1

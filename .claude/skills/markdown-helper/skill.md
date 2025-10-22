@@ -21,6 +21,22 @@ This skill provides markdown operations WITHOUT reading entire files into contex
 - This skill: ~250 tokens
 - **Savings: 550 tokens per query (68%)**
 
+## 🔧 **BASH COMMAND ATTRIBUTION PATTERN**
+
+**CRITICAL: Before executing EACH bash/node command, MUST output:**
+```
+🔧 [markdown-helper] Running: <command>
+```
+
+**Examples:**
+```
+🔧 [markdown-helper] Running: node ~/.claude/skills/markdown-helper/md-helper.js extract-headers README.md
+🔧 [markdown-helper] Running: node ~/.claude/skills/markdown-helper/md-helper.js generate-mermaid workflow.md
+🔧 [markdown-helper] Running: node ~/.claude/skills/markdown-helper/md-helper.js lint *.md
+```
+
+**Why:** This pattern helps users identify which skill is executing which command, improving transparency and debugging.
+
 ---
 
 ## 🎨 **VISUAL OUTPUT FORMATTING**

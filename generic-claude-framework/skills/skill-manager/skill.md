@@ -20,6 +20,23 @@ This skill provides a **native Python script** that handles skill discovery, ena
 - This skill: ~50-100 tokens (single script execution)
 - **Savings: 750-900 tokens per operation (90%)**
 
+## 🔧 **BASH COMMAND ATTRIBUTION PATTERN**
+
+**CRITICAL: Before executing EACH python/bash command, MUST output:**
+```
+🔧 [skill-manager] Running: <command>
+```
+
+**Examples:**
+```
+🔧 [skill-manager] Running: python .claude/skills/skill-manager/scripts/skill-manager.py discover
+🔧 [skill-manager] Running: python .claude/skills/skill-manager/scripts/skill-manager.py enable cli-modern-tools
+🔧 [skill-manager] Running: python .claude/skills/skill-manager/scripts/skill-manager.py toggle-feature cli-modern-tools eza
+🔧 [skill-manager] Running: bash .claude/skills/colored-output/color.sh success "" "Configuration updated"
+```
+
+**Why:** This pattern helps users identify which skill is executing which command, improving transparency and debugging.
+
 ---
 
 ## 📋 Available Commands

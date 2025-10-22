@@ -22,6 +22,22 @@ equipped with procedural knowledge that no model can fully possess.
 3. Domain expertise - Company-specific knowledge, schemas, business logic
 4. Bundled resources - Scripts, references, and assets for complex and repetitive tasks
 
+## 🔧 **BASH COMMAND ATTRIBUTION PATTERN**
+
+**CRITICAL: Before executing EACH bash command, MUST output:**
+```
+🔧 [skill-creator] Running: <command>
+```
+
+**Examples:**
+```
+🔧 [skill-creator] Running: mkdir -p .claude/skills/new-skill/scripts
+🔧 [skill-creator] Running: touch .claude/skills/new-skill/skill.md
+🔧 [skill-creator] Running: bash .claude/skills/colored-output/color.sh skill-header "skill-creator" "Creating skill..."
+```
+
+**Why:** This pattern helps users identify which skill is executing which command, improving transparency and debugging.
+
 ---
 
 ## 🎨 **VISUAL OUTPUT FORMATTING**

@@ -21,7 +21,15 @@
       "Bash(find:*)",
       "Bash(test -f:*)",
       "Bash(git reset:*)",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(for skill in changelog-manager time-helper markdown-helper cli-modern-tools)",
+      "Bash(do echo \"=== $skill ===\" head -15 .claude/skills/$skill/skill.md)",
+      "Bash(do echo \"=== $skill ===\")",
+      "Bash(head:*)",
+      "Bash(done)",
+      "Bash(mkdir:*)",
+      "Bash(python:*)",
+      "Skill(colored-output)"
     ],
     "deny": [],
     "ask": []

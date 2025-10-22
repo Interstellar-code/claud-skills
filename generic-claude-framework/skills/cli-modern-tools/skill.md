@@ -1,7 +1,7 @@
 ---
 name: cli-modern-tools
 description: Auto-suggest modern CLI tool alternatives (bat, eza, fd, ripgrep) for faster, more efficient command-line operations with 50%+ speed improvements
-version: 1.0.0
+version: 1.1.0
 author: Generic Claude Code Framework
 tags: [cli, productivity, performance, tools, bat, eza, fd, ripgrep, watchexec]
 activation_keywords: cat, ls, find, grep, file viewing, directory listing, file search, watch files

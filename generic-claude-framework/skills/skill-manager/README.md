@@ -1,8 +1,8 @@
-# cli-modern-tools
+# skill-manager
 
-> Auto-suggest modern CLI tool alternatives (bat, eza, fd, ripgrep) for faster, more efficient command-line operations with 50%+ speed improvements
+> Native Python-based skill management for enabling/disabling skills, configuring permissions, and managing settings.local.json
 
-**Category**: Utilities | **Language**: Unknown | **Version**: 1.1.0
+**Category**: Utilities | **Language**: Unknown | **Version**: 1.0.0
 
 ## Quick Info
 
@@ -11,11 +11,11 @@
 | **Language** | Unknown |
 | **Token Savings** | None% |
 | **Category** | Utilities |
-| **Tags** | cli, productivity, performance, tools, bat, eza, fd, ripgrep, watchexec |
+| **Tags** | skill-management, permissions, configuration, settings, productivity, native-script |
 
 ## Overview
 
-Auto-suggest modern CLI tool alternatives (bat, eza, fd, ripgrep) for faster, more efficient command-line operations with 50%+ speed improvements
+Native Python-based skill management for enabling/disabling skills, configuring permissions, and managing settings.local.json
 
 ## Use Cases
 
@@ -40,10 +40,10 @@ Auto-suggest modern CLI tool alternatives (bat, eza, fd, ripgrep) for faster, mo
 
 ```bash
 # Skill is included in the framework at:
-# generic-claude-framework\skills\cli-modern-tools
+# generic-claude-framework\skills\skill-manager
 
 # If not present, copy from framework:
-cp -r .claude/skills/cli-modern-tools /your-project/.claude/skills/
+cp -r .claude/skills/skill-manager /your-project/.claude/skills/
 ```
 
 ### Step 2: Install Dependencies
@@ -78,8 +78,8 @@ See the skill documentation for detailed usage instructions.
 ## Related
 
 - [changelog-manager](changelog-manager.md) - Update project changelog with uncommitted changes, synchronize package versions, and create version releases with automatic commit, conditional git tags, GitHub Releases, and push
+- [cli-modern-tools](cli-modern-tools.md) - Auto-suggest modern CLI tool alternatives (bat, eza, fd, ripgrep) for faster, more efficient command-line operations with 50%+ speed improvements
 - [colored-output](colored-output.md) - Centralized colored output formatter for all skills, agents, and commands with ANSI escape codes
-- [lark-agent](lark-agent.md) - No description available
 
 
 ---

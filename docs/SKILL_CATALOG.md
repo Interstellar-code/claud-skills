@@ -1,7 +1,7 @@
 # Skill Catalog
 
-**Last Updated**: 2025-10-22 13:20:46
-**Total Skills**: 12
+**Last Updated**: 2025-10-22 15:20:26
+**Total Skills**: 13
 
 ## Quick Navigation
 
@@ -14,7 +14,7 @@
 ## By Category
 
 
-### Utilities (12 skills)
+### Utilities (13 skills)
 
 | Skill | Description | Language | Token Savings |
 |-------|-------------|----------|---------------|
@@ -26,6 +26,7 @@
 | [log-analysis-tools](generic-claude-framework/skills/log-analysis-tools/README.md) | Fast log file analysis with lnav, multi-framework support (L... | Unknown | N/A |
 | [markdown-helper](generic-claude-framework/skills/markdown-helper/README.md) | Token-efficient markdown parsing, editing, and diagram gener... | Unknown | N/A |
 | [skill-creator](generic-claude-framework/skills/skill-creator/README.md) | Guide for creating effective skills. This skill should be us... | Unknown | N/A |
+| [skill-manager](generic-claude-framework/skills/skill-manager/README.md) | Native Python-based skill management for enabling/disabling ... | Unknown | N/A |
 | [sql-cli](generic-claude-framework/skills/sql-cli/README.md) | Token-efficient MySQL/PostgreSQL operations using mycli and ... | Unknown | 87% vs agent approach (200 vs 1,500+ tokens)% |
 | [template-skill](generic-claude-framework/skills/template-skill/README.md) | Replace with description of the skill and when Claude should... | Unknown | N/A |
 | [time-helper](generic-claude-framework/skills/time-helper/README.md) | Get current time, convert timezones, and perform time calcul... | Unknown | N/A |
@@ -37,7 +38,7 @@
 ## By Language
 
 
-### Unknown (12 skills)
+### Unknown (13 skills)
 
 | Skill | Category | Description | Token Savings |
 |-------|----------|-------------|---------------|
@@ -49,6 +50,7 @@
 | [log-analysis-tools](generic-claude-framework/skills/log-analysis-tools/README.md) | Utilities | Fast log file analysis with lnav, multi-framework support (L... | N/A |
 | [markdown-helper](generic-claude-framework/skills/markdown-helper/README.md) | Utilities | Token-efficient markdown parsing, editing, and diagram gener... | N/A |
 | [skill-creator](generic-claude-framework/skills/skill-creator/README.md) | Utilities | Guide for creating effective skills. This skill should be us... | N/A |
+| [skill-manager](generic-claude-framework/skills/skill-manager/README.md) | Utilities | Native Python-based skill management for enabling/disabling ... | N/A |
 | [sql-cli](generic-claude-framework/skills/sql-cli/README.md) | Utilities | Token-efficient MySQL/PostgreSQL operations using mycli and ... | 87% vs agent approach (200 vs 1,500+ tokens)% |
 | [template-skill](generic-claude-framework/skills/template-skill/README.md) | Utilities | Replace with description of the skill and when Claude should... | N/A |
 | [time-helper](generic-claude-framework/skills/time-helper/README.md) | Utilities | Get current time, convert timezones, and perform time calcul... | N/A |
@@ -69,6 +71,7 @@
 | [log-analysis-tools](generic-claude-framework/skills/log-analysis-tools/README.md) | Utilities | Unknown | Fast log file analysis with lnav, multi-framework support (Laravel, CodeIgniter,... |
 | [markdown-helper](generic-claude-framework/skills/markdown-helper/README.md) | Utilities | Unknown | Token-efficient markdown parsing, editing, and diagram generation using native C... |
 | [skill-creator](generic-claude-framework/skills/skill-creator/README.md) | Utilities | Unknown | Guide for creating effective skills. This skill should be used when users want t... |
+| [skill-manager](generic-claude-framework/skills/skill-manager/README.md) | Utilities | Unknown | Native Python-based skill management for enabling/disabling skills, configuring ... |
 | [sql-cli](generic-claude-framework/skills/sql-cli/README.md) | Utilities | Unknown | Token-efficient MySQL/PostgreSQL operations using mycli and native CLI tools (Wi... |
 | [template-skill](generic-claude-framework/skills/template-skill/README.md) | Utilities | Unknown | Replace with description of the skill and when Claude should use it.... |
 | [time-helper](generic-claude-framework/skills/time-helper/README.md) | Utilities | Unknown | Get current time, convert timezones, and perform time calculations using native ... |

@@ -1,7 +1,7 @@
 ---
 name: colored-output
 description: Centralized colored output formatter for all skills, agents, and commands with ANSI escape codes
-version: 1.0.0
+version: 1.1.0
 author: Claude Code
 tags: [output, formatting, colors, ansi, terminal, utility, ux]
 ---

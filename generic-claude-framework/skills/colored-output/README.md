@@ -2,7 +2,7 @@
 
 > Centralized colored output formatter for all skills, agents, and commands with ANSI escape codes
 
-**Category**: Utilities | **Language**: Unknown | **Version**: 1.0.0
+**Category**: Utilities | **Language**: Unknown | **Version**: 1.1.0
 
 ## Quick Info
 

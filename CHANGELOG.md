@@ -7,6 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.10.1] - 2025-10-22
+
+### Changed
+- **changelog-manager Skill v2.8.0** - Explicit workflow with verification checklist
+  - Added 11 explicit workflow steps (STEP 1-11) that MUST be followed in sequence
+  - Each step includes clear requirements, commands, and verification
+  - Added STEP 5: Generate Documentation (CRITICAL - prevents skipping doc generation)
+  - Added comprehensive VERIFICATION CHECKLIST with 27 checkboxes
+    - Pre-Commit Verification (15 items)
+    - Commit Verification (5 items)
+    - Tag & Push Verification (5 items)
+    - Final Verification (4 items)
+  - Added "Common Mistakes to Avoid" section documenting frequent errors
+  - Workflow prevents token-saving shortcuts that skip critical steps
+  - Updated version: 2.7.0 → 2.8.0
+
+### Fixed
+- **Release Workflow** - Prevented changelog-manager from being bypassed during releases
+  - Fixed issue where Claude could commit skill version changes without using changelog-manager
+  - Explicit steps ensure documentation generation is never skipped
+  - Better to consume more tokens than miss important release steps
+
 ## [1.10.0] - 2025-10-22
 
 ### Added
@@ -348,7 +370,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - N/A (Initial release)
 
-[Unreleased]: https://github.com/Interstellar-code/claud-skills/compare/v1.10.0...HEAD
+[Unreleased]: https://github.com/Interstellar-code/claud-skills/compare/v1.10.1...HEAD
+[1.10.1]: https://github.com/Interstellar-code/claud-skills/compare/v1.10.0...v1.10.1
 [1.10.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.9.0...v1.10.0
 [1.9.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.8.1...v1.9.0
 [1.8.1]: https://github.com/Interstellar-code/claud-skills/compare/v1.8.0...v1.8.1

@@ -18,6 +18,18 @@ version: 1.0.0
 
 ---
 
+## 🎨 **VISUAL OUTPUT FORMATTING**
+
+**CRITICAL: All file-watcher-automation output MUST use the colored-output formatter skill!**
+
+```bash
+bash .claude/skills/colored-output/color.sh agent-header "file-watcher-automation" "Setting up file watcher..."
+bash .claude/skills/colored-output/color.sh progress "" "Configuring watchexec for PHP files"
+bash .claude/skills/colored-output/color.sh success "" "File watcher activated"
+```
+
+---
+
 ## Capabilities
 
 ### 1. Auto-run Pest Tests

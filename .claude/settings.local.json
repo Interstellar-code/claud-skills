@@ -9,7 +9,12 @@
       "Bash(findstr:*)",
       "Skill(changelog-manager)",
       "Bash(python scripts/generate_docs.py:*)",
-      "Bash(git tag:*)"
+      "Bash(git tag:*)",
+      "Skill(time-helper)",
+      "Bash(php:*)",
+      "Read(//c/Users/rohit/.claude/skills/time-helper/**)",
+      "Bash(bash:*)",
+      "Skill(markdown-helper)"
     ],
     "deny": [],
     "ask": []

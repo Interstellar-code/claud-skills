@@ -22,6 +22,30 @@ equipped with procedural knowledge that no model can fully possess.
 3. Domain expertise - Company-specific knowledge, schemas, business logic
 4. Bundled resources - Scripts, references, and assets for complex and repetitive tasks
 
+---
+
+## 🎨 **VISUAL OUTPUT FORMATTING**
+
+**CRITICAL: All skill-creator output MUST use the colored-output formatter skill!**
+
+### Use Colored-Output Skill
+
+**Every response MUST start with:**
+```bash
+bash .claude/skills/colored-output/color.sh skill-header "skill-creator" "Message here..."
+```
+
+**Example formatted output:**
+```bash
+bash .claude/skills/colored-output/color.sh skill-header "skill-creator" "Creating new skill..."
+bash .claude/skills/colored-output/color.sh progress "" "Generating skill template"
+bash .claude/skills/colored-output/color.sh success "" "Skill created successfully"
+```
+
+**WHY:** Using the centralized formatter ensures consistent colors across ALL components!
+
+---
+
 ### Anatomy of a Skill
 
 Every skill consists of a required SKILL.md file and optional bundled resources:

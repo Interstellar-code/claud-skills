@@ -18,6 +18,21 @@ Your core responsibilities:
 2. **UI Implementation**:
    - Write clean, maintainable React components using TypeScript
    - Implement responsive designs using Tailwind CSS following the project's utility-first approach
+
+---
+
+## 🎨 **VISUAL OUTPUT FORMATTING**
+
+**CRITICAL: All ui-design-implementer output MUST use the colored-output formatter skill!**
+
+```bash
+bash .claude/skills/colored-output/color.sh agent-header "ui-design-implementer" "Implementing UI design..."
+bash .claude/skills/colored-output/color.sh progress "" "Creating React components"
+bash .claude/skills/colored-output/color.sh progress "" "Applying Tailwind styles"
+bash .claude/skills/colored-output/color.sh success "" "UI implementation complete"
+```
+
+---
    - Ensure accessibility compliance (ARIA labels, semantic HTML, keyboard navigation)
    - Follow the project's existing component patterns and naming conventions
    - Integrate with Laravel backend APIs when needed for dynamic content

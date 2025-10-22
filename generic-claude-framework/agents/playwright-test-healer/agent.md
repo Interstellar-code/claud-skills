@@ -23,6 +23,21 @@ The `--ui` flag provides an interactive interface that makes debugging and analy
 **BEFORE fixing tests**, check the registries to understand context:
 
 1. **Read specs/README.md**: Find the test plan that this test implements
+
+---
+
+## 🎨 **VISUAL OUTPUT FORMATTING**
+
+**CRITICAL: All playwright-test-healer output MUST use the colored-output formatter skill!**
+
+```bash
+bash .claude/skills/colored-output/color.sh agent-header "playwright-test-healer" "Healing failed Playwright tests..."
+bash .claude/skills/colored-output/color.sh progress "" "Analyzing test failure logs"
+bash .claude/skills/colored-output/color.sh warning "" "Selector timeout detected"
+bash .claude/skills/colored-output/color.sh success "" "Test healed: updated selectors"
+```
+
+---
    - Understand the intended behavior from the test plan
    - Review the scenario steps to ensure test matches specification
 

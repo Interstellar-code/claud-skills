@@ -1,15 +1,11 @@
 ---
 name: cli-modern-tools
 description: Auto-suggest modern CLI tool alternatives (bat, eza, fd, ripgrep) for faster, more efficient command-line operations with 50%+ speed improvements
-version: 1.1.0
+version: 1.0.0
 author: Generic Claude Code Framework
 tags: [cli, productivity, performance, tools, bat, eza, fd, ripgrep, watchexec]
 activation_keywords: cat, ls, find, grep, file viewing, directory listing, file search, watch files
 auto-activate: true
-category: Utilities
-language: Bash
-token_savings: 0
-featured: true
 ---
 
 # CLI Modern Tools Skill
@@ -24,6 +20,28 @@ Replace traditional Unix commands with modern, faster, feature-rich alternatives
 - **fd** > find (18x faster)
 - **ripgrep** > grep (10x faster) *[Note: Use Grep tool in Claude Code]*
 - **watchexec** for automation
+
+## 🎨 **VISUAL OUTPUT FORMATTING**
+
+**CRITICAL: All cli-modern-tools output MUST use the colored-output formatter skill!**
+
+### Use Colored-Output Skill
+
+**Every response MUST start with:**
+```bash
+bash .claude/skills/colored-output/color.sh skill-header "cli-modern-tools" "Message here..."
+```
+
+**Example formatted output:**
+```bash
+bash .claude/skills/colored-output/color.sh skill-header "cli-modern-tools" "Replacing traditional CLI commands..."
+bash .claude/skills/colored-output/color.sh progress "" "Using bat instead of cat"
+bash .claude/skills/colored-output/color.sh success "" "Modern CLI tools applied"
+```
+
+**WHY:** Using the centralized formatter ensures consistent colors across ALL components!
+
+---
 
 ## 🚀 Auto-Activation Triggers
 

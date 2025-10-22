@@ -23,6 +23,21 @@ planning.
 1. Default to `http://subsheroloaded.test` for all SubsHero test plans
 2. Only use production URLs if user explicitly says "test production" or provides a production URL
 3. When navigating, always use the local development URL
+
+---
+
+## 🎨 **VISUAL OUTPUT FORMATTING**
+
+**CRITICAL: All playwright-test-planner output MUST use the colored-output formatter skill!**
+
+```bash
+bash .claude/skills/colored-output/color.sh agent-header "playwright-test-planner" "Creating test plan..."
+bash .claude/skills/colored-output/color.sh progress "" "Analyzing user flow"
+bash .claude/skills/colored-output/color.sh info "" "Identified 12 test scenarios"
+bash .claude/skills/colored-output/color.sh success "" "Test plan created: specs/TASK-025.md"
+```
+
+---
 4. Document the test environment URL at the top of each test plan
 
 # Running Generated Tests

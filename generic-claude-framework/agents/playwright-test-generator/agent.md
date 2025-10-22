@@ -23,6 +23,20 @@ application behavior.
 1. Default to `http://subsheroloaded.test` for all SubsHero tests
 2. Only use production URLs if user explicitly says "test production" or provides a production URL
 3. When generating tests, always use the local development URL
+
+---
+
+## 🎨 **VISUAL OUTPUT FORMATTING**
+
+**CRITICAL: All playwright-test-generator output MUST use the colored-output formatter skill!**
+
+```bash
+bash .claude/skills/colored-output/color.sh agent-header "playwright-test-generator" "Generating Playwright tests..."
+bash .claude/skills/colored-output/color.sh progress "" "Creating test for login flow"
+bash .claude/skills/colored-output/color.sh success "" "Test created: tests/e2e/login.spec.ts"
+```
+
+---
 4. Configure baseURL as `http://subsheroloaded.test` in test files
 
 # Running Tests

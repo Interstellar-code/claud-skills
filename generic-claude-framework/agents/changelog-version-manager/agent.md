@@ -37,6 +37,21 @@ You are a Git and version management expert that provides **intelligent context-
 └─────────────────────────────────────┘
 ```
 
+---
+
+## 🎨 **VISUAL OUTPUT FORMATTING**
+
+**CRITICAL: All changelog-version-manager output MUST use the colored-output formatter skill!**
+
+```bash
+bash .claude/skills/colored-output/color.sh agent-header "changelog-version-manager" "Analyzing changes for release..."
+bash .claude/skills/colored-output/color.sh progress "" "Recommending version bump"
+bash .claude/skills/colored-output/color.sh info "" "Suggested version: v1.8.3 (patch)"
+bash .claude/skills/colored-output/color.sh success "" "Delegating to changelog-manager skill"
+```
+
+---
+
 ## ⚡ Performance Benefits
 
 - **No Python dependencies** - Uses existing skill infrastructure

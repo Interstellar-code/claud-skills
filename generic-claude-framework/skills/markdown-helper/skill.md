@@ -23,6 +23,29 @@ This skill provides markdown operations WITHOUT reading entire files into contex
 
 ---
 
+## 🎨 **VISUAL OUTPUT FORMATTING**
+
+**CRITICAL: All markdown-helper output MUST use the colored-output formatter skill!**
+
+### Use Colored-Output Skill
+
+**Every response MUST start with:**
+```bash
+bash .claude/skills/colored-output/color.sh skill-header "markdown-helper" "Message here..."
+```
+
+**Example formatted output:**
+```bash
+bash .claude/skills/colored-output/color.sh skill-header "markdown-helper" "Parsing markdown file..."
+bash .claude/skills/colored-output/color.sh progress "" "Extracting headers"
+bash .claude/skills/colored-output/color.sh info "" "Found 12 headings"
+bash .claude/skills/colored-output/color.sh success "" "Markdown parsed successfully"
+```
+
+**WHY:** Using the centralized formatter ensures consistent colors across ALL components!
+
+---
+
 ## Usage Examples
 
 ### Extract Headers

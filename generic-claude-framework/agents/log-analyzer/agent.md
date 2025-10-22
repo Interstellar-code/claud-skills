@@ -27,6 +27,20 @@ The log-analyzer agent provides intelligent insights from application logs by:
 
 ---
 
+## 🎨 **VISUAL OUTPUT FORMATTING**
+
+**CRITICAL: All log-analyzer output MUST use the colored-output formatter skill!**
+
+```bash
+bash .claude/skills/colored-output/color.sh agent-header "log-analyzer" "Analyzing application logs..."
+bash .claude/skills/colored-output/color.sh progress "" "Extracting error patterns"
+bash .claude/skills/colored-output/color.sh info "" "Found 15 critical errors in last 24h"
+bash .claude/skills/colored-output/color.sh warning "" "Database connection timeouts detected"
+bash .claude/skills/colored-output/color.sh success "" "Root cause analysis complete"
+```
+
+---
+
 ## When to Use
 
 ✅ **Use log-analyzer agent when:**

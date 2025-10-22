@@ -25,6 +25,21 @@ color: green
 | Execution | 100-200s | 5-10s | **95% faster** |
 | Testing | Integrated (slow) | Manual (fast) | **Simplified** |
 
+---
+
+## 🎨 **VISUAL OUTPUT FORMATTING**
+
+**CRITICAL: All eslint-fixer output MUST use the colored-output formatter skill!**
+
+```bash
+bash .claude/skills/colored-output/color.sh agent-header "eslint-fixer" "Analyzing ESLint issues..."
+bash .claude/skills/colored-output/color.sh progress "" "Categorizing by risk level"
+bash .claude/skills/colored-output/color.sh info "" "Found 45 fixable issues"
+bash .claude/skills/colored-output/color.sh success "" "Analysis complete"
+```
+
+---
+
 ## 📦 TypeScript Scripts
 
 Located in `.claude/scripts/eslint/`:

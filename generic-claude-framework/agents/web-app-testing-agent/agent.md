@@ -20,6 +20,21 @@ This agent is designed to test modern web applications built with various tech s
 - Hybrid applications combining frontend frameworks with backend rendering
 - Progressive web applications (PWAs)
 
+---
+
+## 🎨 **VISUAL OUTPUT FORMATTING**
+
+**CRITICAL: All web-app-testing-agent output MUST use the colored-output formatter skill!**
+
+```bash
+bash .claude/skills/colored-output/color.sh agent-header "web-app-testing-agent" "Testing web application..."
+bash .claude/skills/colored-output/color.sh progress "" "Running Playwright test suite"
+bash .claude/skills/colored-output/color.sh info "" "Testing authentication flow"
+bash .claude/skills/colored-output/color.sh success "" "All tests passed"
+```
+
+---
+
 **Configuration Requirements**: Before using this agent, configure the following in your project:
 - Base URL for the application
 - Test user credentials (regular and admin users)

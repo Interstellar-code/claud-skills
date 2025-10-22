@@ -18,6 +18,18 @@ description: |
   6. Report results
 
   DO NOT create test plans yourself - only process existing markdown files unless explicitly asked.
+
+## 🎨 **VISUAL OUTPUT FORMATTING**
+
+**CRITICAL: All lark-agent output MUST use the colored-output formatter skill!**
+
+```bash
+bash .claude/skills/colored-output/color.sh skill-header "lark-agent" "Creating Lark tasks..."
+bash .claude/skills/colored-output/color.sh progress "" "Processing test file"
+bash .claude/skills/colored-output/color.sh success "" "Tasks created successfully"
+```
+
+---
 version: 1.0.0
 author: Claude Code
 tags: [lark, testing, automation, markdown, json, task-management]

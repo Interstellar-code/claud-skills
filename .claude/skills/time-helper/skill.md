@@ -23,6 +23,49 @@ This skill provides timezone and time operations WITHOUT requiring MCP servers, 
 
 ---
 
+## 🎨 **VISUAL OUTPUT FORMATTING**
+
+**CRITICAL: All time-helper output MUST use the colored-output formatter skill!**
+
+### Use Colored-Output Skill
+
+**Instead of writing ANSI codes manually, use the centralized formatter:**
+
+```bash
+bash .claude/skills/colored-output/color.sh [type] "time-helper" [message]
+```
+
+### Required Output Format
+
+**Every skill response MUST start with:**
+```bash
+bash .claude/skills/colored-output/color.sh skill-header "time-helper" "Message here..."
+```
+
+**Example formatted output:**
+```bash
+bash .claude/skills/colored-output/color.sh skill-header "time-helper" "Getting current time for Tokyo..."
+bash .claude/skills/colored-output/color.sh progress "" "Querying timezone database..."
+bash .claude/skills/colored-output/color.sh info "" "Current time: 2025-10-22 14:30:00 JST"
+bash .claude/skills/colored-output/color.sh info "" "UTC offset: +09:00"
+bash .claude/skills/colored-output/color.sh success "" "Time retrieved successfully"
+```
+
+### Status Messages with Colors
+
+**Use these formatted messages throughout the workflow:**
+
+- Start: `bash .claude/skills/colored-output/color.sh skill-header "time-helper" "Processing time request..."`
+- Progress: `bash .claude/skills/colored-output/color.sh progress "" "Querying database..."`
+- Info: `bash .claude/skills/colored-output/color.sh info "" "Timezone: Asia/Tokyo"`
+- Success: `bash .claude/skills/colored-output/color.sh success "" "Time operation completed"`
+- Warning: `bash .claude/skills/colored-output/color.sh warning "" "Timezone may be ambiguous"`
+- Error: `bash .claude/skills/colored-output/color.sh error "" "Invalid timezone specified"`
+
+**WHY:** Using the centralized formatter ensures consistent colors across ALL skills and makes updates easy!
+
+---
+
 ## Usage Examples
 
 ### Get Current Time

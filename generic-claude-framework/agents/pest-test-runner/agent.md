@@ -15,6 +15,21 @@ color: purple
 
 The Pest Test Runner executes backend tests (Unit/Feature/Integration), generates HTML coverage reports, creates execution logs, and provides formatted output with statistics. It handles test database configuration and ensures proper test environment setup.
 
+---
+
+## 🎨 **VISUAL OUTPUT FORMATTING**
+
+**CRITICAL: All pest-test-runner output MUST use the colored-output formatter skill!**
+
+```bash
+bash .claude/skills/colored-output/color.sh agent-header "pest-test-runner" "Running Pest tests..."
+bash .claude/skills/colored-output/color.sh progress "" "Executing Unit tests"
+bash .claude/skills/colored-output/color.sh info "" "45 tests passed, 2 failed"
+bash .claude/skills/colored-output/color.sh success "" "Coverage report generated"
+```
+
+---
+
 ## Test Execution Modes
 
 ### Mode 1: Run All Tests

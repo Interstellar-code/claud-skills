@@ -43,6 +43,56 @@ auto-activate: true
 - "Let's release this"
 - "Can you update the changelog?"
 
+## 🎨 **VISUAL OUTPUT FORMATTING**
+
+**CRITICAL: All changelog-manager output MUST use colored formatting and icons for visual clarity!**
+
+### Color Scheme (ANSI Escape Codes)
+
+Use these exact ANSI codes in ALL skill responses:
+
+```
+Skill Header:    \033[1;34m🔧 [changelog-manager]\033[0m     # Bold Blue + Icon
+Success:         \033[1;32m✅\033[0m                         # Bold Green
+Warning:         \033[1;33m⚠️\033[0m                          # Bold Yellow
+Error:           \033[1;31m❌\033[0m                         # Bold Red
+Info:            \033[1;36mℹ️\033[0m                          # Bold Cyan
+Progress:        \033[0;34m▶\033[0m                          # Blue Arrow
+```
+
+### Required Output Format
+
+**Every skill response MUST start with:**
+```
+\033[1;34m🔧 [changelog-manager]\033[0m Message here...
+```
+
+**Example formatted output:**
+```
+\033[1;34m🔧 [changelog-manager]\033[0m Analyzing changes for release...
+\033[0;34m▶\033[0m Detected version bump: v1.8.1 → v1.8.2
+\033[0;34m▶\033[0m Updated 5 files
+\033[1;32m✅\033[0m CHANGELOG.md updated
+\033[1;32m✅\033[0m package.json updated
+\033[1;32m✅\033[0m README.md badge updated
+\033[1;34m🔧 [changelog-manager]\033[0m Creating release v1.8.2...
+\033[1;32m✅\033[0m Release v1.8.2 complete!
+```
+
+### Status Messages with Colors
+
+**Use these formatted messages throughout the workflow:**
+
+- Start: `\033[1;34m🔧 [changelog-manager]\033[0m I'll analyze your changes and prepare the release.`
+- Analyzing: `\033[0;34m▶\033[0m Analyzing git diff...`
+- Version Detected: `\033[1;36mℹ️\033[0m Detected version: \033[1;33mv1.8.2\033[0m (patch release)`
+- File Updated: `\033[1;32m✅\033[0m Updated CHANGELOG.md`
+- Warning: `\033[1;33m⚠️\033[0m This looks like a release - use changelog-manager?`
+- Error: `\033[1;31m❌\033[0m Git command failed`
+- Complete: `\033[1;32m✅\033[0m Release v1.8.2 complete!`
+
+**WHY:** This makes skill execution visually distinct from regular Claude responses and improves UX significantly!
+
 ## ⚡ **CRITICAL: Auto-Activation Behavior for Claude**
 
 **When this skill auto-activates (user says trigger keywords), Claude MUST:**
@@ -51,6 +101,7 @@ auto-activate: true
 2. ✅ **DO NOT manually invoke the skill again** - It's already running
 3. ✅ **Proceed directly with the workflow** - Start analyzing changes immediately
 4. ✅ **The skill is already loaded** - You'll see `<command-message>The "changelog-manager" skill is running</command-message>`
+5. ✅ **USE COLORED OUTPUT** - Start first response with `\033[1;34m🔧 [changelog-manager]\033[0m`
 
 **Example of CORRECT behavior:**
 ```

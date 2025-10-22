@@ -1,7 +1,7 @@
 # Skill Catalog
 
-**Last Updated**: 2025-10-22 08:41:19
-**Total Skills**: 11
+**Last Updated**: 2025-10-22 09:30:33
+**Total Skills**: 12
 
 ## Quick Navigation
 
@@ -14,14 +14,15 @@
 ## By Category
 
 
-### Utilities (11 skills)
+### Utilities (12 skills)
 
 | Skill | Description | Language | Token Savings |
 |-------|-------------|----------|---------------|
 | [changelog-manager](generic-claude-framework/skills/changelog-manager/README.md) | Update project changelog with uncommitted changes, synchroni... | Unknown | N/A |
-| [cli-modern-tools](generic-claude-framework/skills/cli-modern-tools/README.md) | Auto-suggest modern CLI tool alternatives (bat, eza, fd, rip... | Bash | N/A |
-| [lark-agent](generic-claude-framework/skills/lark-agent/README.md) | Create hierarchical Lark tasks from markdown test plans.  AC... | Unknown | N/A |
-| [lark-agent-simple](generic-claude-framework/skills/lark-agent-simple/README.md) | Token-efficient Lark task creation from markdown test files.... | Unknown | N/A |
+| [cli-modern-tools](generic-claude-framework/skills/cli-modern-tools/README.md) | Auto-suggest modern CLI tool alternatives (bat, eza, fd, rip... | Unknown | N/A |
+| [colored-output](generic-claude-framework/skills/colored-output/README.md) | Centralized colored output formatter for all skills, agents,... | Unknown | N/A |
+| [lark-agent](generic-claude-framework/skills/lark-agent/README.md) | No description available... | Unknown | N/A |
+| [lark-agent-simple](generic-claude-framework/skills/lark-agent-simple/README.md) | No description available... | Unknown | N/A |
 | [log-analysis-tools](generic-claude-framework/skills/log-analysis-tools/README.md) | Fast log file analysis with lnav, multi-framework support (L... | Unknown | N/A |
 | [markdown-helper](generic-claude-framework/skills/markdown-helper/README.md) | Token-efficient markdown parsing, editing, and diagram gener... | Unknown | N/A |
 | [skill-creator](generic-claude-framework/skills/skill-creator/README.md) | Guide for creating effective skills. This skill should be us... | Unknown | N/A |
@@ -36,19 +37,15 @@
 ## By Language
 
 
-### Bash (1 skill)
-
-| Skill | Category | Description | Token Savings |
-|-------|----------|-------------|---------------|
-| [cli-modern-tools](generic-claude-framework/skills/cli-modern-tools/README.md) | Utilities | Auto-suggest modern CLI tool alternatives (bat, eza, fd, rip... | N/A |
-
-### Unknown (10 skills)
+### Unknown (12 skills)
 
 | Skill | Category | Description | Token Savings |
 |-------|----------|-------------|---------------|
 | [changelog-manager](generic-claude-framework/skills/changelog-manager/README.md) | Utilities | Update project changelog with uncommitted changes, synchroni... | N/A |
-| [lark-agent](generic-claude-framework/skills/lark-agent/README.md) | Utilities | Create hierarchical Lark tasks from markdown test plans.  AC... | N/A |
-| [lark-agent-simple](generic-claude-framework/skills/lark-agent-simple/README.md) | Utilities | Token-efficient Lark task creation from markdown test files.... | N/A |
+| [cli-modern-tools](generic-claude-framework/skills/cli-modern-tools/README.md) | Utilities | Auto-suggest modern CLI tool alternatives (bat, eza, fd, rip... | N/A |
+| [colored-output](generic-claude-framework/skills/colored-output/README.md) | Utilities | Centralized colored output formatter for all skills, agents,... | N/A |
+| [lark-agent](generic-claude-framework/skills/lark-agent/README.md) | Utilities | No description available... | N/A |
+| [lark-agent-simple](generic-claude-framework/skills/lark-agent-simple/README.md) | Utilities | No description available... | N/A |
 | [log-analysis-tools](generic-claude-framework/skills/log-analysis-tools/README.md) | Utilities | Fast log file analysis with lnav, multi-framework support (L... | N/A |
 | [markdown-helper](generic-claude-framework/skills/markdown-helper/README.md) | Utilities | Token-efficient markdown parsing, editing, and diagram gener... | N/A |
 | [skill-creator](generic-claude-framework/skills/skill-creator/README.md) | Utilities | Guide for creating effective skills. This skill should be us... | N/A |
@@ -65,9 +62,10 @@
 | Skill | Category | Language | Description |
 |-------|----------|----------|-------------|
 | [changelog-manager](generic-claude-framework/skills/changelog-manager/README.md) | Utilities | Unknown | Update project changelog with uncommitted changes, synchronize package versions,... |
-| [cli-modern-tools](generic-claude-framework/skills/cli-modern-tools/README.md) | Utilities | Bash | Auto-suggest modern CLI tool alternatives (bat, eza, fd, ripgrep) for faster, mo... |
-| [lark-agent](generic-claude-framework/skills/lark-agent/README.md) | Utilities | Unknown | Create hierarchical Lark tasks from markdown test plans.  ACTIVATE THIS SKILL wh... |
-| [lark-agent-simple](generic-claude-framework/skills/lark-agent-simple/README.md) | Utilities | Unknown | Token-efficient Lark task creation from markdown test files. Uses 60-70% fewer t... |
+| [cli-modern-tools](generic-claude-framework/skills/cli-modern-tools/README.md) | Utilities | Unknown | Auto-suggest modern CLI tool alternatives (bat, eza, fd, ripgrep) for faster, mo... |
+| [colored-output](generic-claude-framework/skills/colored-output/README.md) | Utilities | Unknown | Centralized colored output formatter for all skills, agents, and commands with A... |
+| [lark-agent](generic-claude-framework/skills/lark-agent/README.md) | Utilities | Unknown | No description available... |
+| [lark-agent-simple](generic-claude-framework/skills/lark-agent-simple/README.md) | Utilities | Unknown | No description available... |
 | [log-analysis-tools](generic-claude-framework/skills/log-analysis-tools/README.md) | Utilities | Unknown | Fast log file analysis with lnav, multi-framework support (Laravel, CodeIgniter,... |
 | [markdown-helper](generic-claude-framework/skills/markdown-helper/README.md) | Utilities | Unknown | Token-efficient markdown parsing, editing, and diagram generation using native C... |
 | [skill-creator](generic-claude-framework/skills/skill-creator/README.md) | Utilities | Unknown | Guide for creating effective skills. This skill should be used when users want t... |

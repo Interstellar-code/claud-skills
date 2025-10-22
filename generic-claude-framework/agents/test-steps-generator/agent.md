@@ -18,6 +18,21 @@ This agent specializes in generating comprehensive manual testing steps by revie
 - **Documentation**: Outputs professional test documentation in Markdown format
 - **Test Coverage**: Ensures all user scenarios, edge cases, and error conditions are covered
 
+---
+
+## 🎨 **VISUAL OUTPUT FORMATTING**
+
+**CRITICAL: All test-steps-generator output MUST use the colored-output formatter skill!**
+
+```bash
+bash .claude/skills/colored-output/color.sh agent-header "test-steps-generator" "Generating test steps..."
+bash .claude/skills/colored-output/color.sh progress "" "Analyzing user workflow"
+bash .claude/skills/colored-output/color.sh info "" "Created 15 test scenarios"
+bash .claude/skills/colored-output/color.sh success "" "Test documentation complete"
+```
+
+---
+
 ### 🔍 Analysis Types
 - **Feature Analysis**: Examines new features and their implementation
 - **User Flow Analysis**: Maps complete user interaction paths

@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.9.0] - 2025-10-22
+
+### Added
+- **colored-output Skill v1.0.0** - Centralized colored terminal output formatter
+  - Created bash script (color.sh) for ANSI color formatting with 8 message types
+  - Message types: skill-header (🔧 blue), agent-header (🤖 purple), command-header (⚡ green), success (✅ green), error (❌ red), warning (⚠️ yellow), info (ℹ️ cyan), progress (▶ blue)
+  - Applied to ALL 7 .claude skills: changelog-manager, colored-output, time-helper, cli-modern-tools, markdown-helper, skill-creator, template-skill
+  - Applied to ALL 13 framework skills: Same as above plus sql-cli, webapp-testing, log-analysis-tools, lark-agent, lark-agent-simple
+  - Applied to ALL 14 framework agents: changelog-version-manager, eslint-fixer, file-watcher-automation, log-analyzer, mockup-creation-agent, pest-test-generator, pest-test-runner, playwright-test-generator, playwright-test-healer, playwright-test-planner, task-creator, test-steps-generator, ui-design-implementer, web-app-testing-agent
+  - DRY principle: Single source of truth for color formatting across entire framework
+  - 615+ lines added across 31 files (5 new, 26 modified)
+  - Created comprehensive documentation: COLORED_OUTPUT_TEMPLATE.md and COLORED_OUTPUT_SNIPPET.md
+  - All skills and agents now use: `bash .claude/skills/colored-output/color.sh [type] "[name]" "[message]"`
+  - Dramatically improved terminal readability with consistent visual hierarchy
+  - Token-efficient: All color logic centralized, minimal overhead per skill/agent
+
+### Documentation
+- Created `docs/COLORED_OUTPUT_TEMPLATE.md` - Complete guide for adding colored output to any skill/agent
+- Created `docs/COLORED_OUTPUT_SNIPPET.md` - Copy-paste template for quick integration
+- Created `github-feature-request.md` - Feature request template for CLI-level color support (future enhancement)
+
 ## [1.8.1] - 2025-10-22
 
 ### Documentation
@@ -269,7 +290,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - N/A (Initial release)
 
-[Unreleased]: https://github.com/Interstellar-code/claud-skills/compare/v1.8.1...HEAD
+[Unreleased]: https://github.com/Interstellar-code/claud-skills/compare/v1.9.0...HEAD
+[1.9.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.8.1...v1.9.0
 [1.8.1]: https://github.com/Interstellar-code/claud-skills/compare/v1.8.0...v1.8.1
 [1.8.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.7.0...v1.8.0
 [1.7.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.6.0...v1.7.0

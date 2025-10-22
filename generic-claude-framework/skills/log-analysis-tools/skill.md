@@ -12,6 +12,19 @@ auto-activate: true
 
 **Purpose**: Fast, efficient log file analysis with framework-aware patterns and intelligent pruning
 
+## 🎨 **VISUAL OUTPUT FORMATTING**
+
+**CRITICAL: All log-analysis-tools output MUST use the colored-output formatter skill!**
+
+```bash
+bash .claude/skills/colored-output/color.sh skill-header "log-analysis-tools" "Analyzing log files..."
+bash .claude/skills/colored-output/color.sh progress "" "Parsing Laravel logs"
+bash .claude/skills/colored-output/color.sh info "" "Found 15 errors in last 24h"
+bash .claude/skills/colored-output/color.sh success "" "Analysis complete"
+```
+
+---
+
 ## 🎯 Multi-Framework Support
 
 ### Framework Detection & Log Locations

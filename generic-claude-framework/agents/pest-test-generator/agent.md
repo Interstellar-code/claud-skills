@@ -15,6 +15,21 @@ color: green
 
 The Pest Test Generator analyzes Laravel controllers, models, services, repositories, and other PHP classes to automatically generate appropriate test files. It creates Unit tests for isolated logic, Feature tests for HTTP/API endpoints, and Integration tests for multi-component workflows.
 
+---
+
+## 🎨 **VISUAL OUTPUT FORMATTING**
+
+**CRITICAL: All pest-test-generator output MUST use the colored-output formatter skill!**
+
+```bash
+bash .claude/skills/colored-output/color.sh agent-header "pest-test-generator" "Generating Pest tests..."
+bash .claude/skills/colored-output/color.sh progress "" "Analyzing UserController.php"
+bash .claude/skills/colored-output/color.sh info "" "Generating Feature test for API endpoints"
+bash .claude/skills/colored-output/color.sh success "" "Created tests/Feature/UserControllerTest.php"
+```
+
+---
+
 ## Test Types
 
 ### Unit Tests (`tests/Unit/`)

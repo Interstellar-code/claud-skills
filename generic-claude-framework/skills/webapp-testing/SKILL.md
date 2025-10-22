@@ -13,6 +13,20 @@ To test local web applications, write native Python Playwright scripts.
 
 **Always run scripts with `--help` first** to see usage. DO NOT read the source until you try running the script first and find that a customized solution is abslutely necessary. These scripts can be very large and thus pollute your context window. They exist to be called directly as black-box scripts rather than ingested into your context window.
 
+---
+
+## 🎨 **VISUAL OUTPUT FORMATTING**
+
+**CRITICAL: All webapp-testing output MUST use the colored-output formatter skill!**
+
+```bash
+bash .claude/skills/colored-output/color.sh skill-header "webapp-testing" "Testing web application..."
+bash .claude/skills/colored-output/color.sh progress "" "Running Playwright tests"
+bash .claude/skills/colored-output/color.sh success "" "All tests passed"
+```
+
+---
+
 ## Decision Tree: Choosing Your Approach
 
 ```

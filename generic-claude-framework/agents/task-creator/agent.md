@@ -17,6 +17,20 @@ Ask clarifying questions to understand:
 - Priority level and timeline requirements
 - Integration points with existing systems
 
+---
+
+## 🎨 **VISUAL OUTPUT FORMATTING**
+
+**CRITICAL: All task-creator output MUST use the colored-output formatter skill!**
+
+```bash
+bash .claude/skills/colored-output/color.sh agent-header "task-creator" "Creating project task..."
+bash .claude/skills/colored-output/color.sh progress "" "Gathering requirements"
+bash .claude/skills/colored-output/color.sh success "" "Task created: TASK-025.md"
+```
+
+---
+
 ### 2. **Task Structure Generation**
 Create tasks using this standard format:
 

@@ -21,6 +21,28 @@ Replace traditional Unix commands with modern, faster, feature-rich alternatives
 - **ripgrep** > grep (10x faster) *[Note: Use Grep tool in Claude Code]*
 - **watchexec** for automation
 
+## 🎨 **VISUAL OUTPUT FORMATTING**
+
+**CRITICAL: All cli-modern-tools output MUST use the colored-output formatter skill!**
+
+### Use Colored-Output Skill
+
+**Every response MUST start with:**
+```bash
+bash .claude/skills/colored-output/color.sh skill-header "cli-modern-tools" "Message here..."
+```
+
+**Example formatted output:**
+```bash
+bash .claude/skills/colored-output/color.sh skill-header "cli-modern-tools" "Replacing traditional CLI commands..."
+bash .claude/skills/colored-output/color.sh progress "" "Using bat instead of cat"
+bash .claude/skills/colored-output/color.sh success "" "Modern CLI tools applied"
+```
+
+**WHY:** Using the centralized formatter ensures consistent colors across ALL components!
+
+---
+
 ## 🚀 Auto-Activation Triggers
 
 **CRITICAL: This skill auto-activates on traditional command detection and AUTOMATICALLY replaces them.**

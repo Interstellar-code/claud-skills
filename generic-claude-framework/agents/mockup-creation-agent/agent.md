@@ -27,6 +27,21 @@ This agent works with modern web applications featuring:
 - Configure theme system (dark/light mode)
 - Set up mockup storage location
 
+---
+
+## 🎨 **VISUAL OUTPUT FORMATTING**
+
+**CRITICAL: All mockup-creation-agent output MUST use the colored-output formatter skill!**
+
+```bash
+bash .claude/skills/colored-output/color.sh agent-header "mockup-creation-agent" "Creating mockup..."
+bash .claude/skills/colored-output/color.sh progress "" "Generating HTML structure"
+bash .claude/skills/colored-output/color.sh progress "" "Applying design system styles"
+bash .claude/skills/colored-output/color.sh success "" "Mockup created: /path/to/mockup.html"
+```
+
+---
+
 ## Agent Capabilities
 
 ### Core Mockup Generation

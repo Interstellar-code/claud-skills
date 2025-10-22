@@ -31,6 +31,31 @@ version: 1.0.0
 - "What tables are in the database?" → Use sql-cli skill
 - "Describe the users table structure" → Use sql-cli skill
 
+---
+
+## 🎨 **VISUAL OUTPUT FORMATTING**
+
+**CRITICAL: All sql-cli output MUST use the colored-output formatter skill!**
+
+### Use Colored-Output Skill
+
+**Every response MUST start with:**
+```bash
+bash .claude/skills/colored-output/color.sh skill-header "sql-cli" "Message here..."
+```
+
+**Example formatted output:**
+```bash
+bash .claude/skills/colored-output/color.sh skill-header "sql-cli" "Executing database query..."
+bash .claude/skills/colored-output/color.sh progress "" "Connecting to database"
+bash .claude/skills/colored-output/color.sh info "" "Found 142 rows"
+bash .claude/skills/colored-output/color.sh success "" "Query completed successfully"
+```
+
+**WHY:** Using the centralized formatter ensures consistent colors across ALL components!
+
+---
+
 ## Replaces
 
 ### ❌ Old Method: Artisan Tinker

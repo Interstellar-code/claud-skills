@@ -1,6 +1,6 @@
 {
   "name": "generic-claude-code-framework",
-  "version": "1.11.0",
+  "version": "1.12.0",
   "description": "A comprehensive, reusable framework for Claude Code with production-ready agents, commands, skills, and scripts",
   "main": "index.js",
   "scripts": {

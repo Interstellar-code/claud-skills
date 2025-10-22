@@ -7,6 +7,59 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.12.0] - 2025-10-22
+
+### Added
+- **Feature Toggle System** - Fine-grained control over individual skill features
+  - Added `feature_config` section to skill.md frontmatter
+  - Enable/disable specific features without disabling entire skill
+  - Example: Toggle bat, eza, fd, ripgrep, watchexec independently in cli-modern-tools
+  - Conditional logic in skills checks feature flags before executing
+  - Python backend methods: `list_features()`, `toggle_feature()`, `set_feature()`
+  - CLI commands: `list-features`, `enable-feature`, `disable-feature`, `toggle-feature`
+  - Advanced config view now displays feature toggles with status indicators
+
+- **cli-modern-tools Feature Toggles** - Individual control for each tool
+  - `bat: enabled/disabled` - Control cat alternative suggestions
+  - `eza: enabled/disabled` - Control ls alternative suggestions
+  - `fd: enabled/disabled` - Control find alternative suggestions
+  - `ripgrep: enabled/disabled` - Control grep alternative (bash only)
+  - `watchexec: enabled/disabled` - Control file watching suggestions
+  - Each feature has fallback to traditional command when disabled
+
+- **Bash Command Attribution** - Skill identification for all bash commands
+  - Added `🔧 [skill-name] Running: <command>` prefix pattern
+  - Implemented in changelog-manager skill as prototype
+  - Makes it clear which skill is executing which bash command
+  - Improves transparency and debugging capability
+
+### Changed
+- **skill-manager.py Enhanced** - Added 3 new methods for feature management
+  - `list_features()` - Display all feature toggles for a skill
+  - `toggle_feature()` - Switch feature between enabled/disabled
+  - `set_feature()` - Set feature to specific state
+  - Advanced config display now includes feature toggle section
+  - Added 4 new CLI action choices for feature management
+
+- **cs-skill-management Command** - Updated documentation
+  - Added hybrid approach guidelines (interactive vs direct commands)
+  - Token savings comparison (400 tokens interactive, 200 tokens direct)
+  - Minimal LLM commentary pattern for 60% token reduction
+  - Silent execution rules (no verbose commentary)
+
+### Improved
+- **Skill Behavior Control** - Users can now control actual functionality, not just metadata
+  - Tags were metadata-only, feature toggles control actual behavior
+  - Disabling `eza` now makes skill use `ls` instead
+  - Each feature toggle changes what the skill suggests and executes
+  - Real-world testing confirmed: eza disabled → ls used, eza enabled → eza used
+
+### Documentation
+- Updated cli-modern-tools.md with conditional logic for all patterns
+- Added feature toggle usage examples and testing results
+- Documented bash command attribution pattern for future skills
+- Enhanced command documentation with token optimization strategies
+
 ## [1.11.0] - 2025-10-22
 
 ### Added
@@ -415,7 +468,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - N/A (Initial release)
 
-[Unreleased]: https://github.com/Interstellar-code/claud-skills/compare/v1.11.0...HEAD
+[Unreleased]: https://github.com/Interstellar-code/claud-skills/compare/v1.12.0...HEAD
+[1.12.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.11.0...v1.12.0
 [1.11.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.10.1...v1.11.0
 [1.10.1]: https://github.com/Interstellar-code/claud-skills/compare/v1.10.0...v1.10.1
 [1.10.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.9.0...v1.10.0

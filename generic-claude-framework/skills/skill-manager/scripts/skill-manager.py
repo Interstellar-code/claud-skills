@@ -575,6 +575,25 @@ class SkillManager:
         print(f"  Enabled: {'Yes' if skill['enabled'] else 'No'}")
         print(f"  Permissions: {len(skill['permissions'])} configured")
 
+        # Show feature toggles if available
+        skill_md = self.skills_dir / skill_name / 'skill.md'
+        if skill_md.exists():
+            try:
+                with open(skill_md, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                import re
+                feature_match = re.search(r'feature_config:\s*\n((?:  \w+: (?:enabled|disabled)\s*\n)+)', content)
+                if feature_match:
+                    print(f"\n🎛️  Feature Toggles:")
+                    features = feature_match.group(1)
+                    feature_lines = [line.strip() for line in features.split('\n') if line.strip()]
+                    for line in feature_lines:
+                        feature_name, status = line.split(':')
+                        icon = "✅" if status.strip() == "enabled" else "⬜"
+                        print(f"  {icon} {feature_name.strip()} - {status.strip().upper()}")
+            except:
+                pass
+
         print(f"\n🔧 Available Operations:")
         print(f"  1. Toggle auto-activate")
         print(f"  2. Add/remove tags")
@@ -583,13 +602,130 @@ class SkillManager:
         print(f"  5. Configure parameters")
         print()
 
+    def list_features(self, skill_name: str) -> None:
+        """List all feature toggles for a skill"""
+        skill_dir = self.skills_dir / skill_name
+        skill_md = skill_dir / 'skill.md'
+
+        if not skill_md.exists():
+            print(f"❌ Skill '{skill_name}' not found")
+            return
+
+        try:
+            with open(skill_md, 'r', encoding='utf-8') as f:
+                content = f.read()
+
+            # Extract feature_config section
+            import re
+            feature_match = re.search(r'feature_config:\s*\n((?:  \w+: (?:enabled|disabled)\s*\n)+)', content)
+
+            if not feature_match:
+                print(f"⬜ No feature toggles configured for {skill_name}")
+                return
+
+            print(f"\n🎛️  Feature Toggles: {skill_name}")
+            print("=" * 60)
+
+            features = feature_match.group(1)
+            feature_lines = [line.strip() for line in features.split('\n') if line.strip()]
+
+            for idx, line in enumerate(feature_lines, 1):
+                feature_name, status = line.split(':')
+                feature_name = feature_name.strip()
+                status = status.strip()
+                icon = "✅" if status == "enabled" else "⬜"
+                print(f"  {idx}. {icon} {feature_name} - {status.upper()}")
+
+            print()
+
+        except Exception as e:
+            print(f"❌ Error reading features: {e}", file=sys.stderr)
+
+    def toggle_feature(self, skill_name: str, feature_name: str) -> bool:
+        """Toggle a feature (enabled <-> disabled)"""
+        skill_dir = self.skills_dir / skill_name
+        skill_md = skill_dir / 'skill.md'
+
+        if not skill_md.exists():
+            print(f"❌ Skill '{skill_name}' not found")
+            return False
+
+        try:
+            with open(skill_md, 'r', encoding='utf-8') as f:
+                content = f.read()
+
+            # Find current status
+            import re
+            pattern = rf'(\s+{re.escape(feature_name)}:\s*)(enabled|disabled)'
+            match = re.search(pattern, content)
+
+            if not match:
+                print(f"❌ Feature '{feature_name}' not found in {skill_name}")
+                return False
+
+            # Toggle the status
+            current_status = match.group(2)
+            new_status = 'disabled' if current_status == 'enabled' else 'enabled'
+
+            # Replace in content
+            updated = re.sub(pattern, rf'\1{new_status}', content)
+
+            # Write back
+            with open(skill_md, 'w', encoding='utf-8') as f:
+                f.write(updated)
+
+            print(f"✅ Toggled {feature_name}: {current_status} → {new_status}")
+            return True
+
+        except Exception as e:
+            print(f"❌ Error toggling feature: {e}", file=sys.stderr)
+            return False
+
+    def set_feature(self, skill_name: str, feature_name: str, enable: bool) -> bool:
+        """Set a feature to enabled or disabled"""
+        skill_dir = self.skills_dir / skill_name
+        skill_md = skill_dir / 'skill.md'
+
+        if not skill_md.exists():
+            print(f"❌ Skill '{skill_name}' not found")
+            return False
+
+        try:
+            with open(skill_md, 'r', encoding='utf-8') as f:
+                content = f.read()
+
+            # Find and replace status
+            import re
+            pattern = rf'(\s+{re.escape(feature_name)}:\s*)(enabled|disabled)'
+            match = re.search(pattern, content)
+
+            if not match:
+                print(f"❌ Feature '{feature_name}' not found in {skill_name}")
+                return False
+
+            new_status = 'enabled' if enable else 'disabled'
+            updated = re.sub(pattern, rf'\1{new_status}', content)
+
+            # Write back
+            with open(skill_md, 'w', encoding='utf-8') as f:
+                f.write(updated)
+
+            status_text = "enabled" if enable else "disabled"
+            print(f"✅ {feature_name} {status_text}")
+            return True
+
+        except Exception as e:
+            print(f"❌ Error setting feature: {e}", file=sys.stderr)
+            return False
+
 
 def main():
     parser = argparse.ArgumentParser(description='Skill Manager - Comprehensive skill management for Claude Code')
     parser.add_argument('action',
                        choices=['discover', 'list', 'enable', 'disable', 'status', 'export', 'json',
                                'auto-activate', 'add-permission', 'remove-permission', 'list-permissions',
-                               'add-tag', 'remove-tag', 'set-priority', 'configure', 'advanced'],
+                               'add-tag', 'remove-tag', 'set-priority', 'configure', 'advanced',
+                               'list-features', 'toggle-feature', 'enable-feature', 'disable-feature'],
                        help='Action to perform')
     parser.add_argument('skill_name', nargs='?', help='Skill name')
     parser.add_argument('value', nargs='?', help='Value for the action (permission, tag, priority, config key)')
@@ -695,6 +831,33 @@ def main():
             print("❌ Error: skill_name required")
             sys.exit(1)
         manager.show_advanced_config(args.skill_name)
+
+    elif args.action == 'list-features':
+        if not args.skill_name:
+            print("❌ Error: skill_name required")
+            sys.exit(1)
+        manager.list_features(args.skill_name)
+
+    elif args.action == 'toggle-feature':
+        if not args.skill_name or not args.value:
+            print("❌ Error: skill_name and feature_name required")
+            print("Usage: skill-manager.py toggle-feature <skill_name> <feature_name>")
+            sys.exit(1)
+        manager.toggle_feature(args.skill_name, args.value)
+
+    elif args.action == 'enable-feature':
+        if not args.skill_name or not args.value:
+            print("❌ Error: skill_name and feature_name required")
+            print("Usage: skill-manager.py enable-feature <skill_name> <feature_name>")
+            sys.exit(1)
+        manager.set_feature(args.skill_name, args.value, True)
+
+    elif args.action == 'disable-feature':
+        if not args.skill_name or not args.value:
+            print("❌ Error: skill_name and feature_name required")
+            print("Usage: skill-manager.py disable-feature <skill_name> <feature_name>")
+            sys.exit(1)
+        manager.set_feature(args.skill_name, args.value, False)
 
 
 if __name__ == '__main__':

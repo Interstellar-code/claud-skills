@@ -637,11 +637,23 @@ Result: All documentation automatically synchronized!
 
 ### ✅ STEP 1: Analyze Changes
 
-**MUST RUN ALL THREE COMMANDS:**
+**🔧 BASH COMMAND ATTRIBUTION PATTERN:**
 
-1. Run `git status` to find uncommitted changes
-2. Run `git diff --stat` to see file change summary
-3. Run `git log --oneline -5` to see recent commit patterns
+**CRITICAL: Before executing EACH bash command, MUST output:**
+```
+🔧 [changelog-manager] Running: <command>
+```
+
+**MUST RUN ALL THREE COMMANDS WITH ATTRIBUTION:**
+
+1. **Announce:** `🔧 [changelog-manager] Running: git status`
+   **Execute:** `git status` to find uncommitted changes
+
+2. **Announce:** `🔧 [changelog-manager] Running: git diff --stat`
+   **Execute:** `git diff --stat` to see file change summary
+
+3. **Announce:** `🔧 [changelog-manager] Running: git log --oneline -5`
+   **Execute:** `git log --oneline -5` to see recent commit patterns
 
 **Output to user:** Summarize what files changed (X files modified, Y additions, Z deletions)
 
@@ -740,11 +752,10 @@ Result: All documentation automatically synchronized!
 
 **⚠️ MANDATORY STEP - This step was previously missed!**
 
-**MUST run documentation generation script:**
+**MUST run documentation generation script WITH ATTRIBUTION:**
 
-```bash
-python scripts/generate_docs.py
-```
+1. **Announce:** `🔧 [changelog-manager] Running: python scripts/generate_docs.py`
+   **Execute:** `python scripts/generate_docs.py`
 
 **This script:**
 - Regenerates all agent READMEs
@@ -752,10 +763,10 @@ python scripts/generate_docs.py
 - Updates AGENT_CATALOG.md
 - Updates SKILL_CATALOG.md
 
-**Check if documentation was generated:**
-```bash
-git status --short | grep -E "(README.md|CATALOG.md)"
-```
+**Check if documentation was generated WITH ATTRIBUTION:**
+
+2. **Announce:** `🔧 [changelog-manager] Running: git status --short | grep -E "(README.md|CATALOG.md)"`
+   **Execute:** `git status --short | grep -E "(README.md|CATALOG.md)"`
 
 **Expected output:** 20-30 documentation files updated
 
@@ -810,10 +821,10 @@ git add -A
 - All generated documentation files (agent READMEs, skill READMEs, catalogs)
 - Any other modified files from the original changes
 
-**Verify staging:**
-```bash
-git status --short
-```
+**Verify staging WITH ATTRIBUTION:**
+
+**Announce:** `🔧 [changelog-manager] Running: git status --short`
+**Execute:** `git status --short`
 
 **Output to user:** "Staged X files for commit"
 
@@ -847,10 +858,10 @@ EOF
 )"
 ```
 
-**Verify commit:**
-```bash
-git log -1 --oneline
-```
+**Verify commit WITH ATTRIBUTION:**
+
+**Announce:** `🔧 [changelog-manager] Running: git log -1 --oneline`
+**Execute:** `git log -1 --oneline`
 
 **Output to user:** "Created commit: [commit hash] Release vX.X.X"
 

@@ -31,22 +31,41 @@
 /cs-skill-management advanced <skill-name>
 ```
 
-### 🎯 **IMPORTANT: Interactive Mode After List**
+### 🎯 **HIERARCHICAL MENU STRUCTURE**
 
-**When user runs `/cs-skill-management list`, ALWAYS offer interactive options:**
+**3-Level Navigation System:**
 
-After displaying the list, Claude MUST ask:
+**LEVEL 1:** Main Menu (5 options)
+**LEVEL 2:** Skill List (numbered, select a skill)
+**LEVEL 3:** Skill Parameters (manage specific settings)
+
+See "Interactive Menu Structure" section below for complete flow.
+
+---
+
+### ⚡ **HYBRID APPROACH - Best of Both Worlds**
+
+**Use Case 1: Interactive Menu** (Exploration mode)
+```bash
+/cs-skill-management
+# Navigate with numbers: 1 → 3 → 2
+# Token cost: ~400 per interaction (with minimal LLM)
+# Best for: Exploring skills, learning what's available
 ```
-Would you like to:
-1. Enable a skill
-2. Disable a skill
-3. View skill details
-4. Exit
 
-Enter choice (1-4):
+**Use Case 2: Direct Commands** (Power user mode)
+```bash
+/cs-skill-management advanced cli-modern-tools
+/cs-skill-management set-priority changelog-manager 9
+/cs-skill-management add-tag colored-output anti-flickering
+# Token cost: ~200 per command
+# Best for: Quick actions when you know exactly what you want
 ```
 
-Then wait for user input and execute the chosen action.
+**Recommendation:**
+- Start with **interactive menu** to explore
+- Switch to **direct commands** once you know what you need
+- Saves ~50-75% tokens compared to verbose navigation
 
 ---
 
@@ -105,20 +124,52 @@ python .claude/skills/skill-manager/scripts/skill-manager.py advanced <skill-nam
 
 ---
 
-## 🎨 **VISUAL OUTPUT FORMATTING**
+## 🎨 **VISUAL OUTPUT FORMATTING - MINIMAL LLM COMMENTARY**
 
-**Use colored-output skill MINIMALLY (2 calls max):**
+**⚡ CRITICAL: Use "silent execution" approach to reduce token usage by ~60%**
 
+### Silent Execution Pattern
+
+**DO THIS (Minimal LLM):**
 ```bash
-# START: Header only
-bash .claude/skills/colored-output/color.sh command-header "/cs-skill-management" "Managing skills..."
+# Just show header once at start
+bash .claude/skills/colored-output/color.sh command-header "/cs-skill-management" "Skill Management"
 
-# MIDDLE: Run Python script (it produces formatted output)
+# Execute Python script and display results directly (NO commentary)
 python .claude/skills/skill-manager/scripts/skill-manager.py list
 
-# END: Result only (if needed)
-bash .claude/skills/colored-output/color.sh success "" "Operation complete!"
+# User input prompt (NO additional text)
+# Wait for user selection
 ```
+
+**DON'T DO THIS (Verbose LLM):**
+```bash
+# ❌ Avoid: "Excellent! Let me show you LEVEL 3..."
+# ❌ Avoid: "Here's the detailed view of the skill..."
+# ❌ Avoid: "Now displaying the parameters for..."
+```
+
+### Token Savings
+
+| Approach | Tokens per Interaction | Commentary |
+|----------|----------------------|------------|
+| Verbose (OLD) | ~1000 tokens | "Excellent! Let me show you..." |
+| Minimal (NEW) | ~400 tokens | Silent execution, just results |
+| Direct Commands | ~200 tokens | Bypass menu entirely |
+
+### Implementation Rules
+
+**When navigating menus:**
+1. ✅ Run the Python command
+2. ✅ Display the output directly
+3. ❌ NO "Let me show you..."
+4. ❌ NO "Here's what we found..."
+5. ❌ NO "Excellent choice..."
+
+**Only speak when:**
+- Showing an error message
+- Asking for clarification on ambiguous input
+- Confirming a destructive action (like delete)
 
 ---
 
@@ -334,41 +385,211 @@ Files:
 
 ## 📋 **Interactive Menu Structure**
 
-**When called without arguments:**
+**3-Level Hierarchical Navigation**
 
-1. Run: `python .claude/skills/skill-manager/scripts/skill-manager.py json`
-2. Parse JSON output
-3. Display this menu:
+When called without arguments, display a clean 3-level menu system.
 
+---
+
+### LEVEL 1: Main Menu
+
+**Display:**
 ```
-⚙️  Skill Management - Interactive Mode
-========================================
+⚙️  Skill Management
+====================
 
-Available Skills: 7 total
-├─ Enabled: 5 skills
-├─ Disabled: 2 skills
-└─ Categories: Release, CLI, Documentation, Time, Output
+1. List skills
+2. Activate skill
+3. Deactivate skill
+4. Delete skill
+5. Exit
 
-📂 Browse Options:
-1. View All Skills (7)
-2. View Enabled Skills (5)
-3. View Disabled Skills (2)
-4. Browse by Category
-5. Search for Skill
+Enter choice (1-5):
+```
 
-🔧 Quick Actions:
-6. Enable a Skill
-7. Disable a Skill
-8. Configure Skill Permissions
-9. View Skill Details
+**Implementation:**
+```bash
+# Run Python script to get skill count
+python .claude/skills/skill-manager/scripts/skill-manager.py json
 
-⚙️  Advanced:
-10. Edit settings.local.json directly
-11. Update CLAUDE.md rules
-12. Export current configuration
-13. Import configuration
+# Show menu and wait for user input
+```
 
-Enter choice (1-13) or 'q' to quit:
+---
+
+### LEVEL 2: Skill List (After choosing "1. List skills")
+
+**Display:**
+```
+📋 Skills (8 total)
+
+1. ✅ changelog-manager (v2.8.0) - ENABLED
+2. ✅ cli-modern-tools (v1.1.0) - ENABLED
+3. ✅ colored-output (v1.1.0) - ENABLED
+4. ✅ markdown-helper (v1.0.0) - ENABLED
+5. ⬜ skill-creator (vunknown) - DISABLED
+6. ⬜ skill-manager (v1.0.0) - DISABLED
+7. ⬜ template-skill (vunknown) - DISABLED
+8. ✅ time-helper (v1.0.0) - ENABLED
+9. Back to main menu
+
+Select a skill (1-9):
+```
+
+**Implementation:**
+```bash
+# List all skills with numbering
+python .claude/skills/skill-manager/scripts/skill-manager.py list
+
+# Number each skill 1-N
+# Add option N+1 for "Back to main menu"
+# Wait for user to select a number
+```
+
+---
+
+### LEVEL 3: Skill Parameters (After selecting a skill)
+
+**Display (Example: User selected "3. colored-output"):**
+```
+⚙️  Skill: colored-output (v1.1.0)
+=====================================
+
+📊 Current Status:
+   Status: ✅ Enabled
+   Auto-activate: No
+   Priority: Not set
+   Tags: output, formatting, colors, ansi, terminal, utility, ux
+   Permissions: 1 configured
+
+🔧 Manage Parameters:
+
+1. Toggle enable/disable
+2. Toggle auto-activate (on/off)
+3. Manage tags (add/remove)
+4. Set priority (1-10)
+5. Manage permissions (add/remove/list)
+6. Configure custom parameters
+7. View full details
+8. Back to skill list
+
+Enter choice (1-8):
+```
+
+**Implementation:**
+```bash
+# Get advanced config for selected skill
+python .claude/skills/skill-manager/scripts/skill-manager.py advanced <skill-name>
+
+# Display menu with current settings
+# Wait for user to select an action
+# Execute the selected action
+# Return to this menu after action completes
+```
+
+---
+
+### LEVEL 3 Sub-Actions
+
+**When user selects an action from Level 3:**
+
+**1. Toggle enable/disable**
+```bash
+# Check current status
+if enabled:
+    python .claude/skills/skill-manager/scripts/skill-manager.py disable <skill-name>
+else:
+    python .claude/skills/skill-manager/scripts/skill-manager.py enable <skill-name>
+
+# Show success message
+# Return to Level 3 menu
+```
+
+**2. Toggle auto-activate**
+```bash
+# Check current auto-activate status
+if auto_activate_enabled:
+    python .claude/skills/skill-manager/scripts/skill-manager.py auto-activate <skill-name> --off
+else:
+    python .claude/skills/skill-manager/scripts/skill-manager.py auto-activate <skill-name> --on
+
+# Show success message
+# Return to Level 3 menu
+```
+
+**3. Manage tags**
+```
+Current tags: output, formatting, colors, ansi, terminal, utility, ux
+
+1. Add a tag
+2. Remove a tag
+3. Back
+
+Enter choice (1-3):
+```
+
+If user selects "1. Add a tag":
+```
+Enter tag name to add: anti-flickering
+
+python .claude/skills/skill-manager/scripts/skill-manager.py add-tag <skill-name> anti-flickering
+
+✅ Tag added successfully
+Return to Level 3 menu
+```
+
+**4. Set priority**
+```
+Current priority: Not set
+
+Enter priority (1-10, higher = more important): 8
+
+python .claude/skills/skill-manager/scripts/skill-manager.py set-priority <skill-name> 8
+
+✅ Priority set to 8
+Return to Level 3 menu
+```
+
+**5. Manage permissions**
+```
+🔐 Current Permissions (3):
+
+1. Skill(colored-output)
+2. Bash(bash .claude/skills/colored-output/color.sh:*)
+3. Read(.claude/skills/colored-output/**)
+
+Actions:
+1. Add a permission
+2. Remove a permission
+3. List all permissions
+4. Back
+
+Enter choice (1-4):
+```
+
+**6. Configure custom parameters**
+```
+Enter parameter name: max-calls-per-operation
+Enter parameter value: 3
+
+python .claude/skills/skill-manager/scripts/skill-manager.py configure <skill-name> max-calls-per-operation 3
+
+✅ Parameter configured successfully
+Return to Level 3 menu
+```
+
+**7. View full details**
+```
+# Show comprehensive skill information
+python .claude/skills/skill-manager/scripts/skill-manager.py status <skill-name>
+
+# Display all metadata, files, permissions, etc.
+# Press Enter to return to Level 3 menu
+```
+
+**8. Back to skill list**
+```
+# Return to Level 2 (Skill List)
 ```
 
 ---

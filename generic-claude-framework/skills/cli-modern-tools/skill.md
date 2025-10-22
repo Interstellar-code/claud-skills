@@ -6,6 +6,12 @@ author: Generic Claude Code Framework
 tags: [cli, productivity, performance, tools, bat, eza, fd, ripgrep, watchexec]
 activation_keywords: cat, ls, find, grep, file viewing, directory listing, file search, watch files
 auto-activate: true
+feature_config:
+  bat: enabled
+  eza: enabled
+  fd: enabled
+  ripgrep: enabled
+  watchexec: enabled
 ---
 
 # CLI Modern Tools Skill
@@ -69,40 +75,55 @@ bash .claude/skills/colored-output/color.sh success "" "Modern CLI tools applied
 
 **CRITICAL: This skill auto-activates on traditional command detection and AUTOMATICALLY replaces them.**
 
+**⚙️ FEATURE TOGGLE CONTROL:**
+Before suggesting any replacement, CHECK the `feature_config` in the frontmatter above:
+- If `bat: enabled` → Suggest bat
+- If `bat: disabled` → Use traditional cat (no suggestion)
+- Same logic for eza, fd, ripgrep, watchexec
+
 ### Pattern 1: File Viewing
 **Triggers**: `cat`, `view file`, `show file`, `display contents`
-**Action**: ALWAYS use `bat` instead of `cat`
+**Action**: IF `bat: enabled` → use `bat` instead of `cat`, ELSE use `cat`
 **Implementation**:
 ```bash
 # ❌ Traditional
 cat app.js
 
-# ✅ Automatic replacement
+# ✅ Automatic replacement (IF bat: enabled)
 bat app.js  # Syntax highlighting, line numbers
+
+# ⬜ Fallback (IF bat: disabled)
+cat app.js  # Use traditional command
 ```
 
 ### Pattern 2: Directory Listing
 **Triggers**: `ls`, `list files`, `show directory`, `list dir`
-**Action**: ALWAYS use `eza --long --git` instead of `ls`
+**Action**: IF `eza: enabled` → use `eza --long --git` instead of `ls`, ELSE use `ls`
 **Implementation**:
 ```bash
 # ❌ Traditional
 ls -la app/Models/
 
-# ✅ Automatic replacement
+# ✅ Automatic replacement (IF eza: enabled)
 eza --long --git app/Models/  # Git status, icons, colors
+
+# ⬜ Fallback (IF eza: enabled)
+ls -la app/Models/  # Use traditional command
 ```
 
 ### Pattern 3: File Search (Bash Tool Only)
 **Triggers**: `find`, `search files`, `locate file`, `find file named`
-**Action**: Use `fd` instead of `find` when using Bash tool
+**Action**: IF `fd: enabled` → use `fd` instead of `find`, ELSE use `find`
 **Implementation**:
 ```bash
 # ❌ Traditional
 find . -name "*.tsx"
 
-# ✅ Automatic replacement (Bash tool)
+# ✅ Automatic replacement (IF fd: enabled, Bash tool only)
 fd "\.tsx$"
+
+# ⬜ Fallback (IF fd: disabled)
+find . -name "*.tsx"
 
 # ✅ For Claude Code tools (NOT bash)
 # Use Glob tool instead
@@ -110,35 +131,43 @@ fd "\.tsx$"
 
 ### Pattern 4: Content Search
 **Triggers**: `grep`, `search in files`, `search content`, `find text`
-**Action**: **ALWAYS use Grep tool**, NEVER bash grep/ripgrep
+**Action**: **ALWAYS use Grep tool**, NEVER bash grep/ripgrep (ripgrep setting ignored for Claude Code tools)
 **Implementation**:
 ```
 ❌ bash -c "grep -r 'TODO' app/"
 ✅ [Use Grep tool with pattern="TODO" path="app/"]
+
+Note: ripgrep feature toggle only affects bash command suggestions, not Claude Code tools
 ```
 
 ### Pattern 5: File Watching
 **Triggers**: `watch files`, `auto-run`, `continuous testing`, `on file change`
-**Action**: Use `watchexec` for automation
+**Action**: IF `watchexec: enabled` → use `watchexec` for automation, ELSE suggest manual approach
 **Implementation**:
 ```bash
 # ❌ Traditional (manual)
 # Run tests manually after each change
 
-# ✅ Automatic replacement
+# ✅ Automatic replacement (IF watchexec: enabled)
 watchexec -e php ./vendor/bin/pest
+
+# ⬜ Fallback (IF watchexec: disabled)
+# Suggest manual approach
 ```
 
 ### Pattern 6: Tree View
 **Triggers**: `tree`, `show tree`, `directory structure`
-**Action**: Use `eza --tree` instead of `tree`
+**Action**: IF `eza: enabled` → use `eza --tree` instead of `tree`, ELSE use `tree`
 **Implementation**:
 ```bash
 # ❌ Traditional
 tree -L 3
 
-# ✅ Automatic replacement
+# ✅ Automatic replacement (IF eza: enabled)
 eza --tree --level=3
+
+# ⬜ Fallback (IF eza: enabled)
+tree -L 3
 ```
 
 ## 🎯 Automatic Replacement Rules

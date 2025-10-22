@@ -1,9 +1,9 @@
 ---
 name: changelog-manager
 description: Update project changelog with uncommitted changes, synchronize package versions, and create version releases with automatic commit, conditional git tags, and push
-version: 2.3.0
+version: 2.4.0
 author: Claude Code
-tags: [changelog, versioning, git, release-management, package-management, git-tags, conditional-tagging]
+tags: [changelog, versioning, git, release-management, package-management, git-tags, conditional-tagging, readme-automation]
 auto-activate: true
 ---
 
@@ -275,9 +275,11 @@ After updating CHANGELOG.md, the skill MUST update package version numbers to ma
 
 ### 6. README.md Badge Updates
 
-**Automatic Version Badge Synchronization**
+**Automatic Badge & Release Section Synchronization**
 
-After updating version in CHANGELOG.md and package.json, update README.md badges:
+After updating version in CHANGELOG.md and package.json, update README.md:
+
+#### 6.1 Update Version Badge
 
 - Search for version badge pattern: `[![Version](https://img.shields.io/badge/version-X.X.X-orange)]`
 - Update version number to match new release
@@ -291,6 +293,73 @@ Example:
 # After
 [![Version](https://img.shields.io/badge/version-1.2.0-orange)](CHANGELOG.md)
 ```
+
+#### 6.2 Update Agent/Skill Count Badges
+
+**Automatic Count Calculation:**
+
+Count actual agents and skills in framework directories:
+
+```bash
+# Count agents (directories in generic-claude-framework/agents/)
+AGENT_COUNT=$(find generic-claude-framework/agents -maxdepth 1 -type d ! -name agents | wc -l)
+
+# Count skills (directories in generic-claude-framework/skills/)
+SKILL_COUNT=$(find generic-claude-framework/skills -maxdepth 1 -type d ! -name skills | wc -l)
+```
+
+Update badges with calculated counts:
+
+```markdown
+# Before
+[![Agents](https://img.shields.io/badge/agents-14-blue)](docs/AGENT_CATALOG.md)
+[![Skills](https://img.shields.io/badge/skills-11-green)](docs/SKILL_CATALOG.md)
+
+# After (if counts changed)
+[![Agents](https://img.shields.io/badge/agents-15-blue)](docs/AGENT_CATALOG.md)
+[![Skills](https://img.shields.io/badge/skills-12-green)](docs/SKILL_CATALOG.md)
+```
+
+**Why Auto-Calculate?**
+- Always accurate (no manual updates needed)
+- Reflects current framework state
+- Prevents badge drift from reality
+
+#### 6.3 Add/Update Latest Release Section
+
+**Create "Latest Release" Section:**
+
+Insert after badges, before main content (after line with badges, before "## 🎯 What is This?"):
+
+```markdown
+<details open>
+<summary><b>📦 Latest Release: v1.7.0 (2025-10-22)</b></summary>
+
+### Added
+- cli-modern-tools Skill v1.1.0 with automatic command replacement
+  - New cli-wrapper.sh script for auto-detection and fallback
+  - Auto-replaces: cat→bat, ls→eza, find→fd, tree→eza --tree
+
+### Changed
+- Documentation generator now supports selective updates
+  - New flags: --skill <name>, --agent <name>, --catalogs-only
+
+[View Full Changelog →](CHANGELOG.md)
+</details>
+```
+
+**Extraction Logic:**
+
+1. Parse CHANGELOG.md to find latest version entry
+2. Extract content between `## [X.X.X] - YYYY-MM-DD` and next `##`
+3. Format into collapsible `<details>` block
+4. Replace existing "Latest Release" section or insert if missing
+
+**Benefits:**
+- Users see latest changes immediately on GitHub
+- Collapsible to keep README clean
+- Auto-extracted from CHANGELOG (single source of truth)
+- Always shows current version
 
 ### 7. Git Operations
 

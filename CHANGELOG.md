@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **changelog-manager Skill v2.4.0** - Enhanced README automation
+  - Auto-calculates and updates agent/skill count badges
+  - Auto-creates "Latest Release" section with CHANGELOG excerpt
+  - Extracts latest version content from CHANGELOG.md automatically
+  - Maintains single source of truth for all documentation
+  - Eliminates manual README updates during releases
+
 ## [1.7.0] - 2025-10-22
 
 ### Added

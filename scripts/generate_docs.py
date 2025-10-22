@@ -10,12 +10,17 @@ Automatically generates:
 - Updates main README.md with stats
 
 Usage:
-    python scripts/generate_docs.py
+    python scripts/generate_docs.py                    # Generate all docs
+    python scripts/generate_docs.py --skill <name>     # Update specific skill only
+    python scripts/generate_docs.py --agent <name>     # Update specific agent only
+    python scripts/generate_docs.py --catalogs-only    # Update only catalogs
 """
 
 import os
 import re
+import sys
 import yaml
+import argparse
 from pathlib import Path
 from datetime import datetime
 from typing import Dict, List, Optional
@@ -836,5 +841,94 @@ Top picks for getting started:
         print(f"\n Output directory: {self.docs_dir}")
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser(
+        description="Generate documentation for Generic Claude Code Framework",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  python scripts/generate_docs.py                         # Generate all docs
+  python scripts/generate_docs.py --skill cli-modern-tools  # Update specific skill
+  python scripts/generate_docs.py --agent eslint-fixer     # Update specific agent
+  python scripts/generate_docs.py --catalogs-only         # Update only catalogs
+        """
+    )
+    parser.add_argument('--skill', type=str, help='Update specific skill only (by name)')
+    parser.add_argument('--agent', type=str, help='Update specific agent only (by name)')
+    parser.add_argument('--catalogs-only', action='store_true', help='Update only catalog files')
+
+    args = parser.parse_args()
+
     generator = DocumentationGenerator()
-    generator.generate_all()
+
+    if args.skill:
+        # Selective skill update
+        print("\n" + "="*60)
+        print(f"Updating documentation for skill: {args.skill}")
+        print("="*60 + "\n")
+
+        # Scan all skills first (needed for catalogs)
+        generator.scan_skills()
+        generator.scan_agents()  # Need agents for catalog
+
+        # Find and update specific skill
+        skill = next((s for s in generator.skills if s.name == args.skill), None)
+        if skill:
+            print(f" Updating skill README...")
+            generator.generate_skill_readme(skill)
+            print(f"\n Updating catalogs...")
+            generator.generate_skill_catalog()
+            generator.generate_agent_catalog()
+            print("\n" + "="*60)
+            print(f"DONE: Updated {args.skill} and catalogs")
+            print("="*60)
+        else:
+            print(f"ERROR: Skill '{args.skill}' not found")
+            print(f"Available skills: {', '.join([s.name for s in generator.skills])}")
+            sys.exit(1)
+
+    elif args.agent:
+        # Selective agent update
+        print("\n" + "="*60)
+        print(f"Updating documentation for agent: {args.agent}")
+        print("="*60 + "\n")
+
+        # Scan all agents first (needed for catalogs)
+        generator.scan_agents()
+        generator.scan_skills()  # Need skills for catalog
+
+        # Find and update specific agent
+        agent = next((a for a in generator.agents if a.name == args.agent), None)
+        if agent:
+            print(f" Updating agent README...")
+            generator.generate_agent_readme(agent)
+            print(f"\n Updating catalogs...")
+            generator.generate_agent_catalog()
+            generator.generate_skill_catalog()
+            print("\n" + "="*60)
+            print(f"DONE: Updated {args.agent} and catalogs")
+            print("="*60)
+        else:
+            print(f"ERROR: Agent '{args.agent}' not found")
+            print(f"Available agents: {', '.join([a.name for a in generator.agents])}")
+            sys.exit(1)
+
+    elif args.catalogs_only:
+        # Update catalogs only
+        print("\n" + "="*60)
+        print("Updating catalog files only")
+        print("="*60 + "\n")
+
+        generator.scan_agents()
+        generator.scan_skills()
+
+        print(" Generating catalogs...")
+        generator.generate_agent_catalog()
+        generator.generate_skill_catalog()
+
+        print("\n" + "="*60)
+        print("DONE: Catalogs updated")
+        print("="*60)
+
+    else:
+        # Generate all documentation (default behavior)
+        generator.generate_all()

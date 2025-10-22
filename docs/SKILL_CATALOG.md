@@ -1,6 +1,6 @@
 # Skill Catalog
 
-**Last Updated**: 2025-10-21 22:21:41
+**Last Updated**: 2025-10-22 07:11:19
 **Total Skills**: 11
 
 ## Quick Navigation
@@ -19,7 +19,7 @@
 | Skill | Description | Language | Token Savings |
 |-------|-------------|----------|---------------|
 | [changelog-manager](generic-claude-framework/skills/changelog-manager/README.md) | Update project changelog with uncommitted changes, synchroni... | Unknown | N/A |
-| [cli-modern-tools](generic-claude-framework/skills/cli-modern-tools/README.md) | Auto-suggest modern CLI tool alternatives (bat, eza, fd, rip... | Unknown | N/A |
+| [cli-modern-tools](generic-claude-framework/skills/cli-modern-tools/README.md) | Auto-suggest modern CLI tool alternatives (bat, eza, fd, rip... | Bash | N/A |
 | [lark-agent](generic-claude-framework/skills/lark-agent/README.md) | Create hierarchical Lark tasks from markdown test plans.  AC... | Unknown | N/A |
 | [lark-agent-simple](generic-claude-framework/skills/lark-agent-simple/README.md) | Token-efficient Lark task creation from markdown test files.... | Unknown | N/A |
 | [log-analysis-tools](generic-claude-framework/skills/log-analysis-tools/README.md) | Fast log file analysis with lnav, multi-framework support (L... | Unknown | N/A |
@@ -36,12 +36,17 @@
 ## By Language
 
 
-### Unknown (11 skills)
+### Bash (1 skill)
+
+| Skill | Category | Description | Token Savings |
+|-------|----------|-------------|---------------|
+| [cli-modern-tools](generic-claude-framework/skills/cli-modern-tools/README.md) | Utilities | Auto-suggest modern CLI tool alternatives (bat, eza, fd, rip... | N/A |
+
+### Unknown (10 skills)
 
 | Skill | Category | Description | Token Savings |
 |-------|----------|-------------|---------------|
 | [changelog-manager](generic-claude-framework/skills/changelog-manager/README.md) | Utilities | Update project changelog with uncommitted changes, synchroni... | N/A |
-| [cli-modern-tools](generic-claude-framework/skills/cli-modern-tools/README.md) | Utilities | Auto-suggest modern CLI tool alternatives (bat, eza, fd, rip... | N/A |
 | [lark-agent](generic-claude-framework/skills/lark-agent/README.md) | Utilities | Create hierarchical Lark tasks from markdown test plans.  AC... | N/A |
 | [lark-agent-simple](generic-claude-framework/skills/lark-agent-simple/README.md) | Utilities | Token-efficient Lark task creation from markdown test files.... | N/A |
 | [log-analysis-tools](generic-claude-framework/skills/log-analysis-tools/README.md) | Utilities | Fast log file analysis with lnav, multi-framework support (L... | N/A |
@@ -60,7 +65,7 @@
 | Skill | Category | Language | Description |
 |-------|----------|----------|-------------|
 | [changelog-manager](generic-claude-framework/skills/changelog-manager/README.md) | Utilities | Unknown | Update project changelog with uncommitted changes, synchronize package versions,... |
-| [cli-modern-tools](generic-claude-framework/skills/cli-modern-tools/README.md) | Utilities | Unknown | Auto-suggest modern CLI tool alternatives (bat, eza, fd, ripgrep) for faster, mo... |
+| [cli-modern-tools](generic-claude-framework/skills/cli-modern-tools/README.md) | Utilities | Bash | Auto-suggest modern CLI tool alternatives (bat, eza, fd, ripgrep) for faster, mo... |
 | [lark-agent](generic-claude-framework/skills/lark-agent/README.md) | Utilities | Unknown | Create hierarchical Lark tasks from markdown test plans.  ACTIVATE THIS SKILL wh... |
 | [lark-agent-simple](generic-claude-framework/skills/lark-agent-simple/README.md) | Utilities | Unknown | Token-efficient Lark task creation from markdown test files. Uses 60-70% fewer t... |
 | [log-analysis-tools](generic-claude-framework/skills/log-analysis-tools/README.md) | Utilities | Unknown | Fast log file analysis with lnav, multi-framework support (Laravel, CodeIgniter,... |

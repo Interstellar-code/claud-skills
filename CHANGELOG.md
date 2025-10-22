@@ -7,6 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.7.0] - 2025-10-22
+
+### Added
+- **cli-modern-tools Skill v1.1.0** - Enhanced automatic CLI command replacement
+  - New `cli-wrapper.sh` script for automatic tool detection and fallback
+  - Auto-replaces traditional commands: `cat`→`bat`, `ls`→`eza`, `find`→`fd`, `tree`→`eza --tree`
+  - Smart fd binary detection (bypasses broken wrappers on Windows)
+  - 6 activation patterns with automatic replacement logic
+  - Commands: `view`, `list`, `find`, `tree`, `check`, `install`, `help`
+  - Cross-platform support (Windows/Scoop, Mac/Homebrew, Linux/APT)
+  - Graceful fallback to traditional tools when modern tools unavailable
+  - Improved skill.md with stronger auto-activation triggers and usage examples
+
+### Changed
+- **Documentation Generator Script Enhancement**
+  - Added selective update support: `--skill <name>`, `--agent <name>`, `--catalogs-only`
+  - Prevents unnecessary timestamp-only changes to unrelated documentation files
+  - Enables focused commits for single skill/agent updates
+  - Maintains catalog consistency with selective updates
+
+### Documentation
+- Updated SKILL_CATALOG.md with cli-modern-tools v1.1.0
+- Generated cli-modern-tools README.md with new wrapper script documentation
+- Updated DOCUMENTATION_SYSTEM.md with selective update examples
+
 ## [1.6.0] - 2025-10-21
 
 ### Changed

@@ -2,14 +2,14 @@
 
 > Auto-suggest modern CLI tool alternatives (bat, eza, fd, ripgrep) for faster, more efficient command-line operations with 50%+ speed improvements
 
-**Category**: Utilities | **Language**: Bash | **Version**: 1.1.0
+**Category**: Utilities | **Language**: Unknown | **Version**: 1.0.0
 
 ## Quick Info
 
 | Property | Value |
 |----------|-------|
-| **Language** | Bash |
-| **Token Savings** | 0% |
+| **Language** | Unknown |
+| **Token Savings** | None% |
 | **Category** | Utilities |
 | **Tags** | cli, productivity, performance, tools, bat, eza, fd, ripgrep, watchexec |
 
@@ -47,17 +47,6 @@ cp -r .claude/skills/cli-modern-tools /your-project/.claude/skills/
 ```
 
 ### Step 2: Install Dependencies
-
-**Bash Dependencies:**
-```bash
-# Ensure bash is available (usually pre-installed on Mac/Linux)
-bash --version
-
-# On Windows, use Git Bash or WSL
-
-# Make script executable:
-chmod +x .claude/skills/{skill.name}/*.sh
-```
 
 
 ### Step 3: Configure
@@ -126,6 +115,6 @@ DO NOT create test plans yourself - only process existing markdown files.
 
 ---
 
-**Last Updated**: 2025-10-22
+**Last Updated**: 2025-10-21
 **Maintainer**: Community
-**Status**: Bash Ready
+**Status**: Unknown Ready

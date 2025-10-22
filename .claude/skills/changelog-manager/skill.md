@@ -1,9 +1,9 @@
 ---
 name: changelog-manager
 description: Update project changelog with uncommitted changes, synchronize package versions, and create version releases with automatic commit, conditional git tags, and push
-version: 2.5.0
+version: 2.6.0
 author: Claude Code
-tags: [changelog, versioning, git, release-management, package-management, git-tags, conditional-tagging, readme-automation, docs-automation]
+tags: [changelog, versioning, git, release-management, package-management, git-tags, conditional-tagging, readme-automation, docs-automation, git-guard, auto-intercept]
 auto-activate: true
 ---
 
@@ -43,17 +43,83 @@ auto-activate: true
 - "Let's release this"
 - "Can you update the changelog?"
 
-**When activated, Claude will:**
+### 🛡️ **Git Command Interception (Automatic Guard)**
+
+**CRITICAL: This skill automatically intercepts git commands to prevent bypassing proper release workflow!**
+
+**Intercepts BEFORE executing:**
+- ANY `git commit` command (when release indicators detected)
+- ANY `git tag` command (always intercepts)
+- ANY `git push` command (when unpushed release-like commits exist)
+
+**Detection Logic:**
+When Claude attempts a git command, automatically check for release indicators:
+
+1. **Analyze Changes**:
+   ```bash
+   git diff --cached --name-only  # What's staged
+   git diff --name-only           # What's uncommitted
+   ```
+
+2. **Detect Release Indicators**:
+   - ✅ **3+ files changed** → Likely a release
+   - ✅ **skill.md or agent.md version changed** → Definitely a release
+   - ✅ **CHANGELOG.md modified** → Definitely a release
+   - ✅ **README.md badges changed** → Likely a release
+   - ✅ **package.json version changed** → Definitely a release
+
+3. **Extract Version Info** (if version file changed):
+   ```bash
+   # Old version vs new version
+   git diff skill.md | grep "version:"
+   # Example: -version: 2.4.0 / +version: 2.5.0
+   ```
+
+4. **Block Command & Ask User**:
+   ```
+   🛡️ GIT COMMAND INTERCEPTED
+
+   Detected: changelog-manager/skill.md
+   Version: 2.4.0 → 2.5.0
+
+   Changes:
+   - .claude/skills/changelog-manager/skill.md (version bump)
+   - generic-claude-framework/skills/changelog-manager/skill.md
+   - CHANGELOG.md (unreleased section)
+
+   ⚠️ This looks like a release!
+
+   Options:
+   1. Use changelog-manager for proper release workflow
+      ✅ Auto-generates CHANGELOG entry
+      ✅ Updates README badges
+      ✅ Runs documentation generation
+      ✅ Creates commit + tag + pushes everything
+
+   2. Proceed with manual git commit
+      ⚠️ Skips release automation
+
+   Which do you prefer? (say "use changelog-manager" or "proceed manually")
+   ```
+
+5. **Wait for User Decision**:
+   - If user says "use changelog-manager" → Full release workflow
+   - If user says "proceed manually" → Allow direct git command
+
+**This prevents accidentally bypassing changelog-manager, even when Claude works autonomously!**
+
+**When activated, changelog-manager will:**
 1. ✅ Analyze all uncommitted changes
 2. ✅ Generate changelog entries automatically
 3. ✅ Determine appropriate version bump (patch/minor/major)
 4. ✅ Update CHANGELOG.md, package.json, README.md badges
-5. ✅ Commit all changes with comprehensive message
-6. ✅ **Create annotated git tag with version number (MANDATORY)**
-7. ✅ **Push both commit AND tag to remote repository**
-8. ✅ Confirm successful release with GitHub URL
+5. ✅ Auto-generate documentation for changed agents/skills
+6. ✅ Commit all changes with comprehensive message
+7. ✅ **Create annotated git tag with version number (MANDATORY)**
+8. ✅ **Push both commit AND tag to remote repository**
+9. ✅ Confirm successful release with GitHub URL
 
-**No manual invocation needed!** Just mention any release-related intent.
+**No manual invocation needed!** Skill auto-activates on keywords OR git command attempts.
 
 ## ⚠️ CONDITIONAL REQUIREMENTS
 
@@ -691,6 +757,149 @@ Claude: [Automatically invokes changelog-manager skill]
 → Pushes to GitHub
 → Reports success
 ```
+
+## 🛡️ **GIT COMMAND GUARD (Anti-Bypass Protection)**
+
+**Purpose**: Prevent accidentally bypassing changelog-manager when using direct git commands.
+
+### How It Works
+
+**Before ANY git commit/tag/push command executes, this guard automatically:**
+
+1. **Scans for Release Indicators**:
+   ```bash
+   # Check staged changes
+   git diff --cached --name-only
+
+   # Look for these patterns
+   - 3+ files changed
+   - skill.md with version: X.Y.Z changed
+   - agent.md with version: X.Y.Z changed
+   - CHANGELOG.md modified
+   - README.md badges changed
+   - package.json version changed
+   ```
+
+2. **Extracts Version Information**:
+   ```bash
+   # If version file detected, show old vs new
+   git diff skill.md | grep -E "^[-+]version:"
+   # Example output:
+   # -version: 2.5.0
+   # +version: 2.6.0
+   ```
+
+3. **Blocks Command & Presents Options**:
+   ```
+   🛡️ GIT COMMAND INTERCEPTED
+
+   I detected you're about to commit changes that look like a release:
+
+   File: changelog-manager/skill.md
+   Version Change: 2.5.0 → 2.6.0
+
+   Files to be committed (5):
+   - .claude/skills/changelog-manager/skill.md (version bump detected)
+   - generic-claude-framework/skills/changelog-manager/skill.md
+   - CHANGELOG.md (unreleased changes)
+   - docs/SKILL_CATALOG.md
+   - README.md
+
+   ⚠️ RECOMMENDATION: Use changelog-manager for proper release workflow
+
+   Option 1: Use changelog-manager (Recommended)
+   ✅ Auto-generates CHANGELOG entry from git changes
+   ✅ Updates all version references (package.json, README badges)
+   ✅ Generates documentation for changed agents/skills
+   ✅ Creates semantic commit message
+   ✅ Creates annotated git tag v2.6.0
+   ✅ Pushes commit + tag to GitHub
+   ✅ Complete release in one command
+
+   Option 2: Proceed with manual commit (Not recommended)
+   ⚠️ You'll need to manually:
+      - Update CHANGELOG.md with entries
+      - Update version badges in README
+      - Run documentation generation
+      - Create git tag manually
+      - Push tag separately
+
+   What would you like to do?
+   - Say "use changelog-manager" for Option 1
+   - Say "proceed manually" for Option 2
+   ```
+
+4. **Waits for User Decision**:
+   - User says "use changelog-manager" → Invokes full release workflow
+   - User says "proceed manually" → Allows direct git command (with warning logged)
+
+### What Gets Intercepted
+
+**Always Intercepted:**
+- `git tag -a v...` → Always assumes this is a release
+- `git commit` when CHANGELOG.md is modified
+- `git commit` when skill.md/agent.md version changed
+- `git commit` when package.json version changed
+
+**Conditionally Intercepted:**
+- `git commit` with 3+ files → Asks user
+- `git commit` with README.md badges → Asks user
+- `git push` with unpushed commits that look like releases → Asks user
+
+**Never Intercepted:**
+- `git commit` with single file (typo fix, WIP)
+- `git commit` on feature branches (not main)
+- `git status`, `git diff`, `git log` (read-only operations)
+- `git push` with only documentation commits
+
+### Examples
+
+**Example 1: Version Bump Detected**
+```
+You: [working autonomously, Claude bumps skill version 2.5.0 → 2.6.0]
+Claude: [attempts git commit...]
+Guard: 🛡️ INTERCEPTED - Version change detected
+Guard: [Shows prompt with options]
+You: "use changelog-manager"
+Guard: ✅ Invoking changelog-manager...
+changelog-manager: [runs full release workflow]
+Result: Proper v2.6.0 release created
+```
+
+**Example 2: Multiple Files, No Version**
+```
+You: [changed 5 files across different features]
+Claude: [attempts git commit...]
+Guard: 🛡️ INTERCEPTED - 5 files changed
+Guard: "This looks like a release. Use changelog-manager?"
+You: "proceed manually" (it's just WIP work)
+Guard: ✅ Allowing manual commit
+Result: Manual commit proceeds
+```
+
+**Example 3: Single File Change**
+```
+You: [fixed typo in README]
+Claude: [attempts git commit...]
+Guard: [No interception - single trivial file]
+Result: Direct commit allowed (fast path)
+```
+
+### Benefits
+
+1. **Prevents Bypass**: Even when Claude works autonomously, can't skip proper release workflow
+2. **User Control**: Always asks before forcing changelog-manager
+3. **Smart Detection**: Knows the difference between releases and WIP commits
+4. **Educational**: Shows what proper release workflow would do
+5. **Safe Fallback**: User can always choose manual if needed
+
+### Configuration
+
+**No configuration needed!** The guard is always active and automatically detects release patterns.
+
+**To disable guard** (not recommended):
+- Add `--skip-guard` flag to git commands
+- Or explicitly say "I know this is a release but proceed manually anyway"
 
 ## Version History
 

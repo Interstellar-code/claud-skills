@@ -2,7 +2,7 @@
 
 > Update project changelog with uncommitted changes, synchronize package versions, and create version releases with automatic commit, conditional git tags, and push
 
-**Category**: Utilities | **Language**: Unknown | **Version**: 2.3.0
+**Category**: Utilities | **Language**: Unknown | **Version**: 2.6.0
 
 ## Quick Info
 
@@ -11,7 +11,7 @@
 | **Language** | Unknown |
 | **Token Savings** | None% |
 | **Category** | Utilities |
-| **Tags** | changelog, versioning, git, release-management, package-management, git-tags, conditional-tagging |
+| **Tags** | changelog, versioning, git, release-management, package-management, git-tags, conditional-tagging, readme-automation, docs-automation, git-guard, auto-intercept |
 
 ## Overview
 
@@ -115,6 +115,6 @@ DO NOT create test plans yourself - only process existing markdown files.
 
 ---
 
-**Last Updated**: 2025-10-21
+**Last Updated**: 2025-10-22
 **Maintainer**: Community
 **Status**: Unknown Ready

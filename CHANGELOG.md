@@ -7,15 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.0] - 2025-10-22
+
 ### Changed
-- **changelog-manager Skill v2.5.0** - Integrated documentation generation
-  - Auto-detects changed agent.md and skill.md files during releases
-  - Selectively regenerates README files for modified agents/skills only
-  - Always updates AGENT_CATALOG.md and SKILL_CATALOG.md with current counts
-  - Zero manual intervention - docs stay synchronized automatically
-  - Smart detection prevents unnecessary regeneration
+- **changelog-manager Skill v2.6.0** - Git Command Guard (Anti-Bypass Protection)
+  - **🛡️ NEW**: Automatically intercepts git commit/tag/push commands
+  - Detects release indicators BEFORE command execution (version changes, multiple files, CHANGELOG edits)
+  - Blocks command and asks user: "Use changelog-manager or proceed manually?"
+  - Prevents accidentally bypassing proper release workflow
+  - Works even when Claude operates autonomously
+  - Smart detection: Only intercepts release-like commits, allows WIP/typo fixes
   - **v2.4.0**: Added README badge automation and latest release section
   - **v2.5.0**: Added automatic documentation generation integration
+  - **v2.6.0**: Added git command interception guard
 
 ## [1.7.0] - 2025-10-22
 
@@ -254,7 +258,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - N/A (Initial release)
 
-[Unreleased]: https://github.com/Interstellar-code/claud-skills/compare/v1.4.0...HEAD
+[Unreleased]: https://github.com/Interstellar-code/claud-skills/compare/v1.8.0...HEAD
+[1.8.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.7.0...v1.8.0
+[1.7.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.6.0...v1.7.0
+[1.6.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.5.0...v1.6.0
+[1.5.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.4.0...v1.5.0
 [1.4.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.3.0...v1.4.0
 [1.3.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.2.0...v1.3.0
 [1.2.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.1.0...v1.2.0

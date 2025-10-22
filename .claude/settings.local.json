@@ -1,7 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "WebSearch"
+      "WebSearch",
+      "Bash(git commit:*)",
+      "Bash(git add:*)",
+      "Bash(git log:*)",
+      "Bash(git push:*)",
+      "Bash(findstr:*)",
+      "Skill(changelog-manager)",
+      "Bash(python scripts/generate_docs.py:*)"
     ],
     "deny": [],
     "ask": []

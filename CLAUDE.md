@@ -167,11 +167,21 @@ claud-skills/
 ### Release Management
 **🔴 CRITICAL**: All releases MUST use the changelog-manager skill
 
+**🛡️ GIT COMMAND GUARD (Built-in Protection)**:
+The changelog-manager skill v2.6.0 includes automatic git command interception!
+
+**How it works:**
+- Automatically intercepts git commit/tag/push commands BEFORE execution
+- Scans for release indicators (version changes, multiple files, CHANGELOG edits)
+- Blocks command and presents options to user
+- Prevents bypassing proper release workflow
+
 **⚠️ ENFORCEMENT RULE FOR CLAUDE**:
 Before running ANY git commit command, Claude MUST:
 1. **Check**: Are there multiple files changed OR skill/agent enhancements?
-2. **Ask User**: "These changes look like a release. Should I use changelog-manager to create a proper release?"
-3. **Wait for confirmation** before proceeding
+2. **Trigger**: changelog-manager git guard will auto-intercept
+3. **Ask User**: "These changes look like a release. Should I use changelog-manager to create a proper release?"
+4. **Wait for confirmation** before proceeding
 
 **NEVER bypass changelog-manager for**:
 - Multiple feature files changed

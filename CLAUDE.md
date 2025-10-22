@@ -162,6 +162,46 @@ claud-skills/
 - **Security conscious** - no hardcoded credentials
 - **Community driven** - contributions welcome
 
+## Git Workflow for This Project
+
+### Release Management
+**🔴 CRITICAL**: All releases MUST use the changelog-manager skill
+
+**Auto-Activation Triggers**:
+- User mentions: "release", "create release", "bump version", "prepare release"
+- User mentions: "update changelog", "ready to release", "tag version"
+- User requests git commit + tag + CHANGELOG updates together
+
+**When changelog-manager Handles Release**:
+1. Analyzes uncommitted changes
+2. Generates CHANGELOG.md entries
+3. Determines semantic version bump (patch/minor/major)
+4. Updates version in package.json, README.md badges
+5. Creates comprehensive commit message
+6. Creates annotated git tag (this is a public repo)
+7. Pushes commit + tag to remote
+
+**Direct Git Commands - When to Use**:
+- ✅ WIP commits on feature branches
+- ✅ Documentation updates (non-release)
+- ✅ Quick fixes, typos
+- ✅ Experimental commits
+
+**Direct Git Commands - NEVER for Releases**:
+- ❌ Manual `git commit` for version releases
+- ❌ Manual `git tag -a v...` for versions
+- ❌ Manual CHANGELOG.md updates for releases
+- ❌ Manual version bumps in package files
+
+**Example Workflow**:
+```
+User: "Prepare release v1.8.0"
+✅ changelog-manager auto-activates → handles everything
+
+User: "Quick doc fix in README"
+✅ Direct git commit -m "docs: fix typo" is fine
+```
+
 ## Contributing
 
 When adding new agents or improving existing ones:
@@ -170,3 +210,4 @@ When adding new agents or improving existing ones:
 3. Update `docs/AGENT_CATALOG.md` with new agents
 4. Update this file for architectural changes
 5. Maintain backward compatibility where possible
+6. **For releases**: Use changelog-manager skill (never manual git commands)

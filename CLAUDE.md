@@ -167,9 +167,24 @@ claud-skills/
 ### Release Management
 **🔴 CRITICAL**: All releases MUST use the changelog-manager skill
 
+**⚠️ ENFORCEMENT RULE FOR CLAUDE**:
+Before running ANY git commit command, Claude MUST:
+1. **Check**: Are there multiple files changed OR skill/agent enhancements?
+2. **Ask User**: "These changes look like a release. Should I use changelog-manager to create a proper release?"
+3. **Wait for confirmation** before proceeding
+
+**NEVER bypass changelog-manager for**:
+- Multiple feature files changed
+- Skill version updates (e.g., v2.4.0 → v2.5.0)
+- Agent enhancements
+- CHANGELOG.md modifications
+- README.md badge updates
+- Any change that affects project version
+
 **Auto-Activation Triggers**:
 - User mentions: "release", "create release", "bump version", "prepare release"
 - User mentions: "update changelog", "ready to release", "tag version"
+- User mentions: "push to GitHub", "push commits" (after feature work)
 - User requests git commit + tag + CHANGELOG updates together
 
 **When changelog-manager Handles Release**:
@@ -177,29 +192,50 @@ claud-skills/
 2. Generates CHANGELOG.md entries
 3. Determines semantic version bump (patch/minor/major)
 4. Updates version in package.json, README.md badges
-5. Creates comprehensive commit message
-6. Creates annotated git tag (this is a public repo)
-7. Pushes commit + tag to remote
+5. Auto-generates documentation for changed agents/skills
+6. Creates comprehensive commit message
+7. Creates annotated git tag (this is a public repo)
+8. Pushes commit + tag to remote
 
 **Direct Git Commands - When to Use**:
-- ✅ WIP commits on feature branches
-- ✅ Documentation updates (non-release)
-- ✅ Quick fixes, typos
-- ✅ Experimental commits
+- ✅ WIP commits on feature branches (single file, work in progress)
+- ✅ Typo fixes (one-line changes)
+- ✅ Experimental commits (clearly marked as WIP)
+- ✅ After confirming with user: "This is NOT a release"
 
 **Direct Git Commands - NEVER for Releases**:
 - ❌ Manual `git commit` for version releases
 - ❌ Manual `git tag -a v...` for versions
 - ❌ Manual CHANGELOG.md updates for releases
 - ❌ Manual version bumps in package files
+- ❌ Multiple feature files committed without changelog-manager
 
-**Example Workflow**:
+**Correct Workflow Examples**:
 ```
-User: "Prepare release v1.8.0"
+Scenario 1: User asks to push to GitHub after feature work
+❌ WRONG: git push origin main (bypasses changelog-manager)
+✅ RIGHT: "I see you have feature changes. Should I create a release with changelog-manager?"
+
+Scenario 2: User says "prepare release v1.8.0"
 ✅ changelog-manager auto-activates → handles everything
 
-User: "Quick doc fix in README"
-✅ Direct git commit -m "docs: fix typo" is fine
+Scenario 3: User says "fix typo in README"
+✅ Quick direct commit is fine (single trivial change)
+
+Scenario 4: Enhanced a skill (e.g., changelog-manager v2.4.0 → v2.5.0)
+❌ WRONG: Direct commit with manual version update
+✅ RIGHT: "This is a skill enhancement. Should I prepare a release?"
+```
+
+**Detection Pattern for Claude**:
+```
+if (git diff shows multiple files OR skill.md version change OR CHANGELOG.md change):
+    ASK: "Should I use changelog-manager for this release?"
+    WAIT for user response
+    if user says yes:
+        Use Skill tool to invoke changelog-manager
+    else:
+        Proceed with manual commit (user confirmed)
 ```
 
 ## Contributing

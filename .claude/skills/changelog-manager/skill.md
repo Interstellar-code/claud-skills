@@ -1,9 +1,9 @@
 ---
 name: changelog-manager
 description: Update project changelog with uncommitted changes, synchronize package versions, and create version releases with automatic commit, conditional git tags, GitHub Releases, and push
-version: 2.7.0
+version: 2.8.0
 author: Claude Code
-tags: [changelog, versioning, git, release-management, package-management, git-tags, conditional-tagging, readme-automation, docs-automation, git-guard, auto-intercept, github-releases]
+tags: [changelog, versioning, git, release-management, package-management, git-tags, conditional-tagging, readme-automation, docs-automation, git-guard, auto-intercept, github-releases, explicit-workflow, verification-checklist]
 auto-activate: true
 ---
 
@@ -629,14 +629,27 @@ Result: All documentation automatically synchronized!
 
 ## 🎬 **COMPLETE AUTOMATED WORKFLOW**
 
+**⚠️ CRITICAL: Follow EVERY step below. NO steps can be skipped!**
+
 **When user says: "update changelog" or "prepare release"**
 
-### Step 1: Analyze Changes
-- Run `git status` to find uncommitted changes
-- Run `git diff` to understand code changes
-- Run `git log --oneline -5` to see recent commit patterns
+---
 
-### Step 2: Intelligent Version Bump Detection
+### ✅ STEP 1: Analyze Changes
+
+**MUST RUN ALL THREE COMMANDS:**
+
+1. Run `git status` to find uncommitted changes
+2. Run `git diff --stat` to see file change summary
+3. Run `git log --oneline -5` to see recent commit patterns
+
+**Output to user:** Summarize what files changed (X files modified, Y additions, Z deletions)
+
+---
+
+### ✅ STEP 2: Determine Version Bump
+
+**MUST analyze changes and decide version bump type:**
 
 **Automatic Detection Rules:**
 - **MAJOR bump** (X.0.0) if:
@@ -657,7 +670,17 @@ Result: All documentation automatically synchronized!
   - CHANGELOG mentions "Fixed" or "Bug Fix"
   - **DEFAULT if unclear**
 
-### Step 3: Generate Changelog Entry
+**Read current version from CHANGELOG.md** (top version number)
+
+**Calculate new version** (e.g., 1.9.0 → 1.10.0 for MINOR)
+
+**Output to user:** "Current version: X.Y.Z → New version: X.Y.Z (MINOR release)"
+
+---
+
+### ✅ STEP 3: Generate Changelog Entry
+
+**MUST create comprehensive changelog entry:**
 
 **Structure:**
 ```markdown
@@ -672,8 +695,8 @@ Result: All documentation automatically synchronized!
 ### Fixed
 - [Bug fixes based on git diff analysis]
 
-### Improved
-- [Performance/UX improvements]
+### Documentation
+- [Documentation updates]
 ```
 
 **Content Analysis:**
@@ -681,23 +704,70 @@ Result: All documentation automatically synchronized!
 - Identify new files → "Added" section
 - Identify modified files → "Changed" section
 - Look for "fix" in commit messages → "Fixed" section
-- Look for "improve" → "Improved" section
+- Look for documentation changes → "Documentation" section
 
-### Step 4: Update All Version Files
+**Output to user:** Show draft changelog entry for review
 
-**Files to Update (in order):**
-1. `CHANGELOG.md` - Add new version entry
-2. `package.json` - Update "version" field
-3. `README.md` - Update version badge
-4. `composer.json` - Update "version" field (if exists)
+---
 
-**Version Link Updates (CHANGELOG.md bottom):**
-```markdown
-[Unreleased]: https://github.com/USER/REPO/compare/vX.X.X...HEAD
-[X.X.X]: https://github.com/USER/REPO/compare/vX.Y.Z...vX.X.X
+### ✅ STEP 4: Update All Version Files
+
+**MUST update ALL version files (no exceptions):**
+
+**4.1 Update CHANGELOG.md:**
+- Add new version entry at top (after [Unreleased])
+- Update version links at bottom:
+  ```markdown
+  [Unreleased]: https://github.com/USER/REPO/compare/vX.X.X...HEAD
+  [X.X.X]: https://github.com/USER/REPO/compare/vX.Y.Z...vX.X.X
+  ```
+
+**4.2 Update package.json:**
+- Change "version" field to new version
+
+**4.3 Update README.md:**
+- Update version badge: `[![Version](https://img.shields.io/badge/version-X.X.X-orange)](CHANGELOG.md)`
+
+**4.4 Update composer.json (if exists):**
+- Check if file exists with `test -f composer.json`
+- If exists, update "version" field
+
+**Output to user:** "Updated 3-4 version files: CHANGELOG.md, package.json, README.md [, composer.json]"
+
+---
+
+### ✅ STEP 5: Generate Documentation (CRITICAL - DO NOT SKIP!)
+
+**⚠️ MANDATORY STEP - This step was previously missed!**
+
+**MUST run documentation generation script:**
+
+```bash
+python scripts/generate_docs.py
 ```
 
-### Step 5: Detect Project Type & Decide on Git Tags
+**This script:**
+- Regenerates all agent READMEs
+- Regenerates all skill READMEs
+- Updates AGENT_CATALOG.md
+- Updates SKILL_CATALOG.md
+
+**Check if documentation was generated:**
+```bash
+git status --short | grep -E "(README.md|CATALOG.md)"
+```
+
+**Expected output:** 20-30 documentation files updated
+
+**Output to user:** "Generated documentation: X agent READMEs, Y skill READMEs, 2 catalogs updated"
+
+**If script fails:** Report error and ask user how to proceed
+
+---
+
+### ✅ STEP 6: Detect Project Type & Git Tag Decision
+
+**MUST determine if git tags should be created:**
 
 **Auto-Detection Process:**
 ```bash
@@ -720,47 +790,221 @@ fi
 "This project appears to be [public/private]. Should I create git tags for this release? (Y/n)"
 ```
 
-### Step 6: Git Commit & Conditional Release
+**Output to user:** "Project type: [public/private] → Git tags: [enabled/disabled]"
 
-**Single Atomic Commit:**
+---
+
+### ✅ STEP 7: Stage ALL Changes
+
+**MUST stage ALL modified files:**
+
 ```bash
-# Stage all version-related files
-git add CHANGELOG.md package.json README.md composer.json
+git add -A
+```
 
-# Commit with detailed message
-git commit -m "Release vX.X.X - [Summary]
+**This includes:**
+- CHANGELOG.md
+- package.json
+- README.md
+- composer.json (if exists)
+- All generated documentation files (agent READMEs, skill READMEs, catalogs)
+- Any other modified files from the original changes
+
+**Verify staging:**
+```bash
+git status --short
+```
+
+**Output to user:** "Staged X files for commit"
+
+---
+
+### ✅ STEP 8: Create Release Commit
+
+**MUST create comprehensive commit message:**
+
+```bash
+git commit -m "$(cat <<'EOF'
+Release vX.X.X - [Brief Summary]
 
 ## Version X.X.X
 
-Updated CHANGELOG.md, package.json, and README.md to reflect version X.X.X.
+Updated CHANGELOG.md, package.json, README.md, and auto-generated documentation to reflect version X.X.X.
 
 ### Highlights
 [Top 3 changes from changelog]
 
+### Files Updated
+- CHANGELOG.md (added vX.X.X entry)
+- package.json (X.Y.Z → X.X.X)
+- README.md (version badge updated)
+- Documentation: X agent READMEs, Y skill READMEs, 2 catalogs
+
 🤖 Generated with [Claude Code](https://claude.com/claude-code)
 
-Co-Authored-By: Claude <noreply@anthropic.com>"
+Co-Authored-By: Claude <noreply@anthropic.com>
+EOF
+)"
 ```
 
-**Conditional Git Tag & GitHub Release (Public Projects Only):**
+**Verify commit:**
 ```bash
-# IF project is public/open-source
-if [[ "$USE_TAGS" == true ]]; then
-    # Create annotated tag
-    git tag -a vX.X.X -m "Release vX.X.X - [Summary]"
-
-    # Push both commit and tag
-    git push origin main && git push origin vX.X.X
-
-    # Create GitHub Release with release notes from CHANGELOG
-    gh release create vX.X.X \
-      --title "Release vX.X.X - [Summary]" \
-      --notes "[Extract content from CHANGELOG.md for this version]"
-else
-    # Private project - only push commit
-    git push origin main
-fi
+git log -1 --oneline
 ```
+
+**Output to user:** "Created commit: [commit hash] Release vX.X.X"
+
+---
+
+### ✅ STEP 9: Create Git Tag (if enabled)
+
+**IF git tags enabled (public project):**
+
+```bash
+git tag -a vX.X.X -m "Release vX.X.X - [Brief Summary]"
+```
+
+**Verify tag:**
+```bash
+git tag -l vX.X.X
+```
+
+**Output to user:** "Created tag: vX.X.X"
+
+**IF git tags disabled (private project):**
+- Skip this step
+- Output to user: "Skipping git tag (private project)"
+
+---
+
+### ✅ STEP 10: Push to Remote
+
+**MUST push commit and tag (if enabled):**
+
+**IF git tags enabled:**
+```bash
+git push origin main && git push origin vX.X.X
+```
+
+**IF git tags disabled:**
+```bash
+git push origin main
+```
+
+**Output to user:** "Pushed to origin/main [+ tag vX.X.X]"
+
+---
+
+### ✅ STEP 11: Verify & Report
+
+**MUST verify all steps completed:**
+
+```bash
+git status  # Should show "working tree clean"
+```
+
+**Output comprehensive summary:**
+
+**Success Message (Public Project with Tags):**
+```
+✅ Release vX.X.X Complete!
+
+📋 Updated Files:
+- CHANGELOG.md (added vX.X.X entry)
+- package.json (X.Y.Z → X.X.X)
+- README.md (version badge updated)
+- Documentation: X agent READMEs, Y skill READMEs, 2 catalogs
+
+🏷️  Git Tag: vX.X.X created
+🚀 Pushed to: origin/main
+
+🔗 View Release:
+https://github.com/USER/REPO/releases/tag/vX.X.X
+
+📝 Summary:
+- Added: [Count] new features
+- Changed: [Count] improvements
+- Fixed: [Count] bug fixes
+```
+
+**Success Message (Private Project without Tags):**
+```
+✅ Release vX.X.X Complete!
+
+📋 Updated Files:
+- CHANGELOG.md (added vX.X.X entry)
+- package.json (X.Y.Z → X.X.X)
+- README.md (version badge updated)
+- Documentation: X agent READMEs, Y skill READMEs, 2 catalogs
+
+🚀 Pushed to: origin/main
+
+📝 Summary:
+- Added: [Count] new features
+- Changed: [Count] improvements
+- Fixed: [Count] bug fixes
+
+💡 Note: Git tags skipped (private project)
+```
+
+---
+
+## 🔍 **VERIFICATION CHECKLIST**
+
+**⚠️ CRITICAL: Before reporting success, Claude MUST verify ALL items below:**
+
+### Pre-Commit Verification
+- [ ] ✅ Ran `git status` and analyzed uncommitted changes
+- [ ] ✅ Ran `git diff --stat` and reviewed changes
+- [ ] ✅ Determined correct version bump (MAJOR/MINOR/PATCH)
+- [ ] ✅ Read current version from CHANGELOG.md
+- [ ] ✅ Calculated new version number correctly
+- [ ] ✅ Generated comprehensive changelog entry
+- [ ] ✅ Updated CHANGELOG.md with new version entry
+- [ ] ✅ Updated CHANGELOG.md version links at bottom
+- [ ] ✅ Updated package.json version field
+- [ ] ✅ Updated README.md version badge
+- [ ] ✅ Checked for composer.json and updated if exists
+- [ ] ✅ **Ran `python scripts/generate_docs.py`** (MANDATORY!)
+- [ ] ✅ Verified documentation files were generated (git status)
+- [ ] ✅ Staged ALL files with `git add -A`
+- [ ] ✅ Verified staging with `git status --short`
+
+### Commit Verification
+- [ ] ✅ Created commit with comprehensive message
+- [ ] ✅ Commit message includes version number
+- [ ] ✅ Commit message includes highlights
+- [ ] ✅ Commit message includes documentation update count
+- [ ] ✅ Verified commit with `git log -1 --oneline`
+
+### Tag & Push Verification
+- [ ] ✅ Determined if project is public/private
+- [ ] ✅ Created git tag (if public) OR skipped tag (if private)
+- [ ] ✅ Pushed commit to origin/main
+- [ ] ✅ Pushed tag to origin (if public)
+- [ ] ✅ Verified with `git status` (working tree clean)
+
+### Final Verification
+- [ ] ✅ All version numbers match across all files
+- [ ] ✅ Documentation was generated and committed
+- [ ] ✅ Commit includes ALL changes (original + version files + docs)
+- [ ] ✅ Remote repository updated successfully
+- [ ] ✅ Reported comprehensive summary to user
+
+**If ANY checkbox is unchecked, the release is INCOMPLETE!**
+
+---
+
+### ❌ Common Mistakes to Avoid
+
+1. **Skipping documentation generation** - ALWAYS run `python scripts/generate_docs.py`
+2. **Forgetting to stage documentation** - Use `git add -A` to stage everything
+3. **Not verifying staging** - Always check `git status --short` before commit
+4. **Incomplete commit message** - Must mention documentation updates
+5. **Not checking working tree** - Verify `git status` shows clean after push
+6. **Skipping verification checklist** - ALWAYS go through all checkboxes
+
+---
 
 ### Step 7: Confirm & Report
 

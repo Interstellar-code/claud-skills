@@ -1,0 +1,9 @@
+# Ignore all state files - these are runtime data
+*
+!.gitignore
+!README.md
+!archive/
+
+# Archive directory structure is kept but contents are ignored
+archive/*
+!archive/.gitkeep

@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SubsHero - Manage all your subscriptions in one place. Track spending, get cancellation reminders, and take control of your recurring payments.">
+    <meta name="keywords" content="subscription management, subscription tracker, recurring payments, cost analytics">
+    <meta name="author" content="SubsHero">
+
+    <!-- Open Graph Tags -->
+    <meta property="og:title" content="SubsHero - Subscription Management Made Simple">
+    <meta property="og:description" content="Manage all your subscriptions in one place. Track spending, get cancellation reminders, and take control of your recurring payments.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://subshero.com">
+    <meta property="og:image" content="https://subshero.com/og-image.jpg">
+
+    <!-- Twitter Card Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="SubsHero - Subscription Management Made Simple">
+    <meta name="twitter:description" content="Manage all your subscriptions in one place.">
+    <meta name="twitter:image" content="https://subshero.com/twitter-image.jpg">
+
+    <title>SubsHero - Manage All Your Subscriptions | Matrix Edition</title>
+    <link rel="stylesheet" href="style-matrix.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>💰</text></svg>">
+</head>
+<body>
+    <!-- Matrix falling code background -->
+    <canvas id="matrix-bg" aria-hidden="true"></canvas>
+
+    <!-- Navigation -->
+    <nav class="nav" role="navigation" aria-label="Main navigation">
+        <div class="nav__container">
+            <div class="nav__brand">
+                <span class="nav__logo" aria-label="SubsHero Logo">$</span>
+                <span class="nav__name glitch" data-text="SubsHero">SubsHero</span>
+            </div>
+            <ul class="nav__menu">
+                <li><a href="#features" class="nav__link">Features</a></li>
+                <li><a href="#pricing" class="nav__link">Pricing</a></li>
+                <li><a href="#testimonials" class="nav__link">Testimonials</a></li>
+                <li><a href="#cta" class="nav__link nav__link--cta">Start Free</a></li>
+            </ul>
+            <button class="nav__toggle" aria-label="Toggle navigation menu" aria-expanded="false">
+                <span class="nav__toggle-line"></span>
+                <span class="nav__toggle-line"></span>
+                <span class="nav__toggle-line"></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero__container">
+            <div class="hero__content">
+                <h1 class="hero__title glitch" data-text="MANAGE ALL YOUR SUBSCRIPTIONS">
+                    MANAGE ALL YOUR SUBSCRIPTIONS
+                </h1>
+                <p class="hero__subtitle">
+                    > IN ONE PLACE_
+                </p>
+                <p class="hero__description">
+                    Track. Analyze. Control. Your subscription empire awaits.
+                </p>
+                <div class="hero__cta-group">
+                    <a href="#cta" class="btn btn--primary">
+                        <span class="btn__text">[ START FREE TRIAL ]</span>
+                        <span class="btn__glow"></span>
+                    </a>
+                    <a href="#features" class="btn btn--secondary">
+                        <span class="btn__text">[ LEARN MORE ]</span>
+                    </a>
+                </div>
+            </div>
+            <div class="hero__visual">
+                <div class="terminal">
+                    <div class="terminal__header">
+                        <span class="terminal__dot terminal__dot--red"></span>
+                        <span class="terminal__dot terminal__dot--yellow"></span>
+                        <span class="terminal__dot terminal__dot--green"></span>
+                        <span class="terminal__title">subshero.exe</span>
+                    </div>
+                    <div class="terminal__body">
+                        <div class="terminal__line">
+                            <span class="terminal__prompt">$</span>
+                            <span class="terminal__text typed-text"></span>
+                            <span class="terminal__cursor">_</span>
+                        </div>
+                        <div class="terminal__output">
+                            <p class="terminal__result">> Analyzing subscriptions...</p>
+                            <p class="terminal__result success">> Found 12 active subscriptions</p>
+                            <p class="terminal__result">> Monthly cost: $147.89</p>
+                            <p class="terminal__result warning">> 3 renewals this week</p>
+                            <p class="terminal__result success">> System ready.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="features__container">
+            <header class="section-header">
+                <h2 class="section-header__title glitch" data-text="SYSTEM FEATURES">
+                    <span class="section-header__bracket">[</span>
+                    SYSTEM FEATURES
+                    <span class="section-header__bracket">]</span>
+                </h2>
+                <p class="section-header__subtitle">> Access powerful subscription management protocols</p>
+            </header>
+
+            <div class="features__grid">
+                <!-- Feature 1 -->
+                <article class="feature-card">
+                    <div class="feature-card__icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="3" width="7" height="7"></rect>
+                            <rect x="14" y="14" width="7" height="7"></rect>
+                            <rect x="3" y="14" width="7" height="7"></rect>
+                        </svg>
+                    </div>
+                    <h3 class="feature-card__title">Subscription Tracking</h3>
+                    <p class="feature-card__description">
+                        Monitor all your subscriptions in a unified dashboard. Real-time updates, instant notifications.
+                    </p>
+                    <div class="feature-card__border"></div>
+                </article>
+
+                <!-- Feature 2 -->
+                <article class="feature-card">
+                    <div class="feature-card__icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="12" y1="1" x2="12" y2="23"></line>
+                            <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                        </svg>
+                    </div>
+                    <h3 class="feature-card__title">Cost Analytics</h3>
+                    <p class="feature-card__description">
+                        Deep dive into spending patterns. Visualize costs, identify savings, optimize your budget.
+                    </p>
+                    <div class="feature-card__border"></div>
+                </article>
+
+                <!-- Feature 3 -->
+                <article class="feature-card">
+                    <div class="feature-card__icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <polyline points="12 6 12 12 16 14"></polyline>
+                        </svg>
+                    </div>
+                    <h3 class="feature-card__title">Cancellation Reminders</h3>
+                    <p class="feature-card__description">
+                        Never miss a renewal. Smart alerts before each billing cycle. Stay in control.
+                    </p>
+                    <div class="feature-card__border"></div>
+                </article>
+
+                <!-- Feature 4 -->
+                <article class="feature-card">
+                    <div class="feature-card__icon">
+                        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                            <polyline points="17 6 23 6 23 12"></polyline>
+                        </svg>
+                    </div>
+                    <h3 class="feature-card__title">Spending Insights</h3>
+                    <p class="feature-card__description">
+                        AI-powered recommendations. Discover unused subscriptions. Maximize value, minimize waste.
+                    </p>
+                    <div class="feature-card__border"></div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <div class="pricing__container">
+            <header class="section-header">
+                <h2 class="section-header__title glitch" data-text="ACCESS TIERS">
+                    <span class="section-header__bracket">[</span>
+                    ACCESS TIERS
+                    <span class="section-header__bracket">]</span>
+                </h2>
+                <p class="section-header__subtitle">> Choose your subscription management protocol</p>
+            </header>
+
+            <div class="pricing__grid">
+                <!-- Free Tier -->
+                <article class="pricing-card">
+                    <div class="pricing-card__header">
+                        <h3 class="pricing-card__name">FREE</h3>
+                        <div class="pricing-card__price">
+                            <span class="pricing-card__amount">$0</span>
+                            <span class="pricing-card__period">/month</span>
+                        </div>
+                        <p class="pricing-card__description">Basic access protocol</p>
+                    </div>
+                    <ul class="pricing-card__features">
+                        <li class="pricing-card__feature">
+                            <span class="pricing-card__feature-icon">✓</span>
+                            <span>Track up to 5 subscriptions</span>
+                        </li>
+                        <li class="pricing-card__feature">
+                            <span class="pricing-card__feature-icon">✓</span>
+                            <span>Basic cost analytics</span>
+                        </li>
+                        <li class="pricing-card__feature">
+                            <span class="pricing-card__feature-icon">✓</span>
+                            <span>Email notifications</span>
+                        </li>
+                        <li class="pricing-card__feature pricing-card__feature--disabled">
+                            <span class="pricing-card__feature-icon">✗</span>
+                            <span>Advanced insights</span>
+                        </li>
+                        <li class="pricing-card__feature pricing-card__feature--disabled">
+                            <span class="pricing-card__feature-icon">✗</span>
+                            <span>Priority support</span>
+                        </li>
+                    </ul>
+                    <a href="#cta" class="pricing-card__cta btn btn--outline">
+                        <span class="btn__text">[ INITIALIZE ]</span>
+                    </a>
+                    <div class="pricing-card__border"></div>
+                </article>
+
+                <!-- Pro Tier -->
+                <article class="pricing-card pricing-card--featured">
+                    <div class="pricing-card__badge">RECOMMENDED</div>
+                    <div class="pricing-card__header">
+                        <h3 class="pricing-card__name">PRO</h3>
+                        <div class="pricing-card__price">
+                            <span class="pricing-card__amount">$9.99</span>
+                            <span class="pricing-card__period">/month</span>
+                        </div>
+                        <p class="pricing-card__description">Advanced protocol suite</p>
+                    </div>
+                    <ul class="pricing-card__features">
+                        <li class="pricing-card__feature">
+                            <span class="pricing-card__feature-icon">✓</span>
+                            <span>Unlimited subscriptions</span>
+                        </li>
+                        <li class="pricing-card__feature">
+                            <span class="pricing-card__feature-icon">✓</span>
+                            <span>Advanced analytics dashboard</span>
+                        </li>
+                        <li class="pricing-card__feature">
+                            <span class="pricing-card__feature-icon">✓</span>
+                            <span>Smart cancellation reminders</span>
+                        </li>
+                        <li class="pricing-card__feature">
+                            <span class="pricing-card__feature-icon">✓</span>
+                            <span>AI-powered insights</span>
+                        </li>
+                        <li class="pricing-card__feature">
+                            <span class="pricing-card__feature-icon">✓</span>
+                            <span>Priority email support</span>
+                        </li>
+                    </ul>
+                    <a href="#cta" class="pricing-card__cta btn btn--primary">
+                        <span class="btn__text">[ ACTIVATE PRO ]</span>
+                        <span class="btn__glow"></span>
+                    </a>
+                    <div class="pricing-card__border"></div>
+                </article>
+
+                <!-- Team Tier -->
+                <article class="pricing-card">
+                    <div class="pricing-card__header">
+                        <h3 class="pricing-card__name">TEAM</h3>
+                        <div class="pricing-card__price">
+                            <span class="pricing-card__amount">$24.99</span>
+                            <span class="pricing-card__period">/month</span>
+                        </div>
+                        <p class="pricing-card__description">Enterprise-grade protocol</p>
+                    </div>
+                    <ul class="pricing-card__features">
+                        <li class="pricing-card__feature">
+                            <span class="pricing-card__feature-icon">✓</span>
+                            <span>All Pro features</span>
+                        </li>
+                        <li class="pricing-card__feature">
+                            <span class="pricing-card__feature-icon">✓</span>
+                            <span>Up to 10 team members</span>
+                        </li>
+                        <li class="pricing-card__feature">
+                            <span class="pricing-card__feature-icon">✓</span>
+                            <span>Shared subscription pools</span>
+                        </li>
+                        <li class="pricing-card__feature">
+                            <span class="pricing-card__feature-icon">✓</span>
+                            <span>Team spending reports</span>
+                        </li>
+                        <li class="pricing-card__feature">
+                            <span class="pricing-card__feature-icon">✓</span>
+                            <span>24/7 priority support</span>
+                        </li>
+                    </ul>
+                    <a href="#cta" class="pricing-card__cta btn btn--outline">
+                        <span class="btn__text">[ DEPLOY TEAM ]</span>
+                    </a>
+                    <div class="pricing-card__border"></div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials" id="testimonials">
+        <div class="testimonials__container">
+            <header class="section-header">
+                <h2 class="section-header__title glitch" data-text="USER FEEDBACK">
+                    <span class="section-header__bracket">[</span>
+                    USER FEEDBACK
+                    <span class="section-header__bracket">]</span>
+                </h2>
+                <p class="section-header__subtitle">> Transmission logs from verified users</p>
+            </header>
+
+            <div class="testimonials__grid">
+                <!-- Testimonial 1 -->
+                <article class="testimonial-card">
+                    <div class="testimonial-card__header">
+                        <div class="testimonial-card__avatar">
+                            <span class="testimonial-card__avatar-text">SK</span>
+                        </div>
+                        <div class="testimonial-card__meta">
+                            <h3 class="testimonial-card__name">Sarah K.</h3>
+                            <p class="testimonial-card__role">Software Engineer</p>
+                        </div>
+                    </div>
+                    <blockquote class="testimonial-card__quote">
+                        "SubsHero saved me over $200/month by revealing subscriptions I'd forgotten about. The interface is clean, fast, and the alerts are perfectly timed. Best investment this year."
+                    </blockquote>
+                    <div class="testimonial-card__rating">
+                        <span class="testimonial-card__star">★</span>
+                        <span class="testimonial-card__star">★</span>
+                        <span class="testimonial-card__star">★</span>
+                        <span class="testimonial-card__star">★</span>
+                        <span class="testimonial-card__star">★</span>
+                    </div>
+                    <div class="testimonial-card__border"></div>
+                </article>
+
+                <!-- Testimonial 2 -->
+                <article class="testimonial-card">
+                    <div class="testimonial-card__header">
+                        <div class="testimonial-card__avatar">
+                            <span class="testimonial-card__avatar-text">MC</span>
+                        </div>
+                        <div class="testimonial-card__meta">
+                            <h3 class="testimonial-card__name">Marcus C.</h3>
+                            <p class="testimonial-card__role">Product Manager</p>
+                        </div>
+                    </div>
+                    <blockquote class="testimonial-card__quote">
+                        "Finally, a subscription tracker that actually works. The analytics are insightful, and the team features make managing company subscriptions effortless. Highly recommended."
+                    </blockquote>
+                    <div class="testimonial-card__rating">
+                        <span class="testimonial-card__star">★</span>
+                        <span class="testimonial-card__star">★</span>
+                        <span class="testimonial-card__star">★</span>
+                        <span class="testimonial-card__star">★</span>
+                        <span class="testimonial-card__star">★</span>
+                    </div>
+                    <div class="testimonial-card__border"></div>
+                </article>
+
+                <!-- Testimonial 3 -->
+                <article class="testimonial-card">
+                    <div class="testimonial-card__header">
+                        <div class="testimonial-card__avatar">
+                            <span class="testimonial-card__avatar-text">EP</span>
+                        </div>
+                        <div class="testimonial-card__meta">
+                            <h3 class="testimonial-card__name">Elena P.</h3>
+                            <p class="testimonial-card__role">Freelance Designer</p>
+                        </div>
+                    </div>
+                    <blockquote class="testimonial-card__quote">
+                        "The UI is gorgeous and the automation is game-changing. I never miss a renewal anymore, and the cost breakdowns help me budget like a pro. Love this tool!"
+                    </blockquote>
+                    <div class="testimonial-card__rating">
+                        <span class="testimonial-card__star">★</span>
+                        <span class="testimonial-card__star">★</span>
+                        <span class="testimonial-card__star">★</span>
+                        <span class="testimonial-card__star">★</span>
+                        <span class="testimonial-card__star">★</span>
+                    </div>
+                    <div class="testimonial-card__border"></div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta" id="cta">
+        <div class="cta__container">
+            <div class="cta__content">
+                <h2 class="cta__title glitch" data-text="READY TO TAKE CONTROL?">
+                    READY TO TAKE CONTROL?
+                </h2>
+                <p class="cta__subtitle">
+                    > Join thousands of users who've mastered their subscriptions
+                </p>
+                <form class="cta__form" id="signup-form" novalidate>
+                    <div class="cta__form-group">
+                        <label for="email" class="cta__label sr-only">Email address</label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            class="cta__input"
+                            placeholder="Enter your email..."
+                            required
+                            aria-required="true"
+                            autocomplete="email"
+                        >
+                        <button type="submit" class="cta__submit btn btn--primary">
+                            <span class="btn__text">[ START FREE TRIAL ]</span>
+                            <span class="btn__glow"></span>
+                        </button>
+                    </div>
+                    <p class="cta__note">No credit card required. Cancel anytime.</p>
+                    <div class="cta__error" id="email-error" role="alert" aria-live="polite"></div>
+                    <div class="cta__success" id="email-success" role="status" aria-live="polite"></div>
+                </form>
+            </div>
+            <div class="cta__stats">
+                <div class="stat-card">
+                    <div class="stat-card__value" data-count="15000">0</div>
+                    <div class="stat-card__label">Active Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card__value">$2.4M+</div>
+                    <div class="stat-card__label">Saved Annually</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-card__value">50K+</div>
+                    <div class="stat-card__label">Tracked Subscriptions</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer__container">
+            <div class="footer__brand">
+                <span class="footer__logo">$</span>
+                <span class="footer__name">SubsHero</span>
+            </div>
+            <p class="footer__copyright">
+                &copy; 2025 SubsHero. All rights reserved.
+            </p>
+            <div class="footer__links">
+                <a href="#" class="footer__link">Privacy Policy</a>
+                <a href="#" class="footer__link">Terms of Service</a>
+                <a href="#" class="footer__link">Contact</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="script-matrix.js"></script>
+</body>
+</html>

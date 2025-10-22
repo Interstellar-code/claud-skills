@@ -7,6 +7,65 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.14.0] - 2025-10-23
+
+### Added
+- **Hierarchical Multi-Agent Orchestration System (csprojtasks)** - Complete PM orchestrator with sub-agent coordination
+  - PM agent (csprojecttask) coordinates multiple specialist sub-agents in parallel
+  - State management system with Python CLI tools (state_manager.py, topic_manager.py)
+  - Interactive multi-topic dashboard with real-time progress tracking
+  - Hooks integration for automatic task creation in Claude CLI sidebar
+  - Workaround for Claude Code limitation (agents cannot invoke other agents)
+  - 3-phase workflow: PM prepares prompts → user approves → main session executes
+  - Complete orchestration template for sub-agents (orchestrated-sub-agent-template.md)
+
+- **New Agents** - Research and development specialists
+  - `single-page-website-builder` - Expert in HTML/CSS/JS single-page sites
+  - `feature-comparison-analyst` - Feature set and capability analysis
+  - `market-research-analyst` - Market positioning and competitive landscape
+  - `pricing-research-analyst` - Pricing model and monetization strategy research
+
+- **Professional Website Templates** - 3 production-ready landing page templates
+  - Corporate Professional (blue/gray, enterprise-grade, formal style)
+  - Startup Modern (gradient-heavy, vibrant, energetic with purple/pink/orange)
+  - Minimalist Clean (Swiss design, typography-focused, black/white/red)
+  - Each template includes: HTML, CSS, JavaScript, README, complete documentation
+  - Fully responsive (mobile, tablet, desktop)
+  - Vanilla JavaScript (no dependencies)
+
+- **CLI Modern Tools Enforcement** - Mandatory pre-flight check for bash commands
+  - Added visual decision tree for tool selection (find → Glob, grep → Grep, cat → Read, ls → eza)
+  - Mandatory pre-flight check before EVERY bash command (cannot be bypassed)
+  - Silent enforcement mechanism (no verbose announcements to user)
+  - Updated CLAUDE.md with 🚨 MANDATORY PRE-FLIGHT CHECK section
+
+### Changed
+- **CLAUDE.md Communication Style** - Minimal commentary enforcement
+  - Added examples of WRONG (verbose) vs CORRECT (silent) patterns
+  - Prohibited announcing decision tree checks to user
+  - Streamlined command execution pattern
+
+- **Dashboard Integration** - Multi-topic menu now launches monitor-dashboard.py
+  - Fixed Python subprocess call (uses sys.executable instead of "python")
+  - Added missing get_topic_status() function
+  - Dashboard shows 100% completion for finished tasks
+
+### Fixed
+- **State Management** - Sub-agents now properly update task states
+  - Fixed missing create_state_file step in orchestration template
+  - Added mandatory initialization: create_state_file → set_task_status → append_log
+  - Dashboard now correctly displays completed tasks (was showing 0/3, now shows 3/3)
+
+- **topics.json Sync** - Topic completion status properly reflected
+  - Updates totalTasks, completedTasks, progress fields
+  - Ensures dashboard and state files stay synchronized
+
+### Improved
+- **Tool Usage Guidelines** - Enhanced enforcement documentation
+  - Added Quick Decision Tree with visual flowchart
+  - Clarified when to use Glob vs find, Grep vs grep, Read vs cat
+  - Added enforcement priority levels (HIGHEST, HIGH, MEDIUM)
+
 ## [1.13.0] - 2025-10-22
 
 ### Added
@@ -537,7 +596,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - N/A (Initial release)
 
-[Unreleased]: https://github.com/Interstellar-code/claud-skills/compare/v1.13.0...HEAD
+[Unreleased]: https://github.com/Interstellar-code/claud-skills/compare/v1.14.0...HEAD
+[1.14.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.13.0...v1.14.0
 [1.13.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.12.1...v1.13.0
 [1.12.1]: https://github.com/Interstellar-code/claud-skills/compare/v1.12.0...v1.12.1
 [1.12.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.11.0...v1.12.0

@@ -1,0 +1,16 @@
+{
+  "enabled": true,
+  "hooks": {
+    "pre_task_create": true,
+    "post_task_create": true,
+    "task_progress_update": true,
+    "task_complete": true,
+    "task_error": true,
+    "task_blocked": true
+  },
+  "progress_update_threshold": 10,
+  "sync_to_claude_tasks": true,
+  "task_prefix": "[A:orch]",
+  "verbose": false,
+  "description": "Hook system configuration for Claude Code integration. Syncs orchestration tasks with Claude's native TodoWrite tool."
+}

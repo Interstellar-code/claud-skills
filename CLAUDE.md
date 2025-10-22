@@ -52,7 +52,21 @@ claud-skills/
 [output]
 ```
 
-**✅ DO this (minimal):**
+**❌ ALSO DON'T do this (announcing decision tree):**
+```
+🎯 Decision Tree Check:
+- Does it contain "find"? → Would need find → ❌ STOP! Use Glob tool instead
+
+Let me search for package files using the Glob tool:
+```
+
+**✅ DO this (minimal - just execute):**
+```
+[Silently check decision tree, then just use the tool]
+[output]
+```
+
+**For bash commands with modern tools:**
 ```
 🔧 [cli-modern-tools] Running: eza --long --git .claude
 [output]
@@ -147,7 +161,18 @@ TodoWrite(todos=[{
 
 ## 🔧 Tool Usage Guidelines (CRITICAL)
 
-**⚠️ MANDATORY: Before using ANY bash command, Claude MUST check this replacement table:**
+**🚨 MANDATORY PRE-FLIGHT CHECK - CANNOT BE SKIPPED! 🚨**
+
+**BEFORE executing ANY bash command, Claude MUST:**
+1. ✅ **Check**: Does this command appear in the replacement table below?
+2. ✅ **Replace**: Use the correct alternative from the table
+3. ✅ **Verify**: Did I use Glob/Grep tool instead of bash find/grep?
+
+**This check is MANDATORY and CANNOT BE BYPASSED - not even for "simple" or "quick" commands!**
+
+---
+
+**⚠️ MANDATORY: Bash Command Replacement Table:**
 
 ### Bash Command Replacement Rules
 
@@ -205,6 +230,50 @@ if (command.includes("ls")) {
 - Grep tool doesn't support the operation
 - **BUT** - Must justify in comment why Grep tool won't work
 
+---
+
+### 🎯 Quick Decision Tree (Reference Before EVERY Bash Command)
+
+```
+🤔 I want to execute a bash command...
+
+┌─ Does it contain "find"?
+│  ├─ YES → ❌ STOP! Use Glob tool instead
+│  └─ NO  → Continue ↓
+│
+┌─ Does it contain "grep" or "rg"?
+│  ├─ YES → ❌ STOP! Use Grep tool instead
+│  └─ NO  → Continue ↓
+│
+┌─ Does it contain "cat"?
+│  ├─ YES → ❌ STOP! Use Read tool (or bat in bash)
+│  └─ NO  → Continue ↓
+│
+┌─ Does it contain "ls"?
+│  ├─ YES → ✅ Replace with: eza --long --git
+│  └─ NO  → Continue ↓
+│
+└─ ✅ OK to execute (but check cli-modern-tools table!)
+```
+
+**How to use this:**
+1. **SILENTLY** check this tree before EVERY `Bash` tool call (do NOT output the check to user)
+2. If any condition matches, STOP and use the correct alternative
+3. No exceptions - even for "quick" or "simple" commands
+4. **DO NOT announce the decision** - just use the correct tool directly
+
+**Example (WRONG - too verbose):**
+```
+🎯 Decision Tree Check:
+- Does it contain "find"? → YES → STOP! Use Glob tool
+Let me search for files using Glob tool:
+```
+
+**Example (CORRECT - silent):**
+```
+[Just use Glob tool directly, no announcement]
+```
+
 ### Why This Matters
 
 **Problem:** Using bash commands bypasses:
@@ -213,6 +282,118 @@ if (command.includes("ls")) {
 - Skill recommendations (cli-modern-tools doesn't intercept tool calls)
 
 **Solution:** Check this table BEFORE every bash command execution.
+
+---
+
+## Autonomous Skills - Trust and Confidence Policy
+
+**CRITICAL: Trust autonomous skills to do their job. Don't pre-check what they're designed to check.**
+
+### When a Skill is Fully Autonomous (like changelog-manager)
+
+**❌ DON'T do this:**
+```
+User: "make a release"
+Claude: Let me check git status first...
+Claude: Let me check git diff...
+Claude: Let me stage files...
+Claude: Now let me invoke the skill...
+```
+
+**✅ DO this:**
+```
+User: "make a release"
+Claude: [Immediately invokes changelog-manager skill]
+```
+
+### Confidence Rules
+
+1. **Trust First**: If a skill is documented as autonomous, invoke it immediately
+2. **Fail Gracefully**: If the skill fails or encounters issues, THEN take over manually
+3. **No Redundant Checks**: Don't run commands the skill is designed to run (git status, git diff, git add)
+4. **Efficiency**: Autonomous skills save tokens and time - use them confidently
+
+### When to Pre-Check
+
+**Only pre-check if:**
+- ❌ Skill documentation says "requires manual verification first"
+- ❌ User explicitly asks you to check something first
+- ❌ Previous invocation of this skill failed in this session
+
+**Otherwise:** Invoke directly and trust the skill.
+
+### Autonomous Skills List
+
+Skills that should be invoked directly without pre-checking:
+- **changelog-manager**: Handles git status, diff, add, commit, tag, push autonomously
+- **markdown-helper**: Handles file parsing, extraction, and analysis autonomously
+- **cli-modern-tools**: Suggests modern alternatives autonomously
+- **time-helper**: Handles timezone conversions and calculations autonomously
+
+### Recovery Pattern
+
+```
+1. Invoke skill directly
+2. If skill succeeds → Done!
+3. If skill fails → Read error message → Take over manually
+```
+
+**Philosophy**: Skills are designed to be autonomous. Trust them. You can always take over if they fail.
+
+### Examples
+
+**Example 1: Release Management**
+```
+❌ WRONG:
+User: "make a patch release"
+Claude: Let me check git status...
+Claude: Let me check git diff...
+Claude: Let me stage files...
+Claude: Now invoking changelog-manager...
+
+✅ RIGHT:
+User: "make a patch release"
+Claude: [Invokes changelog-manager immediately]
+```
+
+**Example 2: Markdown Operations**
+```
+❌ WRONG:
+User: "extract headers from spec.md"
+Claude: Let me read the file first to see what's there...
+Claude: Now let me use markdown-helper...
+
+✅ RIGHT:
+User: "extract headers from spec.md"
+Claude: [Invokes markdown-helper immediately]
+```
+
+**Example 3: Skill Failure Recovery**
+```
+✅ CORRECT FLOW:
+User: "make a release"
+Claude: [Invokes changelog-manager]
+Skill: ERROR - CHANGELOG.md not found
+Claude: The skill failed because CHANGELOG.md doesn't exist. Let me create it first...
+Claude: [Creates CHANGELOG.md manually]
+Claude: [Retries changelog-manager]
+```
+
+### Token Efficiency Impact
+
+**Pre-checking unnecessarily wastes tokens:**
+- Manual git status: ~200 tokens
+- Manual git diff: ~300 tokens
+- Manual git add: ~100 tokens
+- **Total wasted**: ~600 tokens
+
+**Direct skill invocation:**
+- Skill does all checks internally: ~250 tokens
+- **Savings**: 350 tokens (58%)
+
+### Key Takeaway
+
+**Trust autonomous skills. They're optimized for their job. You're the backup, not the primary.**
 
 ---
 

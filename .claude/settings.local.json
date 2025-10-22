@@ -29,9 +29,25 @@
       "Bash(done)",
       "Bash(mkdir:*)",
       "Bash(python:*)",
-      "Skill(colored-output)"
+      "Skill(colored-output)",
+      "Bash(node:*)",
+      "Skill(project-orchestration)"
     ],
     "deny": [],
     "ask": []
+  },
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash .claude/skills/project-orchestration/scripts/topic-manager.sh get_active_topics_summary 2>/dev/null || true",
+            "description": "Check for active orchestration topics on session start"
+          }
+        ]
+      }
+    ]
   }
 }

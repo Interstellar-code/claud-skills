@@ -33,6 +33,8 @@ This agent works with modern web applications featuring:
 
 **CRITICAL: All mockup-creation-agent output MUST use the colored-output formatter skill!**
 
+**IMPORTANT: Use MINIMAL colored output (2-3 calls max) to prevent screen flickering! Follow pattern: Header → Regular text → Result only. Each bash call creates a task in Claude CLI.**
+
 ```bash
 bash .claude/skills/colored-output/color.sh agent-header "mockup-creation-agent" "Creating mockup..."
 bash .claude/skills/colored-output/color.sh progress "" "Generating HTML structure"

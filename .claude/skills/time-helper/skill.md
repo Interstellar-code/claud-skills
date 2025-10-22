@@ -37,32 +37,35 @@ bash .claude/skills/colored-output/color.sh [type] "time-helper" [message]
 
 ### Required Output Format
 
-**Every skill response MUST start with:**
-```bash
-bash .claude/skills/colored-output/color.sh skill-header "time-helper" "Message here..."
-```
+**IMPORTANT: Use MINIMAL colored output (2-3 calls max) to prevent screen flickering!**
 
-**Example formatted output:**
+**Example formatted output (MINIMAL PATTERN):**
 ```bash
+# START: Header only
 bash .claude/skills/colored-output/color.sh skill-header "time-helper" "Getting current time for Tokyo..."
-bash .claude/skills/colored-output/color.sh progress "" "Querying timezone database..."
-bash .claude/skills/colored-output/color.sh info "" "Current time: 2025-10-22 14:30:00 JST"
-bash .claude/skills/colored-output/color.sh info "" "UTC offset: +09:00"
+
+# MIDDLE: Regular text (no colored calls)
+Querying timezone database...
+Current time: 2025-10-22 14:30:00 JST
+UTC offset: +09:00
+
+# END: Result only
 bash .claude/skills/colored-output/color.sh success "" "Time retrieved successfully"
 ```
 
-### Status Messages with Colors
+### When to Use Colored Output
 
-**Use these formatted messages throughout the workflow:**
+**DO Use:**
+- Initial header: `bash .claude/skills/colored-output/color.sh skill-header "time-helper" "Processing..."`
+- Final result: `bash .claude/skills/colored-output/color.sh success "" "Complete"`
+- Errors only: `bash .claude/skills/colored-output/color.sh error "" "Invalid timezone"`
 
-- Start: `bash .claude/skills/colored-output/color.sh skill-header "time-helper" "Processing time request..."`
-- Progress: `bash .claude/skills/colored-output/color.sh progress "" "Querying database..."`
-- Info: `bash .claude/skills/colored-output/color.sh info "" "Timezone: Asia/Tokyo"`
-- Success: `bash .claude/skills/colored-output/color.sh success "" "Time operation completed"`
-- Warning: `bash .claude/skills/colored-output/color.sh warning "" "Timezone may be ambiguous"`
-- Error: `bash .claude/skills/colored-output/color.sh error "" "Invalid timezone specified"`
+**DON'T Use:**
+- ❌ Progress updates - use regular text
+- ❌ Info messages - use regular text
+- ❌ Intermediate steps - use regular text
 
-**WHY:** Using the centralized formatter ensures consistent colors across ALL skills and makes updates easy!
+**WHY:** Each bash call creates a task in Claude CLI, causing screen flickering. Keep it minimal!
 
 ---
 

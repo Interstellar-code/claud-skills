@@ -34,15 +34,23 @@ This skill provides markdown operations WITHOUT reading entire files into contex
 bash .claude/skills/colored-output/color.sh skill-header "markdown-helper" "Message here..."
 ```
 
-**Example formatted output:**
+**IMPORTANT: Use MINIMAL colored output (2-3 calls max) to prevent screen flickering!**
+
+**Example formatted output (MINIMAL PATTERN):**
 ```bash
+# START: Header only
 bash .claude/skills/colored-output/color.sh skill-header "markdown-helper" "Parsing markdown file..."
-bash .claude/skills/colored-output/color.sh progress "" "Extracting headers"
-bash .claude/skills/colored-output/color.sh info "" "Found 12 headings"
+
+# MIDDLE: Regular text (no colored calls)
+Extracting headers from file...
+Found 12 headings (4 H1, 6 H2, 2 H3)
+Processing tables and code blocks...
+
+# END: Result only
 bash .claude/skills/colored-output/color.sh success "" "Markdown parsed successfully"
 ```
 
-**WHY:** Using the centralized formatter ensures consistent colors across ALL components!
+**WHY:** Each bash call creates a task in Claude CLI, causing screen flickering. Keep it minimal!
 
 ---
 

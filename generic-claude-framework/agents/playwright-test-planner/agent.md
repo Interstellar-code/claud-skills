@@ -30,6 +30,8 @@ planning.
 
 **CRITICAL: All playwright-test-planner output MUST use the colored-output formatter skill!**
 
+**IMPORTANT: Use MINIMAL colored output (2-3 calls max) to prevent screen flickering! Follow pattern: Header → Regular text → Result only. Each bash call creates a task in Claude CLI.**
+
 ```bash
 bash .claude/skills/colored-output/color.sh agent-header "playwright-test-planner" "Creating test plan..."
 bash .claude/skills/colored-output/color.sh progress "" "Analyzing user flow"

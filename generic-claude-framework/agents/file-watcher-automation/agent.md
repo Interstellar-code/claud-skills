@@ -22,6 +22,8 @@ version: 1.0.0
 
 **CRITICAL: All file-watcher-automation output MUST use the colored-output formatter skill!**
 
+**IMPORTANT: Use MINIMAL colored output (2-3 calls max) to prevent screen flickering! Follow pattern: Header → Regular text → Result only. Each bash call creates a task in Claude CLI.**
+
 ```bash
 bash .claude/skills/colored-output/color.sh agent-header "file-watcher-automation" "Setting up file watcher..."
 bash .claude/skills/colored-output/color.sh progress "" "Configuring watchexec for PHP files"

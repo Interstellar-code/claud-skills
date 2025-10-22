@@ -31,6 +31,8 @@ The log-analyzer agent provides intelligent insights from application logs by:
 
 **CRITICAL: All log-analyzer output MUST use the colored-output formatter skill!**
 
+**IMPORTANT: Use MINIMAL colored output (2-3 calls max) to prevent screen flickering! Follow pattern: Header → Regular text → Result only. Each bash call creates a task in Claude CLI.**
+
 ```bash
 bash .claude/skills/colored-output/color.sh agent-header "log-analyzer" "Analyzing application logs..."
 bash .claude/skills/colored-output/color.sh progress "" "Extracting error patterns"

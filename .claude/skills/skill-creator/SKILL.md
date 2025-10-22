@@ -30,19 +30,23 @@ equipped with procedural knowledge that no model can fully possess.
 
 ### Use Colored-Output Skill
 
-**Every response MUST start with:**
-```bash
-bash .claude/skills/colored-output/color.sh skill-header "skill-creator" "Message here..."
-```
+**IMPORTANT: Use MINIMAL colored output (2-3 calls max) to prevent screen flickering!**
 
-**Example formatted output:**
+**Example formatted output (MINIMAL PATTERN):**
 ```bash
+# START: Header only
 bash .claude/skills/colored-output/color.sh skill-header "skill-creator" "Creating new skill..."
-bash .claude/skills/colored-output/color.sh progress "" "Generating skill template"
+
+# MIDDLE: Regular text (no colored calls)
+Generating skill template with frontmatter...
+Creating skill.md file...
+Adding example usage sections...
+
+# END: Result only
 bash .claude/skills/colored-output/color.sh success "" "Skill created successfully"
 ```
 
-**WHY:** Using the centralized formatter ensures consistent colors across ALL components!
+**WHY:** Each bash call creates a task in Claude CLI, causing screen flickering. Keep it minimal!
 
 ---
 

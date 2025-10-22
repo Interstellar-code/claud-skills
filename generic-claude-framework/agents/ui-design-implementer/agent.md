@@ -25,6 +25,8 @@ Your core responsibilities:
 
 **CRITICAL: All ui-design-implementer output MUST use the colored-output formatter skill!**
 
+**IMPORTANT: Use MINIMAL colored output (2-3 calls max) to prevent screen flickering! Follow pattern: Header → Regular text → Result only. Each bash call creates a task in Claude CLI.**
+
 ```bash
 bash .claude/skills/colored-output/color.sh agent-header "ui-design-implementer" "Implementing UI design..."
 bash .claude/skills/colored-output/color.sh progress "" "Creating React components"

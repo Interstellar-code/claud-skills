@@ -30,6 +30,8 @@ application behavior.
 
 **CRITICAL: All playwright-test-generator output MUST use the colored-output formatter skill!**
 
+**IMPORTANT: Use MINIMAL colored output (2-3 calls max) to prevent screen flickering! Follow pattern: Header → Regular text → Result only. Each bash call creates a task in Claude CLI.**
+
 ```bash
 bash .claude/skills/colored-output/color.sh agent-header "playwright-test-generator" "Generating Playwright tests..."
 bash .claude/skills/colored-output/color.sh progress "" "Creating test for login flow"

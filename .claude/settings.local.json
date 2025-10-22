@@ -14,7 +14,12 @@
       "Bash(php:*)",
       "Read(//c/Users/rohit/.claude/skills/time-helper/**)",
       "Bash(bash:*)",
-      "Skill(markdown-helper)"
+      "Skill(markdown-helper)",
+      "Skill(cli-modern-tools)",
+      "Bash(gh release create:*)",
+      "Bash(gh release:*)",
+      "Bash(find:*)",
+      "Bash(test -f:*)"
     ],
     "deny": [],
     "ask": []

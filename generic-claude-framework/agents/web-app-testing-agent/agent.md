@@ -26,6 +26,8 @@ This agent is designed to test modern web applications built with various tech s
 
 **CRITICAL: All web-app-testing-agent output MUST use the colored-output formatter skill!**
 
+**IMPORTANT: Use MINIMAL colored output (2-3 calls max) to prevent screen flickering! Follow pattern: Header → Regular text → Result only. Each bash call creates a task in Claude CLI.**
+
 ```bash
 bash .claude/skills/colored-output/color.sh agent-header "web-app-testing-agent" "Testing web application..."
 bash .claude/skills/colored-output/color.sh progress "" "Running Playwright test suite"

@@ -31,6 +31,8 @@ color: green
 
 **CRITICAL: All eslint-fixer output MUST use the colored-output formatter skill!**
 
+**IMPORTANT: Use MINIMAL colored output (2-3 calls max) to prevent screen flickering! Follow pattern: Header → Regular text → Result only. Each bash call creates a task in Claude CLI.**
+
 ```bash
 bash .claude/skills/colored-output/color.sh agent-header "eslint-fixer" "Analyzing ESLint issues..."
 bash .claude/skills/colored-output/color.sh progress "" "Categorizing by risk level"

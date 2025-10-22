@@ -23,6 +23,52 @@ This skill provides timezone and time operations WITHOUT requiring MCP servers, 
 
 ---
 
+## 🎨 **VISUAL OUTPUT FORMATTING**
+
+**CRITICAL: All time-helper output MUST use the colored-output formatter skill!**
+
+### Use Colored-Output Skill
+
+**Instead of writing ANSI codes manually, use the centralized formatter:**
+
+```bash
+bash .claude/skills/colored-output/color.sh [type] "time-helper" [message]
+```
+
+### Required Output Format
+
+**IMPORTANT: Use MINIMAL colored output (2-3 calls max) to prevent screen flickering!**
+
+**Example formatted output (MINIMAL PATTERN):**
+```bash
+# START: Header only
+bash .claude/skills/colored-output/color.sh skill-header "time-helper" "Getting current time for Tokyo..."
+
+# MIDDLE: Regular text (no colored calls)
+Querying timezone database...
+Current time: 2025-10-22 14:30:00 JST
+UTC offset: +09:00
+
+# END: Result only
+bash .claude/skills/colored-output/color.sh success "" "Time retrieved successfully"
+```
+
+### When to Use Colored Output
+
+**DO Use:**
+- Initial header: `bash .claude/skills/colored-output/color.sh skill-header "time-helper" "Processing..."`
+- Final result: `bash .claude/skills/colored-output/color.sh success "" "Complete"`
+- Errors only: `bash .claude/skills/colored-output/color.sh error "" "Invalid timezone"`
+
+**DON'T Use:**
+- ❌ Progress updates - use regular text
+- ❌ Info messages - use regular text
+- ❌ Intermediate steps - use regular text
+
+**WHY:** Each bash call creates a task in Claude CLI, causing screen flickering. Keep it minimal!
+
+---
+
 ## Usage Examples
 
 ### Get Current Time

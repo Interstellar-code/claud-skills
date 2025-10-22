@@ -7,6 +7,64 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.10.0] - 2025-10-22
+
+### Added
+- **Tool Usage Guidelines System** - CLAUDE.md enforcement for correct Claude Code tool usage
+  - Added mandatory bash command replacement table (Glob, Grep, Read vs bash find/grep/cat)
+  - Detection patterns for Claude to check before bash execution
+  - Enforcement priority levels (HIGHEST: Glob/Grep, HIGH: Read, MEDIUM: Modern CLI)
+  - Exception cases documented with justification requirements
+  - Prevents bypassing token-efficient Claude Code tools
+  - Cross-referenced in cli-modern-tools skill for double reinforcement
+
+- **Colored Output Usage Guidelines** - Comprehensive guidelines to prevent screen flickering
+  - Added extensive usage section to colored-output skill (+111 lines)
+  - Established minimal pattern: 2-3 bash calls maximum per operation
+  - DO/DON'T examples for proper colored output usage
+  - Anti-pattern documentation showing flickering-causing excessive calls
+  - Target metrics: Max 3-4 calls, Target 2 calls, Forbidden >5 calls
+  - Pattern: Header → Regular text → Result only
+
+- **cli-modern-tools Internal Usage Rules** - Enhanced skill with Claude's internal usage guidance
+  - Added Claude's Internal Tool Usage section (+40 lines)
+  - Quick reference table for tool replacements
+  - Explanation of why skills don't intercept Claude's tool calls
+  - Direct reference to CLAUDE.md Tool Usage Guidelines
+
+### Changed
+- **All 14 Framework Agents** - Updated to follow minimal colored output pattern
+  - Added flickering prevention warning to each agent
+  - Changed from excessive colored calls (10+) to minimal pattern (2-3)
+  - Agents: changelog-version-manager, eslint-fixer, file-watcher-automation, log-analyzer, mockup-creation-agent, pest-test-generator, pest-test-runner, playwright-test-generator, playwright-test-healer, playwright-test-planner, task-creator, test-steps-generator, ui-design-implementer, web-app-testing-agent
+
+- **All 7 Local Skills** - Updated with minimal colored output guidelines
+  - Skills: changelog-manager, time-helper, markdown-helper, cli-modern-tools, skill-creator, template-skill, colored-output
+
+- **All 13 Framework Skills** - Synchronized from local skill updates
+  - Same as above plus framework-specific skills
+
+- **CLAUDE.md** - Added comprehensive new sections (+137 lines)
+  - Tool Usage Guidelines (CRITICAL) section
+  - Colored Output Guidelines section
+  - Detection patterns and enforcement rules
+
+### Fixed
+- **Screen Flickering** - Resolved excessive bash task creation in Claude CLI
+  - Each `bash .claude/skills/colored-output/color.sh` call creates CLI task
+  - Reduced from 10+ calls to 2-3 calls per operation
+  - 70-80% reduction in visual noise and flickering
+
+- **Bash Command Misuse** - Prevented Claude from using bash find/grep instead of Glob/Grep tools
+  - Added mandatory check before bash command execution
+  - Enforces token-efficient Claude Code tools
+  - Prevents bypassing skill recommendations
+
+### Documentation
+- Updated `docs/COLORED_OUTPUT_TEMPLATE.md` - Rewritten with minimal pattern emphasis
+- Updated `docs/COLORED_OUTPUT_SNIPPET.md` - Changed to minimal pattern examples
+- Enhanced `.claude/skills/colored-output/skill.md` - Added comprehensive usage guidelines
+
 ## [1.9.0] - 2025-10-22
 
 ### Added
@@ -290,7 +348,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - N/A (Initial release)
 
-[Unreleased]: https://github.com/Interstellar-code/claud-skills/compare/v1.9.0...HEAD
+[Unreleased]: https://github.com/Interstellar-code/claud-skills/compare/v1.10.0...HEAD
+[1.10.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.9.0...v1.10.0
 [1.9.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.8.1...v1.9.0
 [1.8.1]: https://github.com/Interstellar-code/claud-skills/compare/v1.8.0...v1.8.1
 [1.8.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.7.0...v1.8.0

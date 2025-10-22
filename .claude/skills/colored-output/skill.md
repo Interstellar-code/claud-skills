@@ -22,37 +22,112 @@ This skill provides a **single source of truth** for colored terminal output. In
 
 ---
 
+## 🎯 **USAGE GUIDELINES** (CRITICAL)
+
+**⚠️ IMPORTANT: Use colored output SPARINGLY to prevent screen flickering and visual clutter!**
+
+### ✅ DO Use Colored Output For:
+
+1. **Initial Header** (once at start of operation)
+   ```bash
+   bash .claude/skills/colored-output/color.sh skill-header "skill-name" "Starting operation..."
+   ```
+
+2. **Final Results** (success, error, or completion)
+   ```bash
+   bash .claude/skills/colored-output/color.sh success "" "Operation complete!"
+   ```
+
+3. **Critical Alerts** (warnings, errors)
+   ```bash
+   bash .claude/skills/colored-output/color.sh warning "" "Configuration issue detected"
+   bash .claude/skills/colored-output/color.sh error "" "Operation failed"
+   ```
+
+4. **Summary Sections** (key metrics, final status)
+   ```bash
+   bash .claude/skills/colored-output/color.sh info "" "Processed 10 files"
+   ```
+
+### ❌ DON'T Use Colored Output For:
+
+1. **Progress Updates** - Use regular text instead
+   - ❌ Bad: `bash .claude/skills/colored-output/color.sh progress "" "Step 1 of 5..."`
+   - ✅ Good: Regular Claude text: "Step 1 of 5: Analyzing files..."
+
+2. **Intermediate Info Messages** - Use regular text
+   - ❌ Bad: `bash .claude/skills/colored-output/color.sh info "" "Found 3 files"`
+   - ✅ Good: Regular Claude text: "Found 3 files to process..."
+
+3. **Verbose Logging** - Use regular text
+   - ❌ Bad: Multiple colored calls for each step
+   - ✅ Good: Regular text for all intermediate steps
+
+### 📏 Recommended Pattern
+
+**Minimal Colored Output (2-3 calls per operation):**
+
+```
+# START: Colored header (1 call)
+🔧 [skill-name] Starting operation...
+
+# MIDDLE: Regular Claude text (0 colored calls)
+Analyzing 10 files...
+Processing configurations...
+Updating database...
+Generating reports...
+
+# END: Colored result (1-2 calls)
+✅ Operation complete!
+📋 Summary: 10 files processed, 0 errors
+```
+
+### 🚫 Anti-Pattern (Causes Flickering)
+
+**Excessive Colored Output (10+ calls per operation):**
+
+```
+🔧 [skill-name] Starting operation...          ← Colored
+▶ Step 1: Analyzing files...                   ← Colored (unnecessary)
+ℹ️ Found 10 files                              ← Colored (unnecessary)
+▶ Step 2: Processing...                        ← Colored (unnecessary)
+ℹ️ Processing file 1...                        ← Colored (unnecessary)
+ℹ️ Processing file 2...                        ← Colored (unnecessary)
+... (8 more colored calls) ...
+✅ Operation complete!                          ← Colored
+```
+
+**Problem:** Each bash call creates a new task in Claude CLI, causing screen flickering and visual noise.
+
+### 📊 Target Metrics
+
+- **Maximum:** 3-4 colored bash calls per operation
+- **Minimum:** 2 colored bash calls (header + result)
+- **Ideal:** Use colored output only for boundaries (start/end) and alerts
+
+---
+
 ## 🎨 **VISUAL OUTPUT FORMATTING**
 
-**CRITICAL: This skill itself uses colored output when responding!**
+**CRITICAL: This skill itself follows the minimal colored output pattern!**
 
-### Color Scheme (Self-Reference)
+### Self-Reference Pattern
 
-When explaining or demonstrating colors, use:
+When this skill responds, use the MINIMAL pattern:
 
-```
-Skill Header:    bash .claude/skills/colored-output/color.sh skill-header "colored-output" "Message"
-Success:         bash .claude/skills/colored-output/color.sh success "" "Message"
-Error:           bash .claude/skills/colored-output/color.sh error "" "Message"
-Info:            bash .claude/skills/colored-output/color.sh info "" "Message"
-Progress:        bash .claude/skills/colored-output/color.sh progress "" "Message"
-```
-
-### Required Output Format
-
-**Every response from this skill MUST start with:**
 ```bash
+# START: Header only
 bash .claude/skills/colored-output/color.sh skill-header "colored-output" "Processing request..."
+
+# MIDDLE: Regular text (no colored calls)
+Analyzing color requirements...
+Available message types: skill-header, agent-header, success, error, warning, info, progress...
+
+# END: Result only
+bash .claude/skills/colored-output/color.sh success "" "Formatting complete!"
 ```
 
-**Example formatted output:**
-```bash
-bash .claude/skills/colored-output/color.sh skill-header "colored-output" "Formatting output..."
-bash .claude/skills/colored-output/color.sh progress "" "Applying color scheme"
-bash .claude/skills/colored-output/color.sh success "" "Output formatted successfully"
-```
-
-**WHY:** This skill demonstrates its own capabilities by using itself!
+**DO NOT use excessive colored calls when demonstrating. Follow the 2-3 call guideline!**
 
 ---
 

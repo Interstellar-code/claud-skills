@@ -1,42 +1,37 @@
 ## 🎨 **VISUAL OUTPUT FORMATTING**
 
-**CRITICAL: All [COMPONENT-NAME] output MUST use the colored-output formatter skill!**
+**IMPORTANT: Use MINIMAL colored output (2-3 calls max) to prevent screen flickering!**
 
-### Use Colored-Output Skill
-
-**Instead of writing ANSI codes manually, use the centralized formatter:**
-
-```bash
-bash .claude/skills/colored-output/color.sh [type] "[COMPONENT-NAME]" [message]
-```
-
-### Required Output Format
-
-**Every response MUST start with:**
-```bash
-bash .claude/skills/colored-output/color.sh [COMPONENT-TYPE]-header "[COMPONENT-NAME]" "Message here..."
-```
+### Use Colored-Output Skill (MINIMAL PATTERN)
 
 **Example formatted output:**
 ```bash
+# START: Header only
 bash .claude/skills/colored-output/color.sh [COMPONENT-TYPE]-header "[COMPONENT-NAME]" "Starting task..."
-bash .claude/skills/colored-output/color.sh progress "" "Processing step 1..."
-bash .claude/skills/colored-output/color.sh info "" "Found 10 items"
+
+# MIDDLE: Regular Claude text (no colored calls)
+Processing step 1...
+Processing step 2...
+Found 10 items to process...
+Updating configurations...
+
+# END: Result only
 bash .claude/skills/colored-output/color.sh success "" "Task completed successfully"
 ```
 
-### Status Messages with Colors
+### When to Use Colored Output
 
-**Use these formatted messages throughout the workflow:**
+**DO Use:**
+- Initial header: `bash .claude/skills/colored-output/color.sh [TYPE]-header "[NAME]" "Starting..."`
+- Final result: `bash .claude/skills/colored-output/color.sh success "" "Complete!"`
+- Errors only: `bash .claude/skills/colored-output/color.sh error "" "Failed!"`
 
-- Start: `bash .claude/skills/colored-output/color.sh [COMPONENT-TYPE]-header "[COMPONENT-NAME]" "Starting..."`
-- Progress: `bash .claude/skills/colored-output/color.sh progress "" "Processing..."`
-- Info: `bash .claude/skills/colored-output/color.sh info "" "Information here"`
-- Success: `bash .claude/skills/colored-output/color.sh success "" "Operation completed"`
-- Warning: `bash .claude/skills/colored-output/color.sh warning "" "Warning message"`
-- Error: `bash .claude/skills/colored-output/color.sh error "" "Error message"`
+**DON'T Use:**
+- ❌ Progress updates - use regular text
+- ❌ Info messages - use regular text
+- ❌ Intermediate steps - use regular text
 
-**WHY:** Using the centralized formatter ensures consistent colors across ALL components and makes updates easy!
+**WHY:** Each bash call creates a task in Claude CLI, causing screen flickering. Keep it minimal!
 
 ---
 

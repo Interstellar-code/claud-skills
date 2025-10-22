@@ -24,6 +24,8 @@ This agent specializes in generating comprehensive manual testing steps by revie
 
 **CRITICAL: All test-steps-generator output MUST use the colored-output formatter skill!**
 
+**IMPORTANT: Use MINIMAL colored output (2-3 calls max) to prevent screen flickering! Follow pattern: Header → Regular text → Result only. Each bash call creates a task in Claude CLI.**
+
 ```bash
 bash .claude/skills/colored-output/color.sh agent-header "test-steps-generator" "Generating test steps..."
 bash .claude/skills/colored-output/color.sh progress "" "Analyzing user workflow"

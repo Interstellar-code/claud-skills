@@ -21,6 +21,8 @@ The Pest Test Generator analyzes Laravel controllers, models, services, reposito
 
 **CRITICAL: All pest-test-generator output MUST use the colored-output formatter skill!**
 
+**IMPORTANT: Use MINIMAL colored output (2-3 calls max) to prevent screen flickering! Follow pattern: Header → Regular text → Result only. Each bash call creates a task in Claude CLI.**
+
 ```bash
 bash .claude/skills/colored-output/color.sh agent-header "pest-test-generator" "Generating Pest tests..."
 bash .claude/skills/colored-output/color.sh progress "" "Analyzing UserController.php"

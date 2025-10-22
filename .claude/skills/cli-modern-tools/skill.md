@@ -12,6 +12,26 @@ auto-activate: true
 
 **Purpose**: Automatically suggest and use modern CLI alternatives for 50%+ speed improvements and better UX
 
+## ⚠️ **CRITICAL: Claude's Internal Tool Usage**
+
+**Before Claude executes ANY bash command internally, MUST check:**
+
+| If Claude wants to use... | Use this instead | Tool Type |
+|---|---|---|
+| `bash find . -name "*.js"` | **Glob** tool `pattern="**/*.js"` | Claude Code Tool |
+| `bash grep -r "pattern"` | **Grep** tool `pattern="pattern"` | Claude Code Tool |
+| `bash cat file.txt` | **Read** tool `file_path="file.txt"` | Claude Code Tool |
+| `bash ls -la` | `bash eza --long --git` (if available) | Bash Command |
+
+**Why this matters:**
+- Skills only auto-activate on user messages, NOT on Claude's internal tool calls
+- Claude must consciously check this table before executing bash commands
+- Prevents bypassing token-efficient Claude Code tools
+
+**See CLAUDE.md "Tool Usage Guidelines" for complete replacement rules.**
+
+---
+
 ## 🎯 Core Concept
 
 Replace traditional Unix commands with modern, faster, feature-rich alternatives:
@@ -23,23 +43,25 @@ Replace traditional Unix commands with modern, faster, feature-rich alternatives
 
 ## 🎨 **VISUAL OUTPUT FORMATTING**
 
-**CRITICAL: All cli-modern-tools output MUST use the colored-output formatter skill!**
+**IMPORTANT: Use MINIMAL colored output (2-3 calls max) to prevent screen flickering!**
 
 ### Use Colored-Output Skill
 
-**Every response MUST start with:**
+**Example formatted output (MINIMAL PATTERN):**
 ```bash
-bash .claude/skills/colored-output/color.sh skill-header "cli-modern-tools" "Message here..."
-```
-
-**Example formatted output:**
-```bash
+# START: Header only
 bash .claude/skills/colored-output/color.sh skill-header "cli-modern-tools" "Replacing traditional CLI commands..."
-bash .claude/skills/colored-output/color.sh progress "" "Using bat instead of cat"
+
+# MIDDLE: Regular text (no colored calls)
+Using bat instead of cat for syntax highlighting...
+Using eza instead of ls for git status integration...
+Using fd instead of find for faster file search...
+
+# END: Result only
 bash .claude/skills/colored-output/color.sh success "" "Modern CLI tools applied"
 ```
 
-**WHY:** Using the centralized formatter ensures consistent colors across ALL components!
+**WHY:** Each bash call creates a task in Claude CLI, causing screen flickering. Keep it minimal!
 
 ---
 

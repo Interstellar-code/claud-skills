@@ -2,13 +2,22 @@
 
 **Use this template to add colored, icon-enhanced output to any skill or agent!**
 
+## ⚠️ **CRITICAL: Use MINIMAL Colored Output**
+
+**IMPORTANT:** Each bash colored output call creates a separate task in Claude CLI, causing screen flickering and visual clutter.
+
+**Maximum:** 2-3 colored calls per operation
+**Target:** Header + Result only
+**Forbidden:** More than 5 colored calls per operation
+
 ## 🎨 Why Use Colored Output?
 
 ✅ Makes skill/agent execution visually distinct from regular Claude responses
-✅ Improves user experience significantly
+✅ Improves user experience when used sparingly
 ✅ Easy to spot errors, warnings, and successes
-✅ Works in all modern terminals (Windows Terminal, iTerm2, VSCode, etc.)
-✅ **Works NOW** - No need to wait for Claude Code updates!
+✅ Works in all modern terminals
+✅ **Works NOW** - No need to wait for Claude Code updates
+❌ **BUT** - Use SPARINGLY to prevent screen flickering!
 
 ---
 
@@ -24,56 +33,44 @@
 
 ### Step 2: Add This Section to Your Skill/Agent
 
-Copy this template and paste it near the top of your skill.md or agent.md file:
+Copy this MINIMAL pattern template:
 
 ```markdown
 ## 🎨 **VISUAL OUTPUT FORMATTING**
 
-**CRITICAL: All [SKILL/AGENT-NAME] output MUST use colored formatting and icons for visual clarity!**
+**IMPORTANT: Use MINIMAL colored output (2-3 calls max) to prevent screen flickering!**
 
-### Color Scheme (ANSI Escape Codes)
+### Use Colored-Output Skill
 
-Use these exact ANSI codes in ALL responses:
+**Example formatted output (MINIMAL PATTERN):**
+```bash
+# START: Header only
+bash .claude/skills/colored-output/color.sh skill-header "YOUR-SKILL-NAME" "Starting workflow..."
+# OR for agents:
+bash .claude/skills/colored-output/color.sh agent-header "YOUR-AGENT-NAME" "Starting workflow..."
 
-```
-Component Header: \033[1;34m🔧 [SKILL-NAME]\033[0m      # Bold Blue + Icon (Skills)
-Component Header: \033[1;35m🤖 [AGENT-NAME]\033[0m      # Bold Purple + Icon (Agents)
-Success:          \033[1;32m✅\033[0m                   # Bold Green
-Warning:          \033[1;33m⚠️\033[0m                    # Bold Yellow
-Error:            \033[1;31m❌\033[0m                   # Bold Red
-Info:             \033[1;36mℹ️\033[0m                    # Bold Cyan
-Progress:         \033[0;34m▶\033[0m                    # Blue Arrow
-```
+# MIDDLE: Regular Claude text (no colored calls)
+Analyzing files...
+Processing 10 items...
+Updating configurations...
 
-### Required Output Format
-
-**Every response MUST start with:**
-```
-\033[1;34m🔧 [SKILL-NAME]\033[0m Message here...
+# END: Result only
+bash .claude/skills/colored-output/color.sh success "" "Workflow complete!"
 ```
 
-**Example formatted output:**
-```
-\033[1;34m🔧 [SKILL-NAME]\033[0m Starting workflow...
-\033[0;34m▶\033[0m Analyzing files...
-\033[0;34m▶\033[0m Processing data...
-\033[1;32m✅\033[0m Task completed successfully
-\033[1;34m🔧 [SKILL-NAME]\033[0m Workflow complete!
-```
+### When to Use Colored Output
 
-### Status Messages with Colors
+**DO Use:**
+- Initial header: `bash .claude/skills/colored-output/color.sh skill-header "name" "Starting..."`
+- Final result: `bash .claude/skills/colored-output/color.sh success "" "Complete!"`
+- Errors only: `bash .claude/skills/colored-output/color.sh error "" "Failed!"`
 
-**Use these formatted messages:**
+**DON'T Use:**
+- ❌ Progress updates - use regular text
+- ❌ Info messages - use regular text
+- ❌ Intermediate steps - use regular text
 
-- Start: `\033[1;34m🔧 [SKILL-NAME]\033[0m Starting task...`
-- Progress: `\033[0;34m▶\033[0m Processing step 1 of 3...`
-- Info: `\033[1;36mℹ️\033[0m Additional information here`
-- Success: `\033[1;32m✅\033[0m Operation completed`
-- Warning: `\033[1;33m⚠️\033[0m Warning message`
-- Error: `\033[1;31m❌\033[0m Error occurred`
-- Complete: `\033[1;32m✅\033[0m All tasks complete!`
-
-**WHY:** This makes execution visually distinct and improves UX significantly!
+**WHY:** Each bash call creates a task in Claude CLI, causing screen flickering. Keep it minimal!
 ```
 
 ---

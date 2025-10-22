@@ -38,6 +38,77 @@ claud-skills/
 └── README.md                  # Getting started guide
 ```
 
+## 🔧 Tool Usage Guidelines (CRITICAL)
+
+**⚠️ MANDATORY: Before using ANY bash command, Claude MUST check this replacement table:**
+
+### Bash Command Replacement Rules
+
+**File Operations:**
+
+| ❌ Traditional Command | ✅ Correct Tool | When to Use |
+|---|---|---|
+| `find . -name "*.js"` | **Glob** tool with `pattern="**/*.js"` | ALWAYS in Claude Code for file pattern matching |
+| `find . -type f` | **Glob** tool with `pattern="**/*"` | ALWAYS in Claude Code for finding files |
+| `grep -r "pattern"` | **Grep** tool with `pattern="pattern"` | ALWAYS in Claude Code for content search |
+| `cat file.txt` | `bat file.txt` (in bash) OR **Read** tool | Read tool for Claude Code, bat for user-facing |
+| `ls -la` | `eza --long --git` (in bash) | When user asks to list files |
+
+**Detection Pattern for Claude:**
+
+```javascript
+// BEFORE executing bash command, check:
+if (command.includes("find")) {
+    → Use Glob tool instead (pattern matching)
+    → NEVER use bash find in Claude Code
+}
+
+if (command.includes("grep") || command.includes("rg")) {
+    → Use Grep tool instead
+    → NEVER use bash grep/ripgrep in Claude Code
+}
+
+if (command.includes("cat")) {
+    → Use Read tool for file reading
+    → OR use bat in bash if showing to user
+}
+
+if (command.includes("ls")) {
+    → Use eza in bash if available
+    → Fallback to ls if eza not installed
+}
+```
+
+**Enforcement Priority:**
+
+1. **HIGHEST**: Glob tool (file patterns) - NEVER use bash find
+2. **HIGHEST**: Grep tool (content search) - NEVER use bash grep/rg
+3. **HIGH**: Read tool (file reading) - Prefer over cat
+4. **MEDIUM**: Modern CLI tools (bat, eza, fd) - Use when appropriate
+
+**Exception Cases:**
+
+✅ **Can use bash find** only when:
+- Glob tool doesn't support the operation (very rare)
+- Need advanced find features like `-exec`, `-mtime`, etc.
+- **BUT** - Must justify in comment why Glob won't work
+
+✅ **Can use bash grep** only when:
+- Piping output from another command (e.g., `git log | grep "pattern"`)
+- Grep tool doesn't support the operation
+- **BUT** - Must justify in comment why Grep tool won't work
+
+### Why This Matters
+
+**Problem:** Using bash commands bypasses:
+- Token-efficient Claude Code tools
+- Proper permissions and access controls
+- Skill recommendations (cli-modern-tools doesn't intercept tool calls)
+
+**Solution:** Check this table BEFORE every bash command execution.
+
+---
+
 ## Development Commands
 
 ### Documentation
@@ -271,6 +342,72 @@ if (git diff shows multiple files OR skill.md version change OR CHANGELOG.md cha
     else:
         Proceed with manual commit (user confirmed)
 ```
+
+## Colored Output Guidelines
+
+### 🎯 Critical Rule: Minimal Colored Output Usage
+
+**⚠️ PROBLEM**: Excessive `bash .claude/skills/colored-output/color.sh` calls cause screen flickering and visual clutter in Claude CLI. Each bash call appears as a separate task.
+
+**✅ SOLUTION**: Use colored output SPARINGLY - only for headers and final results.
+
+### When to Use Colored Output
+
+**DO Use (2-3 calls maximum per operation):**
+- ✅ Initial header (once at start)
+  ```bash
+  bash .claude/skills/colored-output/color.sh skill-header "skill-name" "Starting..."
+  ```
+- ✅ Final result (once at end)
+  ```bash
+  bash .claude/skills/colored-output/color.sh success "" "Complete!"
+  ```
+- ✅ Critical alerts (errors, warnings)
+  ```bash
+  bash .claude/skills/colored-output/color.sh error "" "Failed!"
+  ```
+
+**DON'T Use (causes flickering):**
+- ❌ Progress updates ("Step 1...", "Processing...")
+- ❌ Info messages ("Found X files", "Analyzing...")
+- ❌ Intermediate steps (use regular Claude text instead)
+
+### Recommended Pattern
+
+```
+# START: Colored header (1 call)
+🔧 [skill-name] Starting operation...
+
+# MIDDLE: Regular text (0 calls)
+Analyzing files...
+Processing 10 items...
+Updating configurations...
+
+# END: Colored result (1-2 calls)
+✅ Operation complete!
+```
+
+### Anti-Pattern (DO NOT DO THIS)
+
+```
+🔧 [skill-name] Starting...         ← Colored
+▶ Step 1...                         ← Colored (unnecessary)
+ℹ️ Found 10 files                   ← Colored (unnecessary)
+▶ Step 2...                         ← Colored (unnecessary)
+... (8 more colored calls) ...
+✅ Complete!                         ← Colored
+```
+
+**Result**: 10+ bash tasks → screen flickers
+
+### Enforcement
+
+All skills and agents MUST follow this pattern:
+- **Maximum**: 3-4 colored bash calls per operation
+- **Target**: 2 colored bash calls (header + result)
+- **Forbidden**: More than 5 colored calls per operation
+
+See `.claude/skills/colored-output/skill.md` for full guidelines.
 
 ## Contributing
 

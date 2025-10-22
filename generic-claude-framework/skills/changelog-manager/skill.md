@@ -1,9 +1,9 @@
 ---
 name: changelog-manager
-description: Update project changelog with uncommitted changes, synchronize package versions, and create version releases with automatic commit, conditional git tags, and push
-version: 2.6.1
+description: Update project changelog with uncommitted changes, synchronize package versions, and create version releases with automatic commit, conditional git tags, GitHub Releases, and push
+version: 2.7.0
 author: Claude Code
-tags: [changelog, versioning, git, release-management, package-management, git-tags, conditional-tagging, readme-automation, docs-automation, git-guard, auto-intercept]
+tags: [changelog, versioning, git, release-management, package-management, git-tags, conditional-tagging, readme-automation, docs-automation, git-guard, auto-intercept, github-releases]
 auto-activate: true
 ---
 
@@ -45,53 +45,40 @@ auto-activate: true
 
 ## 🎨 **VISUAL OUTPUT FORMATTING**
 
-**CRITICAL: All changelog-manager output MUST use colored formatting and icons for visual clarity!**
+**CRITICAL: Use MINIMAL colored output (2-3 calls max) to prevent screen flickering!**
 
-### Color Scheme (ANSI Escape Codes)
+### Use Colored-Output Skill
 
-Use these exact ANSI codes in ALL skill responses:
+**Example formatted output (MINIMAL PATTERN):**
+```bash
+# START: Header only
+bash .claude/skills/colored-output/color.sh skill-header "changelog-manager" "Analyzing changes for release..."
 
-```
-Skill Header:    \033[1;34m🔧 [changelog-manager]\033[0m     # Bold Blue + Icon
-Success:         \033[1;32m✅\033[0m                         # Bold Green
-Warning:         \033[1;33m⚠️\033[0m                          # Bold Yellow
-Error:           \033[1;31m❌\033[0m                         # Bold Red
-Info:            \033[1;36mℹ️\033[0m                          # Bold Cyan
-Progress:        \033[0;34m▶\033[0m                          # Blue Arrow
-```
+# MIDDLE: Regular text (no colored calls)
+Detected version bump: v1.8.1 → v1.8.2
+Updated 5 files
+- CHANGELOG.md updated
+- package.json updated
+- README.md badge updated
+Creating release v1.8.2...
 
-### Required Output Format
-
-**Every skill response MUST start with:**
-```
-\033[1;34m🔧 [changelog-manager]\033[0m Message here...
-```
-
-**Example formatted output:**
-```
-\033[1;34m🔧 [changelog-manager]\033[0m Analyzing changes for release...
-\033[0;34m▶\033[0m Detected version bump: v1.8.1 → v1.8.2
-\033[0;34m▶\033[0m Updated 5 files
-\033[1;32m✅\033[0m CHANGELOG.md updated
-\033[1;32m✅\033[0m package.json updated
-\033[1;32m✅\033[0m README.md badge updated
-\033[1;34m🔧 [changelog-manager]\033[0m Creating release v1.8.2...
-\033[1;32m✅\033[0m Release v1.8.2 complete!
+# END: Result only
+bash .claude/skills/colored-output/color.sh success "" "Release v1.8.2 complete!"
 ```
 
-### Status Messages with Colors
+### When to Use Colored Output
 
-**Use these formatted messages throughout the workflow:**
+**DO Use:**
+- Initial header: `bash .claude/skills/colored-output/color.sh skill-header "changelog-manager" "Starting..."`
+- Final result: `bash .claude/skills/colored-output/color.sh success "" "Release complete!"`
+- Errors only: `bash .claude/skills/colored-output/color.sh error "" "Git command failed"`
 
-- Start: `\033[1;34m🔧 [changelog-manager]\033[0m I'll analyze your changes and prepare the release.`
-- Analyzing: `\033[0;34m▶\033[0m Analyzing git diff...`
-- Version Detected: `\033[1;36mℹ️\033[0m Detected version: \033[1;33mv1.8.2\033[0m (patch release)`
-- File Updated: `\033[1;32m✅\033[0m Updated CHANGELOG.md`
-- Warning: `\033[1;33m⚠️\033[0m This looks like a release - use changelog-manager?`
-- Error: `\033[1;31m❌\033[0m Git command failed`
-- Complete: `\033[1;32m✅\033[0m Release v1.8.2 complete!`
+**DON'T Use:**
+- ❌ Progress updates - use regular text
+- ❌ Info messages - use regular text
+- ❌ File updates - use regular text
 
-**WHY:** This makes skill execution visually distinct from regular Claude responses and improves UX significantly!
+**WHY:** Each bash call creates a task in Claude CLI, causing screen flickering. Keep it minimal!
 
 ## ⚡ **CRITICAL: Auto-Activation Behavior for Claude**
 
@@ -620,9 +607,24 @@ Result: All documentation automatically synchronized!
    git push origin main && git push origin vX.X.X
    ```
 
-5. **Verify Success**
+5. **Create GitHub Release**
+   ```bash
+   # Extract release notes from CHANGELOG.md for this version
+   # Use gh CLI to create formatted GitHub Release
+   gh release create vX.X.X \
+     --title "Release vX.X.X - [Brief summary]" \
+     --notes "$(cat <<'EOF'
+   [Extract content from CHANGELOG.md for this version]
+
+   See [CHANGELOG.md](CHANGELOG.md) for full details.
+   EOF
+   )"
+   ```
+
+6. **Verify Success**
    - Confirm commit pushed successfully
    - Confirm tag created on remote
+   - Confirm GitHub Release published
    - Provide GitHub release URL
 
 ## 🎬 **COMPLETE AUTOMATED WORKFLOW**
@@ -740,7 +742,7 @@ Updated CHANGELOG.md, package.json, and README.md to reflect version X.X.X.
 Co-Authored-By: Claude <noreply@anthropic.com>"
 ```
 
-**Conditional Git Tag (Public Projects Only):**
+**Conditional Git Tag & GitHub Release (Public Projects Only):**
 ```bash
 # IF project is public/open-source
 if [[ "$USE_TAGS" == true ]]; then
@@ -749,6 +751,11 @@ if [[ "$USE_TAGS" == true ]]; then
 
     # Push both commit and tag
     git push origin main && git push origin vX.X.X
+
+    # Create GitHub Release with release notes from CHANGELOG
+    gh release create vX.X.X \
+      --title "Release vX.X.X - [Summary]" \
+      --notes "[Extract content from CHANGELOG.md for this version]"
 else
     # Private project - only push commit
     git push origin main
@@ -757,7 +764,7 @@ fi
 
 ### Step 7: Confirm & Report
 
-**Success Message (Public Project with Tags):**
+**Success Message (Public Project with Tags & GitHub Release):**
 ```
 ✅ Release v1.2.0 Complete!
 
@@ -768,8 +775,9 @@ fi
 
 🏷️  Git Tag: v1.2.0 created
 🚀 Pushed to: origin/main
+📦 GitHub Release: Published
 
-🔗 View on GitHub:
+🔗 View Release:
 https://github.com/USER/REPO/releases/tag/v1.2.0
 
 📝 Summary:

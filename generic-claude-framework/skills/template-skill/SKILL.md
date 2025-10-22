@@ -11,18 +11,21 @@ description: Replace with description of the skill and when Claude should use it
 
 ### Use Colored-Output Skill
 
-**Every response MUST start with:**
-```bash
-bash .claude/skills/colored-output/color.sh skill-header "YOUR-SKILL-NAME" "Message here..."
-```
+**IMPORTANT: Use MINIMAL colored output (2-3 calls max) to prevent screen flickering!**
 
-**Example formatted output:**
+**Example formatted output (MINIMAL PATTERN):**
 ```bash
+# START: Header only
 bash .claude/skills/colored-output/color.sh skill-header "YOUR-SKILL-NAME" "Starting task..."
-bash .claude/skills/colored-output/color.sh progress "" "Processing..."
+
+# MIDDLE: Regular text (no colored calls)
+Processing data...
+Performing operations...
+
+# END: Result only
 bash .claude/skills/colored-output/color.sh success "" "Task completed"
 ```
 
-**WHY:** Using the centralized formatter ensures consistent colors across ALL components!
+**WHY:** Each bash call creates a task in Claude CLI, causing screen flickering. Keep it minimal!
 
 ---

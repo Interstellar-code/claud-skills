@@ -718,6 +718,236 @@ class SkillManager:
             print(f"❌ Error setting feature: {e}", file=sys.stderr)
             return False
 
+    def generate_abbreviation(self, name: str, prefix_type: str = 'S') -> str:
+        """
+        Generate 3-letter abbreviation from skill/agent name
+
+        Algorithm:
+        1. Check for special cases first
+        2. Remove common words (helper, manager, agent, skill)
+        3. Extract key words
+        4. Take first 3 consonants from combined key words
+        5. Pad with _ if < 3 characters
+
+        Args:
+            name: Skill or agent name
+            prefix_type: 'S' for skill, 'A' for agent
+
+        Returns:
+            Full prefix like '[S:cli]' or '[A:esf]'
+        """
+        # Normalize name
+        original_name = name
+        name = name.lower().replace('_', '-')
+
+        # Special cases for common patterns
+        special_cases = {
+            'cli-modern-tools': 'cli',
+            'eslint-fixer': 'esf',
+            'changelog-manager': 'chn',
+            'sql-cli': 'sql',
+            'pest-test-generator': 'peg',  # Pest gEnerator
+            'pest-test-runner': 'per',      # Pest Euner
+            'playwright-test-generator': 'pwg',  # PlayWright Generator
+            'playwright-test-healer': 'pwh',
+            'playwright-test-planner': 'pwp',
+        }
+
+        if name in special_cases:
+            abbrev = special_cases[name]
+            return f"[{prefix_type}:{abbrev}]"
+
+        # Remove common suffixes/words but keep meaningful parts
+        stop_words = ['helper', 'manager', 'agent', 'skill']
+        words = name.split('-')
+        key_words = [w for w in words if w not in stop_words]
+
+        # If all words removed, use original
+        if not key_words:
+            key_words = words
+
+        # Generate abbreviation from consonants of key words
+        combined = ''.join(key_words)
+        consonants = ''.join(c for c in combined if c not in 'aeiou')
+
+        if len(consonants) >= 3:
+            abbrev = consonants[:3]
+        else:
+            # Fallback: use first 3 chars of combined key words
+            abbrev = combined[:3]
+
+        # Pad if needed
+        abbrev = abbrev[:3].ljust(3, '_')
+
+        return f"[{prefix_type}:{abbrev}]"
+
+    def discover_agents(self) -> List[Dict[str, Any]]:
+        """Discover all agents in generic-claude-framework/agents/ directory"""
+        agents = []
+        agents_dir = self.project_root / 'generic-claude-framework' / 'agents'
+
+        if not agents_dir.exists():
+            # Try .claude/agents as fallback
+            agents_dir = self.project_root / '.claude' / 'agents'
+            if not agents_dir.exists():
+                return agents
+
+        for agent_dir in agents_dir.iterdir():
+            if not agent_dir.is_dir():
+                continue
+
+            agent_md = agent_dir / 'agent.md'
+            if not agent_md.exists():
+                continue
+
+            # Parse agent metadata (similar to skills)
+            metadata = self._parse_skill_metadata(agent_md)
+            metadata['agent_name'] = agent_dir.name
+            metadata['agent_path'] = str(agent_dir)
+            agents.append(metadata)
+
+        return agents
+
+    def generate_task_prefix_mapping(self) -> Dict[str, str]:
+        """
+        Generate complete task prefix mapping for all skills and agents
+
+        Returns:
+            Dictionary with skill/agent names as keys and prefixes as values
+        """
+        mapping = {}
+
+        # Discover skills
+        skills = self.discover_skills()
+        for skill in skills:
+            name = skill['skill_name']
+            prefix = self.generate_abbreviation(name, 'S')
+            mapping[name] = prefix
+
+        # Discover agents
+        agents = self.discover_agents()
+        for agent in agents:
+            name = agent['agent_name']
+            prefix = self.generate_abbreviation(name, 'A')
+            mapping[name] = prefix
+
+        return mapping
+
+    def add_claude_md_rule(self, rule_name: str) -> bool:
+        """
+        Add recommended rule to CLAUDE.md file
+
+        Args:
+            rule_name: Name of rule to add ('task-prefix', 'bash-attribution', 'minimal-commentary')
+
+        Returns:
+            True if successful, False otherwise
+        """
+        claude_md = self.project_root / 'CLAUDE.md'
+
+        if not claude_md.exists():
+            print(f"❌ CLAUDE.md not found at {claude_md}")
+            return False
+
+        try:
+            with open(claude_md, 'r', encoding='utf-8') as f:
+                content = f.read()
+
+            if rule_name == 'task-prefix':
+                # Check if rule already exists
+                if '## Task Prefix System' in content:
+                    print(f"⚠️  Task Prefix System already exists in CLAUDE.md")
+                    return False
+
+                # Generate mapping
+                mapping = self.generate_task_prefix_mapping()
+
+                # Build rule section
+                rule_section = "\n\n## Task Prefix System\n\n"
+                rule_section += "**CRITICAL: When creating tasks with TodoWrite, prefix content with skill/agent identifier**\n\n"
+                rule_section += "This helps users understand which skill/agent is creating which task in the Claude CLI.\n\n"
+                rule_section += "### Prefix Format\n"
+                rule_section += "- Skills: `[S:xxx]` where xxx is 3-letter abbreviation\n"
+                rule_section += "- Agents: `[A:xxx]` where xxx is 3-letter abbreviation\n\n"
+                rule_section += "### Complete Mapping Table\n\n"
+                rule_section += "**Skills:**\n"
+
+                # Sort skills
+                skills = {k: v for k, v in mapping.items() if v.startswith('[S:')}
+                for name in sorted(skills.keys()):
+                    prefix = skills[name]
+                    rule_section += f"- `{prefix}` - {name}\n"
+
+                rule_section += "\n**Agents:**\n"
+
+                # Sort agents
+                agents = {k: v for k, v in mapping.items() if v.startswith('[A:')}
+                for name in sorted(agents.keys()):
+                    prefix = agents[name]
+                    rule_section += f"- `{prefix}` - {name}\n"
+
+                rule_section += "\n### Usage Examples\n\n"
+                rule_section += "```python\n"
+                rule_section += "# Skill creating tasks\n"
+                rule_section += 'TodoWrite(todos=[{\n'
+                rule_section += '    "content": "[S:cli] Check if eza is installed",\n'
+                rule_section += '    "status": "pending",\n'
+                rule_section += '    "activeForm": "Checking eza installation"\n'
+                rule_section += "}])\n\n"
+                rule_section += "# Agent creating tasks\n"
+                rule_section += 'TodoWrite(todos=[{\n'
+                rule_section += '    "content": "[A:esf] Fix ESLint errors in src/",\n'
+                rule_section += '    "status": "in_progress",\n'
+                rule_section += '    "activeForm": "Fixing ESLint errors"\n'
+                rule_section += "}])\n"
+                rule_section += "```\n\n"
+                rule_section += "### Rules\n"
+                rule_section += "- **ALWAYS prefix** task content when skill/agent creates task\n"
+                rule_section += "- **Use exact prefix** from mapping table above\n"
+                rule_section += "- **Pad with underscore** if abbreviation < 3 chars (e.g., `[S:sql_]`)\n"
+                rule_section += "- **User-created tasks** don't need prefix (only skill/agent tasks)\n\n"
+
+                # Find good insertion point (after Communication Style if exists, otherwise end)
+                if '## 🔧 Tool Usage Guidelines' in content:
+                    # Insert before Tool Usage Guidelines
+                    content = content.replace('## 🔧 Tool Usage Guidelines', rule_section + '## 🔧 Tool Usage Guidelines')
+                else:
+                    # Append to end
+                    content += rule_section
+
+                # Write back
+                with open(claude_md, 'w', encoding='utf-8') as f:
+                    f.write(content)
+
+                print(f"✅ Added Task Prefix System to CLAUDE.md")
+                print(f"📊 Generated {len(mapping)} prefixes ({len(skills)} skills, {len(agents)} agents)")
+                return True
+
+            elif rule_name == 'remove-task-prefix':
+                # Remove task prefix section
+                if '## Task Prefix System' not in content:
+                    print(f"⚠️  Task Prefix System not found in CLAUDE.md")
+                    return False
+
+                # Find and remove section (until next ## heading)
+                pattern = r'\n\n## Task Prefix System\n\n.*?(?=\n\n##|\Z)'
+                content = re.sub(pattern, '', content, flags=re.DOTALL)
+
+                # Write back
+                with open(claude_md, 'w', encoding='utf-8') as f:
+                    f.write(content)
+
+                print(f"✅ Removed Task Prefix System from CLAUDE.md")
+                return True
+
+            else:
+                print(f"❌ Unknown rule: {rule_name}")
+                return False
+
+        except Exception as e:
+            print(f"❌ Error modifying CLAUDE.md: {e}", file=sys.stderr)
+            return False
+
 
 def main():
     parser = argparse.ArgumentParser(description='Skill Manager - Comprehensive skill management for Claude Code')
@@ -725,7 +955,8 @@ def main():
                        choices=['discover', 'list', 'enable', 'disable', 'status', 'export', 'json',
                                'auto-activate', 'add-permission', 'remove-permission', 'list-permissions',
                                'add-tag', 'remove-tag', 'set-priority', 'configure', 'advanced',
-                               'list-features', 'toggle-feature', 'enable-feature', 'disable-feature'],
+                               'list-features', 'toggle-feature', 'enable-feature', 'disable-feature',
+                               'generate-abbreviation', 'show-task-prefixes', 'add-task-prefix-rule', 'remove-task-prefix-rule'],
                        help='Action to perform')
     parser.add_argument('skill_name', nargs='?', help='Skill name')
     parser.add_argument('value', nargs='?', help='Value for the action (permission, tag, priority, config key)')
@@ -858,6 +1089,34 @@ def main():
             print("Usage: skill-manager.py disable-feature <skill_name> <feature_name>")
             sys.exit(1)
         manager.set_feature(args.skill_name, args.value, False)
+
+    # Task Prefix System actions
+    elif args.action == 'generate-abbreviation':
+        if not args.skill_name:
+            print("❌ Error: skill_name required")
+            print("Usage: skill-manager.py generate-abbreviation <skill_name> [--agent]")
+            sys.exit(1)
+        prefix_type = 'A' if args.value == 'agent' else 'S'
+        abbrev = manager.generate_abbreviation(args.skill_name, prefix_type)
+        print(f"✅ Generated abbreviation: {abbrev}")
+
+    elif args.action == 'show-task-prefixes':
+        mapping = manager.generate_task_prefix_mapping()
+        print("\n📋 Task Prefix Mapping")
+        print("=" * 60)
+        print("\n🔧 Skills:")
+        for name in sorted([k for k, v in mapping.items() if v.startswith('[S:')]):
+            print(f"  {mapping[name]} - {name}")
+        print("\n🤖 Agents:")
+        for name in sorted([k for k, v in mapping.items() if v.startswith('[A:')]):
+            print(f"  {mapping[name]} - {name}")
+        print(f"\n📊 Total: {len(mapping)} prefixes")
+
+    elif args.action == 'add-task-prefix-rule':
+        manager.add_claude_md_rule('task-prefix')
+
+    elif args.action == 'remove-task-prefix-rule':
+        manager.add_claude_md_rule('remove-task-prefix')
 
 
 if __name__ == '__main__':

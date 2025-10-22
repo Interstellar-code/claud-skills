@@ -81,6 +81,70 @@ claud-skills/
 
 ---
 
+
+
+## Task Prefix System
+
+**CRITICAL: When creating tasks with TodoWrite, prefix content with skill/agent identifier**
+
+This helps users understand which skill/agent is creating which task in the Claude CLI.
+
+### Prefix Format
+- Skills: `[S:xxx]` where xxx is 3-letter abbreviation
+- Agents: `[A:xxx]` where xxx is 3-letter abbreviation
+
+### Complete Mapping Table
+
+**Skills:**
+- `[S:chn]` - changelog-manager
+- `[S:cli]` - cli-modern-tools
+- `[S:clr]` - colored-output
+- `[S:mrk]` - markdown-helper
+- `[S:crt]` - skill-creator
+- `[S:skl]` - skill-manager
+- `[S:tmp]` - template-skill
+- `[S:tim]` - time-helper
+
+**Agents:**
+- `[A:chn]` - changelog-version-manager
+- `[A:esf]` - eslint-fixer
+- `[A:flw]` - file-watcher-automation
+- `[A:lgn]` - log-analyzer
+- `[A:mck]` - mockup-creation-agent
+- `[A:peg]` - pest-test-generator
+- `[A:per]` - pest-test-runner
+- `[A:pwg]` - playwright-test-generator
+- `[A:pwh]` - playwright-test-healer
+- `[A:pwp]` - playwright-test-planner
+- `[A:tsk]` - task-creator
+- `[A:tst]` - test-steps-generator
+- `[A:dsg]` - ui-design-implementer
+- `[A:wbp]` - web-app-testing-agent
+
+### Usage Examples
+
+```python
+# Skill creating tasks
+TodoWrite(todos=[{
+    "content": "[S:cli] Check if eza is installed",
+    "status": "pending",
+    "activeForm": "Checking eza installation"
+}])
+
+# Agent creating tasks
+TodoWrite(todos=[{
+    "content": "[A:esf] Fix ESLint errors in src/",
+    "status": "in_progress",
+    "activeForm": "Fixing ESLint errors"
+}])
+```
+
+### Rules
+- **ALWAYS prefix** task content when skill/agent creates task
+- **Use exact prefix** from mapping table above
+- **Pad with underscore** if abbreviation < 3 chars (e.g., `[S:sql_]`)
+- **User-created tasks** don't need prefix (only skill/agent tasks)
+
 ## 🔧 Tool Usage Guidelines (CRITICAL)
 
 **⚠️ MANDATORY: Before using ANY bash command, Claude MUST check this replacement table:**

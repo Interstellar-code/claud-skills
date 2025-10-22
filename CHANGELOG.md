@@ -7,6 +7,44 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.13.0] - 2025-10-22
+
+### Added
+- **Task Prefix System** - Identify skill/agent tasks in Claude CLI
+  - Added `[S:xxx]` prefix for skills, `[A:xxx]` prefix for agents (xxx = 3-letter abbreviation)
+  - Automatic abbreviation generation algorithm in skill-manager.py
+  - Complete mapping table added to CLAUDE.md (8 skills, 14 agents)
+  - Examples: `[S:cli]` for cli-modern-tools, `[A:esf]` for eslint-fixer
+  - Helps users understand which skill/agent is creating which task
+  - Improves task tracking and debugging in Claude CLI interface
+
+- **skill-manager.py Enhancements** - CLAUDE.md rule management
+  - `generate_abbreviation()` method - Creates 3-letter skill/agent abbreviations
+  - `discover_agents()` method - Scans generic-claude-framework/agents/ directory
+  - `generate_task_prefix_mapping()` method - Builds complete prefix mapping
+  - `add_claude_md_rule()` method - Adds task prefix system to CLAUDE.md
+  - Special case handling for common patterns (cli, esf, sql, etc.)
+  - Consonant extraction algorithm for unique abbreviations
+
+- **New CLI Commands** - Task prefix management
+  - `generate-abbreviation <name>` - Generate abbreviation for skill/agent
+  - `show-task-prefixes` - Display complete mapping table
+  - `add-task-prefix-rule` - Add task prefix system to CLAUDE.md
+  - `remove-task-prefix-rule` - Remove task prefix system from CLAUDE.md
+
+### Changed
+- **CLAUDE.md Updated** - Task Prefix System section added
+  - Complete mapping table for all skills and agents
+  - Usage examples with TodoWrite
+  - Rules for when to prefix tasks
+  - Inserted before "Tool Usage Guidelines" section
+
+### Improved
+- **Task Tracking UX** - Better visibility in Claude CLI
+  - Users can now identify which skill/agent created each task
+  - Easier to debug when multiple skills/agents run concurrently
+  - Consistent prefix format across all skills and agents
+
 ## [1.12.1] - 2025-10-22
 
 ### Added
@@ -499,7 +537,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - N/A (Initial release)
 
-[Unreleased]: https://github.com/Interstellar-code/claud-skills/compare/v1.12.1...HEAD
+[Unreleased]: https://github.com/Interstellar-code/claud-skills/compare/v1.13.0...HEAD
+[1.13.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.12.1...v1.13.0
 [1.12.1]: https://github.com/Interstellar-code/claud-skills/compare/v1.12.0...v1.12.1
 [1.12.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.11.0...v1.12.0
 [1.11.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.10.1...v1.11.0

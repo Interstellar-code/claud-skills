@@ -197,6 +197,30 @@ Before running ANY git commit command, Claude MUST:
 - User mentions: "push to GitHub", "push commits" (after feature work)
 - User requests git commit + tag + CHANGELOG updates together
 
+**⚡ CRITICAL: Auto-Activation Behavior**:
+When changelog-manager auto-activates (user says trigger keywords), Claude MUST:
+1. ✅ **DO NOT ask for confirmation** - Skill already activated, just proceed
+2. ✅ **DO NOT manually invoke the skill again** - It's already running
+3. ✅ **Proceed directly with the workflow** - Start analyzing changes immediately
+4. ⚠️ **You'll see**: `<command-message>The "changelog-manager" skill is running</command-message>`
+
+**Example of CORRECT behavior:**
+```
+User: "release update"
+Claude: [Skill auto-activates]
+Claude: "I'll analyze your changes and prepare the release."
+Claude: [Proceeds with git status, git diff, version detection...]
+```
+
+**Example of INCORRECT behavior (DO NOT DO THIS):**
+```
+User: "release update"
+Claude: [Skill auto-activates]
+Claude: "Would you like me to use changelog-manager?" ❌ WRONG - Don't ask!
+User: "yes"
+Claude: [Manually invokes skill again] ❌ WRONG - Skill already running!
+```
+
 **When changelog-manager Handles Release**:
 1. Analyzes uncommitted changes
 2. Generates CHANGELOG.md entries

@@ -1,7 +1,7 @@
 ---
 name: changelog-manager
 description: Update project changelog with uncommitted changes, synchronize package versions, and create version releases with automatic commit, conditional git tags, and push
-version: 2.6.0
+version: 2.6.1
 author: Claude Code
 tags: [changelog, versioning, git, release-management, package-management, git-tags, conditional-tagging, readme-automation, docs-automation, git-guard, auto-intercept]
 auto-activate: true
@@ -42,6 +42,37 @@ auto-activate: true
 - "Ready to push these changes"
 - "Let's release this"
 - "Can you update the changelog?"
+
+## ⚡ **CRITICAL: Auto-Activation Behavior for Claude**
+
+**When this skill auto-activates (user says trigger keywords), Claude MUST:**
+
+1. ✅ **DO NOT ask for confirmation** - Skill already activated, just proceed
+2. ✅ **DO NOT manually invoke the skill again** - It's already running
+3. ✅ **Proceed directly with the workflow** - Start analyzing changes immediately
+4. ✅ **The skill is already loaded** - You'll see `<command-message>The "changelog-manager" skill is running</command-message>`
+
+**Example of CORRECT behavior:**
+```
+User: "release update"
+Claude: [Skill auto-activates]
+Claude: "I'll analyze your changes and prepare the release."
+Claude: [Proceeds with git status, git diff, version detection...]
+```
+
+**Example of INCORRECT behavior (DO NOT DO THIS):**
+```
+User: "release update"
+Claude: [Skill auto-activates]
+Claude: "Would you like me to use changelog-manager?" ❌ WRONG - Don't ask!
+User: "yes"
+Claude: [Manually invokes skill again] ❌ WRONG - Skill already running!
+```
+
+**Why this matters:**
+- Asking for confirmation when skill already activated causes double-triggering
+- Manually invoking an already-running skill creates duplicate messages
+- Auto-activation means user ALREADY confirmed by using trigger keywords
 
 ### 🛡️ **Git Command Interception (Automatic Guard)**
 

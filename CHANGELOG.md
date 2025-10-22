@@ -7,6 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.8.1] - 2025-10-22
+
+### Documentation
+- **changelog-manager Skill v2.6.1** - Auto-Activation Behavior Documentation
+  - Added critical documentation section explaining auto-activation behavior for Claude
+  - Prevents double-triggering issue when skill auto-activates on trigger keywords
+  - Clear examples of correct vs incorrect behavior patterns
+  - Updated both .claude/ and generic-claude-framework/ skill files
+  - Updated CLAUDE.md with auto-activation handling examples
+  - Added `Bash(git tag:*)` permission to settings.local.json
+
 ## [1.8.0] - 2025-10-22
 
 ### Changed
@@ -258,7 +269,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - N/A (Initial release)
 
-[Unreleased]: https://github.com/Interstellar-code/claud-skills/compare/v1.8.0...HEAD
+[Unreleased]: https://github.com/Interstellar-code/claud-skills/compare/v1.8.1...HEAD
+[1.8.1]: https://github.com/Interstellar-code/claud-skills/compare/v1.8.0...v1.8.1
 [1.8.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.7.0...v1.8.0
 [1.7.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.6.0...v1.7.0
 [1.6.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.5.0...v1.6.0

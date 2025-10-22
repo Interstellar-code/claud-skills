@@ -2,7 +2,7 @@
 
 > Update project changelog with uncommitted changes, synchronize package versions, and create version releases with automatic commit, conditional git tags, and push
 
-**Category**: Utilities | **Language**: Unknown | **Version**: 2.6.0
+**Category**: Utilities | **Language**: Unknown | **Version**: 2.6.1
 
 ## Quick Info
 

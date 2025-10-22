@@ -8,7 +8,8 @@
       "Bash(git push:*)",
       "Bash(findstr:*)",
       "Skill(changelog-manager)",
-      "Bash(python scripts/generate_docs.py:*)"
+      "Bash(python scripts/generate_docs.py:*)",
+      "Bash(git tag:*)"
     ],
     "deny": [],
     "ask": []

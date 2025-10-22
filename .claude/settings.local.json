@@ -19,7 +19,9 @@
       "Bash(gh release create:*)",
       "Bash(gh release:*)",
       "Bash(find:*)",
-      "Bash(test -f:*)"
+      "Bash(test -f:*)",
+      "Bash(git reset:*)",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": []

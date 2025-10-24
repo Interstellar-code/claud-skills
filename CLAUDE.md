@@ -95,7 +95,48 @@ Let me search for package files using the Glob tool:
 
 ---
 
+## 📄 File Creation Policy
 
+**CRITICAL: Do NOT create summary/documentation files in agent/skill directories**
+
+### ❌ Forbidden File Types
+
+**NEVER create these types of files**:
+- `ENHANCEMENT-SUMMARY.md`
+- `RELEASE-VERIFICATION-v*.md`
+- `INTEGRATION-COMPLETE.md`
+- `IMPLEMENTATION-SUMMARY.md`
+- `CHANGES-SUMMARY.md`
+- Any similar summary/verification/completion documentation files
+
+### ❌ Forbidden Locations
+
+**NEVER create summary files in**:
+- `.claude/agents/{agent-name}/` directories
+- `.claude/skills/{skill-name}/` directories
+- `.claude/commands/` directories
+
+### ✅ Allowed Documentation
+
+**Only create these files**:
+- `README.md` - Agent/skill documentation (if explicitly requested by user)
+- `agent.md` - Agent definition (required)
+- `skill.md` - Skill definition (required)
+- Architecture/flow diagrams if they already exist (update only)
+
+### Rationale
+
+**Why this rule exists**:
+- Summary files clutter agent directories
+- Information should be in agent.md/skill.md itself
+- User doesn't need post-implementation summaries
+- Changes should be tracked via git commits, not summary files
+
+### Exception
+
+**Only exception**: User explicitly asks "create a summary file" or "document these changes in a separate file"
+
+---
 
 ## Task Prefix System
 
@@ -282,6 +323,205 @@ Let me search for files using Glob tool:
 - Skill recommendations (cli-modern-tools doesn't intercept tool calls)
 
 **Solution:** Check this table BEFORE every bash command execution.
+
+---
+
+### 🚀 Efficient Claude Code Operations - Token Optimization
+
+**CRITICAL: When doing multiple file searches or content analysis, use Task tool with Explore agent for token efficiency**
+
+#### When to Use Explore Agent vs. Direct Tools
+
+**❌ INEFFICIENT (Multiple separate tool calls):**
+```
+Grep(pattern="topicplan\.md", ...)     # 200 tokens, 55 results
+Grep(pattern="spec/", ...)              # 150 tokens, 2 results
+Grep(pattern="deliverables/", ...)      # 150 tokens, 5 results
+Total: 500+ tokens, 3 separate operations
+```
+
+**✅ EFFICIENT (Single Explore agent call):**
+```
+Task(
+  subagent_type="Explore",
+  description="Find all file path references",
+  prompt="Find all references to topicplan.md, spec/, and deliverables/ paths in agent.md"
+)
+Total: ~250 tokens, 1 consolidated operation (50% savings)
+```
+
+#### Rules for Efficient Operations
+
+**Use Explore Agent when:**
+- ✅ Searching for multiple patterns simultaneously
+- ✅ Need to understand codebase structure
+- ✅ Gathering context across multiple files
+- ✅ Searching for related concepts (not just exact matches)
+- ✅ Need consolidated, summarized results
+
+**Use Direct Tools (Glob/Grep/Read) when:**
+- ✅ Single specific file to read
+- ✅ One exact pattern to find
+- ✅ Quick verification of known location
+- ✅ Simple one-off operation
+
+#### Examples from CLAUDE.md
+
+**From recent work:**
+```
+❌ What I did (inefficient):
+  - 3 separate Grep calls for topicplan.md, spec/, deliverables/
+  - Each call used tokens and showed all results
+
+✅ What I should have done:
+  Task(
+    subagent_type="Explore",
+    description="Find all file path references",
+    prompt="Find all references to topicplan.md, spec/, and deliverables/ paths"
+  )
+```
+
+**Token Savings:**
+- Direct approach: ~500 tokens (multiple tool calls + all results)
+- Explore agent: ~250 tokens (single coordinated search)
+- **Savings: 50%**
+
+#### Decision Guide
+
+```
+🤔 I need to search for information...
+
+┌─ Multiple patterns or files?
+│  ├─ YES → ✅ Use Task(subagent_type="Explore")
+│  └─ NO  → Continue ↓
+│
+┌─ Need context across codebase?
+│  ├─ YES → ✅ Use Task(subagent_type="Explore")
+│  └─ NO  → Continue ↓
+│
+┌─ Single specific file/pattern?
+│  └─ YES → ✅ Use direct Glob/Grep/Read tools
+```
+
+**Key Principle:** Task tool with Explore agent is MORE efficient for multi-step searches. Don't default to direct tools for complex operations.
+
+---
+
+### 📝 Efficient Markdown Operations - Use markdown-helper Skill
+
+**CRITICAL: For markdown file operations, use markdown-helper skill for 68% token savings**
+
+#### When to Use markdown-helper vs. Read/Edit Tools
+
+**❌ INEFFICIENT (Direct Read/Edit):**
+```
+Read(file_path="spec.md")              # 800 tokens - loads entire file
+# Extract headers manually from output
+# Parse tables manually
+# Extract lists manually
+Total: 800+ tokens, manual parsing needed
+```
+
+**✅ EFFICIENT (markdown-helper skill):**
+```bash
+# Extract headers (JSON output)
+node ~/.claude/skills/markdown-helper/md-helper.js extract-headers spec.md --json
+
+# Extract tables
+node ~/.claude/skills/markdown-helper/md-helper.js extract-tables spec.md --json
+
+# Extract lists
+node ~/.claude/skills/markdown-helper/md-helper.js extract-lists spec.md
+
+Total: ~250 tokens, structured output (68% savings)
+```
+
+#### markdown-helper Capabilities
+
+**1. Token-Efficient Parsing:**
+- ✅ Extract headers without reading full file
+- ✅ Extract tables as JSON/CSV
+- ✅ Extract lists (bulleted, numbered)
+- ✅ Get file statistics (word count, heading count)
+
+**2. Template Operations:**
+- ✅ Bulk search & replace for placeholders
+- ✅ Populate templates efficiently
+- ✅ Multi-file replacements
+
+**3. Validation:**
+- ✅ Lint markdown files
+- ✅ Validate structure
+- ✅ Auto-fix formatting issues
+
+#### Rules for Markdown Operations
+
+**Use markdown-helper when:**
+- ✅ Parsing spec files (headers, requirements, tables)
+- ✅ Extracting structured data from markdown
+- ✅ Populating templates with placeholders
+- ✅ Validating generated markdown files
+- ✅ Bulk operations across multiple files
+- ✅ Need JSON/CSV output from markdown
+
+**Use Read/Edit tools when:**
+- ✅ Need full file content for context
+- ✅ Making complex, non-templated edits
+- ✅ One-off specific line changes
+- ✅ Reading non-markdown files
+
+#### Examples
+
+**Parsing Spec Files:**
+```bash
+# ❌ WRONG (800 tokens):
+Read(file_path="project-spec.md")
+
+# ✅ RIGHT (250 tokens):
+🔧 [markdown-helper] Running: node md-helper.js extract-headers project-spec.md --json
+🔧 [markdown-helper] Running: node md-helper.js extract-lists project-spec.md
+🔧 [markdown-helper] Running: node md-helper.js extract-tables project-spec.md --json
+```
+
+**Populating Templates:**
+```bash
+# ❌ WRONG (manual Read + Write + Edit):
+Read(template.md)  # 500 tokens
+# Manually replace placeholders
+Write(output.md, content)  # 500 tokens
+Total: 1000+ tokens
+
+# ✅ RIGHT (markdown-helper bulk replace):
+🔧 [markdown-helper] Running: node md-helper.js replace template.md "{slug}" "my-topic"
+Total: ~200 tokens (80% savings)
+```
+
+**Validation:**
+```bash
+# ✅ After generating markdown files, validate:
+🔧 [markdown-helper] Running: node md-helper.js lint topicplan.md
+```
+
+#### Token Savings Impact
+
+**Real Example from Agent Work:**
+- Traditional Read approach: ~800 tokens per spec file
+- markdown-helper approach: ~250 tokens
+- **Savings: 550 tokens per operation (68%)**
+
+For a project with 5 markdown files:
+- Traditional: 4000 tokens
+- markdown-helper: 1250 tokens
+- **Total savings: 2750 tokens (69%)**
+
+#### Integration with Bash Attribution
+
+**MUST use bash attribution pattern:**
+```bash
+🔧 [markdown-helper] Running: node md-helper.js extract-headers spec.md
+```
+
+See markdown-helper skill documentation for full command reference.
 
 ---
 
@@ -810,6 +1050,197 @@ All skills and agents MUST follow this pattern:
 - **Forbidden**: More than 5 colored calls per operation
 
 See `.claude/skills/colored-output/skill.md` for full guidelines.
+
+## 🎯 csprojecttask Agent Usage - MANDATORY
+
+**CRITICAL: When user requests multi-step projects, topics, or mentions spec files - ALWAYS use csprojecttask agent**
+
+### When to Use csprojecttask Agent (MANDATORY)
+
+**✅ MUST use csprojecttask agent when user says:**
+- "create a topic using [spec-file.md]"
+- "build [project name] using spec"
+- "start a project from [spec]"
+- "use the PM orchestration system"
+- "create a multi-step project"
+- Any mention of "topic", "spec", or "multi-agent"
+
+**❌ NEVER do these manually (always use agent):**
+- Create `Project-tasks/{slug}/` directories
+- Create `Project-tasks/{slug}/topicplan.md`
+- Create `.claude/agents/state/csprojecttask/topics/{slug}/` directories
+- Write `topic.json`, `task-*.json`, `pm-state.json` files
+- Manually execute the 3-phase workflow
+- Approve phases on behalf of the user
+
+### Correct Workflow
+
+**Step 1: Invoke Agent**
+```javascript
+Task(
+  subagent_type="csprojecttask",
+  description="Create topic from spec",
+  prompt="Create a topic using the specification file: [spec-file.md]
+
+[Brief summary of what needs to be built]
+
+Please proceed through all phases and present each phase for user approval."
+)
+```
+
+**Step 2: Present Phase 1 Results to User**
+When agent returns Phase 1 analysis, Claude MUST:
+- ✅ Present requirements summary to user
+- ✅ Ask user: "Does this look correct? Should I proceed to Phase 2?"
+- ❌ DO NOT auto-approve on behalf of user
+
+**Step 3: User Approves → Continue to Phase 2**
+Only after user says "yes", "approved", "continue":
+- Invoke agent again for Phase 2 (Agent Selection)
+- Present agent selection to user for approval
+
+**Step 4: User Approves → Continue to Phase 3**
+Only after user approves:
+- Invoke agent again for Phase 3 (Execution Planning)
+- Present execution plan to user for approval
+
+**Step 5: User Approves → Execute**
+Only after user approves:
+- Invoke agent to launch sub-agents
+- Monitor progress
+- Report completion
+
+### 3-Phase Approval Pattern (MANDATORY)
+
+**CRITICAL: User must approve each phase, not Claude**
+
+```
+Phase 1: Requirements Analysis
+├─ Agent analyzes spec
+├─ Returns requirements summary
+└─ ⚠️ STOP - Present to user for approval
+
+User approves ✓
+
+Phase 2: Agent Selection
+├─ Agent selects sub-agents (e.g., single-page-website-builder)
+├─ Returns agent list with justification
+└─ ⚠️ STOP - Present to user for approval
+
+User approves ✓
+
+Phase 3: Execution Planning
+├─ Agent prepares detailed prompts for sub-agents
+├─ Returns execution plan
+└─ ⚠️ STOP - Present to user for approval
+
+User approves ✓
+
+Execution:
+├─ Agent launches sub-agents
+├─ Monitors progress via state files
+└─ Reports completion with deliverables
+```
+
+### What Claude MUST NOT Do
+
+**❌ FORBIDDEN - These bypass the agent:**
+1. Manually create `Project-tasks/{slug}/` structure
+2. Manually write `topicplan.md`
+3. Manually create state JSON files (`topic.json`, `task-*.json`)
+4. Execute work that csprojecttask agent should orchestrate
+5. Approve phases on behalf of user (NO "Yes, please proceed!")
+6. Skip user approval between phases
+
+### What Claude MUST Do
+
+**✅ REQUIRED - Proper agent usage:**
+1. Recognize trigger phrases (spec file, topic, multi-step)
+2. Invoke `Task(subagent_type="csprojecttask", ...)`
+3. Wait for agent to return Phase 1 results
+4. Present Phase 1 to user and wait for approval
+5. Only continue after user explicitly approves
+6. Repeat for Phase 2, Phase 3, and Execution
+7. Monitor state files for progress
+8. Report completion with deliverables location
+
+### Detection Pattern
+
+```javascript
+// When user message contains:
+if (message.includes("create a topic") ||
+    message.includes("using spec") ||
+    message.includes("start a project") ||
+    message.includes(".md spec") ||
+    message.includes("PM orchestration")) {
+
+    // ✅ DO THIS:
+    Task(subagent_type="csprojecttask", prompt="...");
+
+    // ❌ DO NOT DO THIS:
+    // mkdir -p "Project-tasks/..."
+    // Write(...topic.json...)
+}
+```
+
+### Example (CORRECT)
+
+```
+User: "create a topic using test-spec-dashboard.md"
+
+Claude: [Invokes csprojecttask agent]
+
+Agent returns: Phase 1 complete - here's the requirements...
+
+Claude to User: "The agent has analyzed the spec:
+- Browser-based dashboard
+- 6 deliverables (HTML, CSS, JS files)
+- Uses single-page-website-builder agent
+- MVP includes topic cards, detail view, auto-refresh
+
+Does this look correct? Should we proceed to Phase 2 (Agent Selection)?"
+
+User: "yes"
+
+Claude: [Invokes agent for Phase 2]
+...
+```
+
+### Example (WRONG - DO NOT DO THIS)
+
+```
+User: "create a topic using test-spec-dashboard.md"
+
+Claude: ❌ "I'll create a topic using the dashboard spec. Starting the csprojecttask workflow now."
+
+Claude: ❌ [Manually creates directories]
+mkdir -p "Project-tasks/csprojecttask-dashboard/spec"
+
+Claude: ❌ [Manually writes topic.json]
+Write(.claude/agents/state/.../topic.json, ...)
+
+Claude: ❌ [Auto-approves on behalf of user]
+"Yes, please proceed with launching the task!"
+```
+
+### Enforcement Rules
+
+1. **Trigger Detection**: ALWAYS check for spec file mentions
+2. **Agent Invocation**: ALWAYS use Task tool with csprojecttask
+3. **Manual Work**: NEVER create Project-tasks/ or state files manually
+4. **User Approval**: NEVER approve phases on behalf of user
+5. **Phase Separation**: ALWAYS wait for user between phases
+
+### Why This Matters
+
+- ✅ Tests the csprojecttask agent properly (the whole point!)
+- ✅ User controls the workflow (approves each phase)
+- ✅ Follows 3-phase architecture correctly
+- ✅ Creates proper topic structure and state files
+- ✅ Enables multi-topic management via menu system
+- ✅ Self-documenting via topicplan.md
+
+**When in doubt**: If user mentions spec files or multi-step projects → use csprojecttask agent!
 
 ## Contributing
 

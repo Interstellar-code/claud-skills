@@ -7,6 +7,57 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.15.0] - 2025-01-24
+
+### Added
+- **Documentation-Expert Integration** - Automatic documentation generation for all topics
+  - Added Step 15.6: Documentation Task (MANDATORY) in csprojecttask agent
+  - Added Step 17.6: Documentation Expert Prompt Template (comprehensive README generation)
+  - Every topic now automatically includes documentation-expert as second-to-last task
+  - QA validator enhanced to check documentation quality
+  - Documentation task creates README.md with: Overview, Features, Setup, Usage, Examples, API docs
+
+- **csprojecttask Agent Enhancements** - Workflow improvements
+  - New mandatory task sequence: Features → Documentation → QA Validation
+  - Documentation-expert and deliverables-qa-validator now required for all topics
+  - Enhanced csprojecttask README with Standard Topic Workflow section
+  - Updated all examples to show 5-task sequence (3 features + 1 doc + 1 QA)
+  - Added agent registry entries for documentation-expert and deliverables-qa-validator
+
+- **CLAUDE.md Enhanced Documentation** - Comprehensive workflow and policy additions
+  - Added File Creation Policy (forbidden file types, locations, allowed documentation)
+  - Added Efficient Claude Code Operations section (token optimization with Explore agent)
+  - Added Efficient Markdown Operations (markdown-helper skill usage, 68% token savings)
+  - Added Autonomous Skills trust policy (changelog-manager, markdown-helper)
+  - Enhanced communication style guidelines (minimal commentary)
+
+- **Project-tasks Examples** - Real-world deliverable examples
+  - csprojecttask-dashboard-v2 (browser-based topic dashboard)
+  - todowrite-integration-test (integration test with comprehensive README)
+  - Simple calculator library integration test (documentation-expert workflow validation)
+
+- **.gitignore** - Repository ignore rules for test files and Windows artifacts
+- **test-spec-dashboard.md** - Example specification file for dashboard projects
+
+### Changed
+- **Interactive Menu Scripts** - Enhanced cs-prj-menu.bat and cs-prj-menu.sh
+  - Improved cross-platform compatibility
+  - Better error handling and user feedback
+  - Enhanced topic navigation features
+
+### Removed
+- **Project Cleanup** - Removed completed and outdated documentation
+  - RELEASE-VERIFICATION-v1.14.0.md (post-release cleanup)
+  - Project-tasks/done/ completed task files
+  - task-003-matrix-style-COMPLETE.md (archived)
+
+### Impact
+- ✅ **Automatic professional documentation** for every topic
+- ✅ **Documentation quality assurance** via QA validator
+- ✅ **Consistent documentation standards** across all projects
+- ✅ **Token-efficient operations** via enhanced CLAUDE.md guidelines
+- ✅ **Better user experience** with how-to guides and setup instructions
+
 ## [1.14.0] - 2025-10-23
 
 ### Added

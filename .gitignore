@@ -1,0 +1,12 @@
+# Windows nul file (created by some shell redirects)
+nul
+NUL
+tests/.gitignore
+tests/README.md
+tests/test-csprojecttask-flow.py
+tests/validate-state-sync.py
+tests/fixtures/test-spec-parallel.md
+tests/fixtures/test-spec-sequential.md
+tests/fixtures/test-spec-simple.md
+tests/fixtures/test-spec-validation-run.md
+tests/test-agent-simple/agent.md

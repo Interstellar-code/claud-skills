@@ -1,208 +1,261 @@
 ---
 name: csprojtasks
 description: Hierarchical multi-agent orchestration system with PM coordination, file-based state management, and interactive menu interface. Use when managing complex multi-agent workflows, coordinating parallel sub-agents, or organizing large project tasks with multiple specialists.
+version: 2.0.0
 ---
 
-# CS Project Tasks Skill
+# CS Project Tasks Skill (V2.0)
 
 Comprehensive orchestration utilities for managing hierarchical multi-agent systems with PM coordination, state management, and topic-based organization.
 
 ## Overview
 
-This skill provides utilities for:
-- **State Management**: Create, read, update state files for orchestration
+This skill provides Python-based utilities for:
+- **State Management**: Create, read, update state files for orchestration (V2.0)
 - **Topic Lifecycle**: Initialize, resume, archive project topics
 - **Task Coordination**: Manage sub-agent tasks and dependencies
 - **Token Tracking**: Monitor and report token usage across agents
-- **Interactive Menu**: Browse topics, view tasks, and invoke the PM agent (see `INTERACTIVE-MENU-WORKFLOW.md`)
+- **SessionStart Hook**: Display active topics on Claude Code startup
 
 ## When Claude Should Use This Skill
 
 Auto-activate when:
-- User requests `/cs:projecttask` command
 - PM orchestrator needs to manage state files
 - Creating or updating topic metadata
 - Initializing sub-agent task states
 - Archiving completed topics
 - Reading orchestration state for resume
 
-## Directory Structure
+## Directory Structure (V2.0)
 
 ```
 .claude/
 ├── agents/
-│   ├── pm-project-orchestrator.md       # PM agent
-│   ├── orchestrated-sub-agent-template.md  # Universal template
+│   ├── csprojecttask/                    # PM agent
+│   │   ├── agent.md
+│   │   └── orchestrated-sub-agent-template.md
 │   └── state/                            # Runtime state
-│       ├── topics.json                   # Active topics registry
-│       ├── {topic-slug}/                 # Per-topic state
-│       │   ├── topic.json
-│       │   ├── pm-state.json
-│       │   ├── task-{id}-{name}.json
-│       │   └── messages.json
-│       └── archive/                      # Completed topics
+│       └── csprojecttask/                # V2.0 namespace
+│           ├── topics.json               # ✅ Single source of truth
+│           ├── topics/                   # Topic directories
+│           │   └── {topic-slug}/
+│           │       ├── task-{id}-{name}.json
+│           │       └── messages.json
+│           └── archive/                  # Completed topics
 │
 └── skills/
     └── csprojtasks/
-        ├── SKILL.md                      # This file
-        ├── scripts/
-        │   ├── state-manager.sh          # State CRUD operations
-        │   ├── topic-manager.sh          # Topic lifecycle
-        │   └── utils.sh                  # Shared utilities
+        ├── skill.md                      # This file
+        ├── scripts/                      # Python utilities (V2.0)
+        │   ├── topic_manager.py          # Topic lifecycle
+        │   ├── state_manager.py          # State CRUD operations
+        │   ├── utils.py                  # Shared utilities
+        │   ├── setup_project_structure.py # Directory setup
+        │   ├── finalize_topic.py         # Topic completion
+        │   ├── check_topics_file.py      # Validation
+        │   └── get_topics_quiet.sh       # SessionStart hook
         └── templates/
             └── state-templates.json      # State file schemas
 ```
 
-## Utilities
+## Python Utilities (V2.0)
 
-### 1. State Manager (`scripts/state-manager.sh`)
+### 1. Topic Manager (`scripts/topic_manager.py`)
 
-**Purpose**: CRUD operations for state files
+**Purpose**: Manage topic lifecycle (V2.0 - uses topics.json)
 
-**Functions**:
-- `create_state_file <path> <template>` - Initialize state file from template
-- `read_state <path> <field>` - Read specific field from state
-- `update_state <path> <field> <value>` - Update state field
-- `append_log <path> <level> <message>` - Append log entry
-- `validate_state <path>` - Validate JSON structure
-
-**Usage Example**:
-```bash
-# Create new task state
-bash .claude/skills/csprojtasks/scripts/state-manager.sh \
-  create_state_file \
-  ".claude/agents/state/auth-system/task-001-backend.json" \
-  "task-state"
-
-# Append log entry
-bash .claude/skills/csprojtasks/scripts/state-manager.sh \
-  append_log \
-  ".claude/agents/state/auth-system/task-001-backend.json" \
-  "info" \
-  "Starting database schema design"
-
-# Read current status
-bash .claude/skills/csprojtasks/scripts/state-manager.sh \
-  read_state \
-  ".claude/agents/state/auth-system/task-001-backend.json" \
-  ".status"
-```
-
-### 2. Topic Manager (`scripts/topic-manager.sh`)
-
-**Purpose**: Manage topic lifecycle
-
-**Functions**:
-- `create_topic <title> <description>` - Initialize new topic
-- `list_active_topics` - Get all active topics
+**Commands**:
+- `create_topic <title>` - Initialize new topic in topics.json
+- `list_active_topics` - List non-completed topics
+- `list_completed_topics` - List completed topics
 - `get_topic_status <slug>` - Get topic progress and metrics
-- `archive_topic <slug>` - Move topic to archive
-- `resume_topic <slug>` - Prepare topic for resume
+- `touch_topic <slug>` - Update last active time
+- `update_topic_progress <slug>` - Recalculate progress from tasks
+- `archive_topic <slug>` - Move topic to archive directory
+- `resume_topic <slug>` - Update last active and return status
+- `get_active_topics_summary` - Get summary for SessionStart hook
+- `complete_topic <slug>` - Mark as completed and archive
+- `delete_topic <slug>` - Delete topic (use with caution)
 
-**Usage Example**:
+**Usage Examples**:
 ```bash
-# Create new topic
-bash .claude/skills/csprojtasks/scripts/topic-manager.sh \
+# Create new topic (V2.0)
+python .claude/skills/csprojtasks/scripts/topic_manager.py \
   create_topic \
   "Add JWT authentication" \
-  "Implement JWT-based auth with tokens and middleware"
+  --description "Implement JWT-based auth with tokens and middleware"
 
 # List active topics
-bash .claude/skills/csprojtasks/scripts/topic-manager.sh \
+python .claude/skills/csprojtasks/scripts/topic_manager.py \
   list_active_topics
 
-# Get topic status
-bash .claude/skills/csprojtasks/scripts/topic-manager.sh \
+# Get topic status (reads from topics.json)
+python .claude/skills/csprojtasks/scripts/topic_manager.py \
   get_topic_status \
   "auth-system-jwt"
 
 # Archive completed topic
-bash .claude/skills/csprojtasks/scripts/topic-manager.sh \
+python .claude/skills/csprojtasks/scripts/topic_manager.py \
   archive_topic \
   "auth-system-jwt"
+
+# Get active topics summary (SessionStart hook)
+python .claude/skills/csprojtasks/scripts/topic_manager.py \
+  get_active_topics_summary
 ```
 
-### 3. Utility Functions (`scripts/utils.sh`)
+### 2. State Manager (`scripts/state_manager.py`)
+
+**Purpose**: CRUD operations for state files (V2.0)
+
+**Commands**:
+- `create_state_file <path> <template>` - Initialize state file from template
+- `read_state <path> <field>` - Read specific field from state
+- `update_state <path> <field> <value>` - Update state field
+- `append_log <path> <level> <message>` - Append log entry
+- `set_task_status <path> <status>` - Update task status
+- `track_file_change <path> <file> <change_type>` - Track file change
+- `update_progress <path> <progress>` - Update progress (0-100)
+- `validate_state <path>` - Validate JSON structure
+- `set_blocking_question <path> <question>` - Set blocking question
+- `answer_question <path> <answer>` - Answer blocking question
+- `set_task_result <path> <result>` - Set task completion result
+
+**Usage Examples**:
+```bash
+# Create new task state
+python .claude/skills/csprojtasks/scripts/state_manager.py \
+  create_state_file \
+  ".claude/agents/state/csprojecttask/topics/auth-system/task-001-backend.json" \
+  "task-state"
+
+# Append log entry
+python .claude/skills/csprojtasks/scripts/state_manager.py \
+  append_log \
+  ".claude/agents/state/csprojecttask/topics/auth-system/task-001-backend.json" \
+  "info" \
+  "Starting database schema design"
+
+# Read current status
+python .claude/skills/csprojtasks/scripts/state_manager.py \
+  read_state \
+  ".claude/agents/state/csprojecttask/topics/auth-system/task-001-backend.json" \
+  "status"
+
+# Update progress
+python .claude/skills/csprojtasks/scripts/state_manager.py \
+  update_progress \
+  ".claude/agents/state/csprojecttask/topics/auth-system/task-001-backend.json" \
+  50
+```
+
+### 3. Utility Functions (`scripts/utils.py`)
 
 **Purpose**: Shared helper functions
 
 **Functions**:
-- `slugify <text>` - Convert text to URL-safe slug
-- `generate_task_id` - Generate unique task ID
-- `timestamp_iso` - Get ISO 8601 timestamp
-- `atomic_write <path> <content>` - Atomic file write
-- `ensure_directory <path>` - Create directory if needed
+- `find_project_root()` - Find project root by locating .claude directory
+- `slugify(text)` - Convert text to URL-safe slug
+- `generate_task_id(topic_slug)` - Generate unique task ID
+- `timestamp_iso()` - Get ISO 8601 timestamp with timezone
+- `atomic_write(path, content)` - Atomic file write (supports dict/list/str)
+- `ensure_directory(path)` - Create directory if needed
+- `read_json_file(path)` - Read and parse JSON file
+- `read_json_field(path, field)` - Read specific JSON field
+- `update_json_field(path, field, value)` - Update JSON field
+- `append_json_array(path, field, value)` - Append to JSON array
+- `validate_json(path)` - Validate JSON structure
 
-**Usage Example**:
-```bash
-# Source utilities
-source .claude/skills/csprojtasks/scripts/utils.sh
+**Usage** (imported by other scripts):
+```python
+from utils import (
+    find_project_root, slugify, timestamp_iso,
+    atomic_write, read_json_file
+)
 
 # Generate slug
-SLUG=$(slugify "Add JWT Authentication")
+slug = slugify("Add JWT Authentication")
 # Returns: "add-jwt-authentication"
 
-# Generate task ID
-TASK_ID=$(generate_task_id)
-# Returns: "task_001"
+# Atomic write (prevents corruption)
+atomic_write("state.json", {"status": "completed"})
 
-# Atomic write
-atomic_write "state.json" '{"status": "completed"}'
+# Find project root
+project_root = find_project_root()
+# Returns: Path to directory containing .claude/
 ```
 
-## State File Templates
+### 4. Setup Project Structure (`scripts/setup_project_structure.py`)
+
+**Purpose**: Create initial directory structure for topics
+
+**Usage**:
+```bash
+# Create Project-tasks/{slug}/ structure
+python .claude/skills/csprojtasks/scripts/setup_project_structure.py \
+  "landing-page-builder"
+
+# Creates:
+# - Project-tasks/landing-page-builder/
+# - Project-tasks/landing-page-builder/spec/
+# - Project-tasks/landing-page-builder/deliverables/
+```
+
+### 5. Finalize Topic (`scripts/finalize_topic.py`)
+
+**Purpose**: Mark topic as completed and archive
+
+**Usage**:
+```bash
+# Finalize topic (V2.0)
+python .claude/skills/csprojtasks/scripts/finalize_topic.py \
+  "landing-page-builder"
+
+# Actions:
+# 1. Marks status as "completed" in topics.json
+# 2. Sets completedAt timestamp
+# 3. Archives topic directory
+```
+
+### 6. Check Topics File (`scripts/check_topics_file.py`)
+
+**Purpose**: Validate topics.json structure
+
+**Usage**:
+```bash
+# Validate topics registry (V2.0)
+python .claude/skills/csprojtasks/scripts/check_topics_file.py --summary
+
+# Returns summary of topics.json health
+```
+
+### 7. SessionStart Hook (`scripts/get_topics_quiet.sh`)
+
+**Purpose**: Display active topics on Claude Code startup
+
+**Usage** (configured in `.claude/settings.local.json`):
+```bash
+bash .claude/skills/csprojtasks/scripts/get_topics_quiet.sh
+
+# Output (if topics exist):
+# Found 2 active topic(s):
+#   • Landing Page Builder (45% complete, 3/5 tasks)
+#   • API Integration (20% complete, 1/4 tasks)
+
+# Output (if no topics):
+# No pending topics - ready for new work!
+```
+
+## State File Templates (V2.0)
 
 Templates are stored in `templates/state-templates.json`:
-
-### Topic State Template
-```json
-{
-  "slug": "",
-  "title": "",
-  "description": "",
-  "status": "in_progress",
-  "createdAt": "",
-  "lastActiveAt": "",
-  "completedAt": null,
-  "userRequest": "",
-  "tags": [],
-  "relatedFiles": [],
-  "tokenUsage": {
-    "total": 0,
-    "pmAgent": 0,
-    "subAgents": {},
-    "estimated": 0,
-    "savings": 0,
-    "savingsPercent": 0
-  }
-}
-```
-
-### PM State Template
-```json
-{
-  "topicSlug": "",
-  "sessionId": "",
-  "userRequest": "",
-  "tasks": [],
-  "overallStatus": "in_progress",
-  "completedTasks": 0,
-  "totalTasks": 0,
-  "createdAt": "",
-  "tokenUsage": {
-    "pmTokens": 0,
-    "subAgentTokens": 0,
-    "totalTokens": 0
-  }
-}
-```
 
 ### Task State Template
 ```json
 {
   "taskId": "",
   "focusArea": "",
-  "userPrompt": "",
+  "agentName": "",
   "status": "pending",
   "assignedAt": "",
   "startedAt": null,
@@ -224,147 +277,157 @@ Templates are stored in `templates/state-templates.json`:
 
 ## Integration with PM Orchestrator
 
-The PM agent (`pm-project-orchestrator.md`) uses these utilities for:
+The PM agent (`csprojecttask`) uses these utilities for:
 
-1. **Topic Initialization**
-   ```bash
-   # PM creates new topic
-   topic-manager.sh create_topic "User login feature" "Create login with validation"
-   ```
+### 1. Topic Initialization
+```bash
+# PM creates new topic (V2.0)
+python .claude/skills/csprojtasks/scripts/topic_manager.py \
+  create_topic "User login feature" \
+  --description "Create login with validation"
 
-2. **Task State Management**
-   ```bash
-   # PM initializes sub-agent task
-   state-manager.sh create_state_file \
-     ".claude/agents/state/login-feature/task-001-frontend.json" \
-     "task-state"
-   ```
+# Returns: user-login-feature (slug)
+```
 
-3. **Progress Monitoring**
-   ```bash
-   # PM reads task status
-   state-manager.sh read_state \
-     ".claude/agents/state/login-feature/task-001-frontend.json" \
-     ".status"
-   ```
+### 2. Directory Setup
+```bash
+# PM creates Project-tasks structure
+python .claude/skills/csprojtasks/scripts/setup_project_structure.py \
+  "user-login-feature"
+```
 
-4. **Topic Archival**
-   ```bash
-   # PM archives completed topic
-   topic-manager.sh archive_topic "login-feature"
-   ```
+### 3. Task State Management
+```bash
+# PM initializes sub-agent task
+python .claude/skills/csprojtasks/scripts/state_manager.py \
+  create_state_file \
+  ".claude/agents/state/csprojecttask/topics/login-feature/task-001-frontend.json" \
+  "task-state"
+```
+
+### 4. Progress Monitoring
+```bash
+# PM reads task status
+python .claude/skills/csprojtasks/scripts/state_manager.py \
+  read_state \
+  ".claude/agents/state/csprojecttask/topics/login-feature/task-001-frontend.json" \
+  "status"
+```
+
+### 5. Topic Completion
+```bash
+# PM finalizes topic (V2.0)
+python .claude/skills/csprojtasks/scripts/finalize_topic.py \
+  "login-feature"
+```
 
 ## Integration with Sub-Agents
 
-Sub-agents use state-manager for logging:
+Sub-agents use state_manager for logging and updates:
 
 ```bash
 # Sub-agent logs progress
-state-manager.sh append_log \
+python .claude/skills/csprojtasks/scripts/state_manager.py \
+  append_log \
   "$STATE_FILE" \
   "info" \
   "Creating LoginForm component"
 
-# Sub-agent logs milestone
-state-manager.sh append_log \
+# Sub-agent updates progress
+python .claude/skills/csprojtasks/scripts/state_manager.py \
+  update_progress \
   "$STATE_FILE" \
-  "progress" \
-  "Login form complete (40% complete)"
+  40
 
-# Sub-agent updates current operation
-state-manager.sh update_state \
+# Sub-agent tracks file changes
+python .claude/skills/csprojtasks/scripts/state_manager.py \
+  track_file_change \
   "$STATE_FILE" \
-  ".currentOperation" \
-  "Adding form validation"
-```
-
-## Token Tracking
-
-Token metrics are updated via:
-
-```bash
-# Update task token usage
-state-manager.sh update_state \
-  "$STATE_FILE" \
-  ".tokenUsage.total" \
-  "3500"
-
-# Update PM token usage
-state-manager.sh update_state \
-  ".claude/agents/state/topic/pm-state.json" \
-  ".tokenUsage.pmTokens" \
-  "1200"
+  "src/components/LoginForm.tsx" \
+  "created"
 ```
 
 ## Best Practices
 
-1. **Always validate JSON** before writing
-2. **Use atomic writes** (temp file + mv)
+1. **Always validate JSON** before writing (automatic in atomic_write)
+2. **Use atomic writes** to prevent corruption (built-in)
 3. **Log regularly** (every 30-60 seconds minimum)
 4. **Update progress milestones** (25%, 50%, 75%, 100%)
 5. **Track file changes** in state files
-6. **Archive completed topics** for history
+6. **Archive completed topics** for history (automatic via finalize_topic.py)
 
 ## Error Handling
 
 All scripts include error handling:
 - Validate input parameters
 - Check file existence
-- Verify JSON structure
-- Return meaningful error codes
-- Log errors to stderr
+- Verify JSON structure (automatic validation)
+- Return meaningful error codes (0 = success, 1 = error)
+- Log errors to stderr (colored output)
 
 ## Performance
 
 State operations are optimized:
-- Use `jq` for efficient JSON parsing
 - Atomic writes prevent corruption
 - Minimal file I/O
-- Cached slug lookups
+- Path resolution caches project root
+- JSON validation only when needed
 
 ## Security
 
 State files may contain sensitive data:
-- Gitignored by default
+- Gitignored by default (`.claude/agents/state/`)
 - File permissions: 644 (owner read/write)
 - No credentials stored in state
-- Audit trail for all operations
+- Audit trail via logs array
 
 ## Troubleshooting
 
 **Invalid JSON error:**
 ```bash
 # Validate state file
-jq . .claude/agents/state/topic/task-001.json
+python .claude/skills/csprojtasks/scripts/state_manager.py \
+  validate_state \
+  ".claude/agents/state/csprojecttask/topics/my-topic/task-001.json"
 ```
 
 **State file not found:**
 ```bash
 # Check topics registry
-cat .claude/agents/state/topics.json
+cat .claude/agents/state/csprojecttask/topics.json | python -m json.tool
 ```
 
-**Permission errors:**
+**Wrong directory created:**
 ```bash
-# Fix permissions
-chmod 644 .claude/agents/state/**/*.json
+# Ensure scripts run from project root OR
+# Use absolute paths (scripts auto-detect project root via find_project_root())
 ```
 
 ## Version
 
-**Version**: 1.0.0
+**Version**: 2.0.0
 **Created**: 2025-10-22
-**Updated**: 2025-10-22
+**Updated**: 2025-10-24 (Python migration complete)
+
+## Migration Notes (V1 → V2)
+
+**Key Changes**:
+- ✅ Bash scripts → Python scripts
+- ✅ Individual topic.json files → Single topics.json registry
+- ✅ Relative paths → Absolute path resolution
+- ✅ Manual JSON handling → Atomic write with validation
+- ✅ List support added to atomic_write()
 
 ## Support
 
 For issues:
-1. Check JSON validity with `jq`
-2. Review `.claude/agents/state/README.md`
-3. Verify directory structure
-4. Check file permissions
+1. Check JSON validity: `python -m json.tool < file.json`
+2. Validate topics.json: `check_topics_file.py --summary`
+3. Review state structure: See `STATE-STRUCTURE-V2.md`
+4. Verify directory structure exists
+5. Check file permissions
 
 ---
 
-**Part of**: Hierarchical Multi-Agent Orchestration System
-**Related**: pm-project-orchestrator.md, orchestrated-sub-agent-template.md
+**Part of**: Hierarchical Multi-Agent Orchestration System V2.0
+**Related**: csprojecttask agent, orchestrated-sub-agent-template

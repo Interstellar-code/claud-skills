@@ -123,6 +123,14 @@ def get_topic_data(topic_slug: str) -> Optional[Dict]:
 
     if pm_state and "tasks" in pm_state:
         tasks_list = pm_state.get("tasks", [])
+
+        # Handle case where tasks might be a JSON string (double-encoded)
+        if isinstance(tasks_list, str):
+            try:
+                tasks_list = json.loads(tasks_list)
+            except json.JSONDecodeError:
+                tasks_list = []
+
         total_tasks = len(tasks_list)
 
         for task_data in tasks_list:

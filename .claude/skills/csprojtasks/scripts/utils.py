@@ -24,9 +24,28 @@ class Colors:
     NC = '\033[0m'  # No Color
 
 
+def find_project_root() -> Path:
+    """
+    Find project root by looking for .claude directory
+
+    Returns:
+        Path to project root
+    """
+    current = Path.cwd()
+
+    # Check current directory and parents
+    for parent in [current] + list(current.parents):
+        if (parent / ".claude").exists():
+            return parent
+
+    # Fallback: use current directory
+    return current
+
+
 def log_info(message: str) -> None:
     """Log info message to stderr"""
-    print(f"{Colors.GREEN}[INFO]{Colors.NC} {message}", file=sys.stderr)
+    if not os.environ.get('QUIET'):
+        print(f"{Colors.GREEN}[INFO]{Colors.NC} {message}", file=sys.stderr)
 
 
 def log_warn(message: str) -> None:
@@ -95,21 +114,21 @@ def timestamp_iso() -> str:
     return datetime.now(timezone.utc).astimezone().isoformat()
 
 
-def atomic_write(file_path: str | Path, content: str | dict) -> bool:
+def atomic_write(file_path: str | Path, content: str | dict | list) -> bool:
     """
     Atomic file write (prevents corruption)
 
     Args:
         file_path: Path to file
-        content: String content or dict (will be JSON encoded)
+        content: String content, dict, or list (will be JSON encoded)
 
     Returns:
         True if successful, False otherwise
     """
     file_path = Path(file_path)
 
-    # Convert dict to JSON string
-    if isinstance(content, dict):
+    # Convert dict or list to JSON string
+    if isinstance(content, (dict, list)):
         try:
             content = json.dumps(content, indent=2)
         except (TypeError, ValueError) as e:

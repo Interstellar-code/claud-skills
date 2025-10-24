@@ -6,6 +6,7 @@ Part of: Hierarchical Multi-Agent Orchestration System v2.1.0
 
 import sys
 import os
+import json
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -106,6 +107,13 @@ def get_topic_tasks(slug: str) -> Dict:
         return {"tasks": [], "total": 0, "completed": 0, "in_progress": 0, "pending": 0}
 
     tasks = pm_data.get("tasks", [])
+
+    # Handle case where tasks might be a JSON string (double-encoded)
+    if isinstance(tasks, str):
+        try:
+            tasks = json.loads(tasks)
+        except json.JSONDecodeError:
+            tasks = []
 
     # Count by status
     counts = {"completed": 0, "in_progress": 0, "pending": 0, "failed": 0}

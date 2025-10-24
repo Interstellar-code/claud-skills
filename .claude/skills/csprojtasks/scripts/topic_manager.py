@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Topic Manager - Topic lifecycle management
+Topic Manager - Topic lifecycle management (V2.0)
 Part of: Hierarchical Multi-Agent Orchestration System v2.0.0 (Python)
 """
 
@@ -14,34 +14,40 @@ from typing import Dict, List, Optional
 from utils import (
     log_info, log_warn, log_error,
     timestamp_iso, atomic_write, ensure_directory,
-    read_json_file, update_json_field, slugify,
-    validate_json
+    read_json_file, slugify, validate_json, find_project_root
 )
 
 
-STATE_DIR = Path(".claude/agents/state/csprojecttask")
+# Find project root and set absolute paths
+PROJECT_ROOT = find_project_root()
+STATE_DIR = PROJECT_ROOT / ".claude/agents/state/csprojecttask"
 TOPICS_DIR = STATE_DIR / "topics"
 ARCHIVE_DIR = STATE_DIR / "archive"
 TOPICS_FILE = STATE_DIR / "topics.json"
 
 
 def init_topics_registry() -> None:
-    """Initialize topics registry if it doesn't exist"""
+    """Initialize topics registry if it doesn't exist (V2.0 structure)"""
     if not TOPICS_FILE.exists():
         ensure_directory(STATE_DIR)
         ensure_directory(TOPICS_DIR)
         ensure_directory(ARCHIVE_DIR)
-        atomic_write(TOPICS_FILE, {"active": [], "completed": []})
-        log_info("Initialized topics registry")
+        atomic_write(TOPICS_FILE, {
+            "version": "2.0.0",
+            "lastUpdated": timestamp_iso(),
+            "topics": []
+        })
+        log_info("Initialized topics registry (V2.0)")
 
 
-def create_topic(title: str, description: str = "") -> Optional[str]:
+def create_topic(title: str, description: str = "", user_request: str = "") -> Optional[str]:
     """
-    Create new topic
+    Create new topic (V2.0 - single topics.json entry)
 
     Args:
         title: Topic title
         description: Optional topic description
+        user_request: Optional original user request
 
     Returns:
         Topic slug if successful, None otherwise
@@ -57,22 +63,38 @@ def create_topic(title: str, description: str = "") -> Optional[str]:
         log_error(f"Topic already exists: {slug}")
         return None
 
-    # Create topic directory
+    # Create topic directory (for task files)
     ensure_directory(topic_dir)
 
-    # Create topic metadata
-    topic_json = topic_dir / "topic.json"
-    topic_data = {
+    # Create messages queue (for multi-agent communication)
+    messages_file = topic_dir / "messages.json"
+    atomic_write(messages_file, [])
+
+    # Add to topics.json (single source of truth in V2.0)
+    registry_data = read_json_file(TOPICS_FILE)
+    if registry_data is None:
+        return None
+
+    topic_entry = {
         "slug": slug,
         "title": title,
         "description": description,
         "status": "in_progress",
+        "currentPhase": "requirements-analysis",
         "createdAt": timestamp,
         "lastActiveAt": timestamp,
         "completedAt": None,
-        "userRequest": title,
-        "tags": [],
-        "relatedFiles": [],
+        "userRequest": user_request or title,
+        "tasks": [],
+        "totalTasks": 0,
+        "completedTasks": 0,
+        "progress": 0.0,
+        "files": {
+            "topicPlan": f"Project-tasks/{slug}/topicplan.md",
+            "spec": f"Project-tasks/{slug}/spec/original-spec.md",
+            "deliverables": f"Project-tasks/{slug}/deliverables/",
+            "qaReport": f"Project-tasks/{slug}/QA-REPORT.md"
+        },
         "tokenUsage": {
             "total": 0,
             "pmAgent": 0,
@@ -83,56 +105,8 @@ def create_topic(title: str, description: str = "") -> Optional[str]:
         }
     }
 
-    atomic_write(topic_json, topic_data)
-
-    # Create PM state
-    pm_state = topic_dir / "pm-state.json"
-    pm_data = {
-        "topicSlug": slug,
-        "sessionId": f"sess_{timestamp.replace(':', '').replace('-', '').replace('+', '')}",
-        "userRequest": title,
-        "tasks": [],
-        "overallStatus": "in_progress",
-        "completedTasks": 0,
-        "totalTasks": 0,
-        "createdAt": timestamp,
-        "tokenUsage": {
-            "pmTokens": 0,
-            "subAgentTokens": 0,
-            "totalTokens": 0
-        }
-    }
-
-    atomic_write(pm_state, pm_data)
-
-    # Create messages queue
-    messages_file = topic_dir / "messages.json"
-    atomic_write(messages_file, [])
-
-    # Add to topics registry
-    registry_data = read_json_file(TOPICS_FILE)
-    if registry_data is None:
-        return None
-
-    registry_entry = {
-        "slug": slug,
-        "title": title,
-        "status": "in_progress",
-        "createdAt": timestamp,
-        "lastActiveAt": timestamp,
-        "totalTasks": 0,
-        "completedTasks": 0,
-        "progress": 0,
-        "tokens": {
-            "total": 0,
-            "pmAgent": 0,
-            "subAgents": 0,
-            "estimated": 0,
-            "savings": "0%"
-        }
-    }
-
-    registry_data["active"].append(registry_entry)
+    registry_data["topics"].append(topic_entry)
+    registry_data["lastUpdated"] = timestamp
     atomic_write(TOPICS_FILE, registry_data)
 
     log_info(f"Created topic: {slug}")
@@ -141,7 +115,7 @@ def create_topic(title: str, description: str = "") -> Optional[str]:
 
 def list_active_topics() -> List[Dict]:
     """
-    List all active topics
+    List all active topics (V2.0 - filter from topics array)
 
     Returns:
         List of active topic dicts
@@ -149,15 +123,33 @@ def list_active_topics() -> List[Dict]:
     init_topics_registry()
 
     data = read_json_file(TOPICS_FILE)
-    if data is None or 'active' not in data:
+    if data is None or 'topics' not in data:
         return []
 
-    return data['active']
+    # Filter for non-completed topics
+    return [t for t in data['topics'] if t.get('status') != 'completed']
+
+
+def list_completed_topics() -> List[Dict]:
+    """
+    List all completed topics (V2.0 - filter from topics array)
+
+    Returns:
+        List of completed topic dicts
+    """
+    init_topics_registry()
+
+    data = read_json_file(TOPICS_FILE)
+    if data is None or 'topics' not in data:
+        return []
+
+    # Filter for completed topics
+    return [t for t in data['topics'] if t.get('status') == 'completed']
 
 
 def get_topic_status(slug: str) -> Optional[Dict]:
     """
-    Get topic status
+    Get topic status (V2.0 - read from topics.json)
 
     Args:
         slug: Topic slug
@@ -165,18 +157,21 @@ def get_topic_status(slug: str) -> Optional[Dict]:
     Returns:
         Topic dict or None if not found
     """
-    topic_json = TOPICS_DIR / slug / "topic.json"
-
-    if not topic_json.exists():
-        log_error(f"Topic not found: {slug}")
+    data = read_json_file(TOPICS_FILE)
+    if data is None or 'topics' not in data:
         return None
 
-    return read_json_file(topic_json)
+    for topic in data['topics']:
+        if topic['slug'] == slug:
+            return topic
+
+    log_error(f"Topic not found: {slug}")
+    return None
 
 
 def touch_topic(slug: str) -> bool:
     """
-    Update topic last active time
+    Update topic last active time (V2.0 - update topics.json)
 
     Args:
         slug: Topic slug
@@ -184,27 +179,24 @@ def touch_topic(slug: str) -> bool:
     Returns:
         True if successful, False otherwise
     """
-    topic_json = TOPICS_DIR / slug / "topic.json"
     timestamp = timestamp_iso()
 
-    if not topic_json.exists():
-        log_error(f"Topic not found: {slug}")
-        return False
-
-    # Update topic metadata
-    if not update_json_field(topic_json, ".lastActiveAt", timestamp):
-        return False
-
-    # Update registry
     registry_data = read_json_file(TOPICS_FILE)
     if registry_data is None:
         return False
 
-    for topic in registry_data.get("active", []):
+    topic_found = False
+    for topic in registry_data.get("topics", []):
         if topic["slug"] == slug:
             topic["lastActiveAt"] = timestamp
+            topic_found = True
             break
 
+    if not topic_found:
+        log_error(f"Topic not found: {slug}")
+        return False
+
+    registry_data["lastUpdated"] = timestamp
     atomic_write(TOPICS_FILE, registry_data)
     log_info(f"Updated topic activity: {slug}")
     return True
@@ -212,7 +204,7 @@ def touch_topic(slug: str) -> bool:
 
 def update_topic_progress(slug: str) -> bool:
     """
-    Update topic progress based on completed tasks
+    Update topic progress based on completed tasks (V2.0 - read task files)
 
     Args:
         slug: Topic slug
@@ -220,36 +212,59 @@ def update_topic_progress(slug: str) -> bool:
     Returns:
         True if successful, False otherwise
     """
-    pm_state = TOPICS_DIR / slug / "pm-state.json"
+    topic_dir = TOPICS_DIR / slug
 
-    if not pm_state.exists():
-        log_error(f"PM state not found for topic: {slug}")
+    if not topic_dir.exists():
+        log_error(f"Topic directory not found: {slug}")
         return False
 
-    pm_data = read_json_file(pm_state)
-    if pm_data is None:
-        return False
+    # Read all task files to calculate progress
+    task_files = list(topic_dir.glob("task-*.json"))
+    total_tasks = len(task_files)
+    completed_tasks = 0
+    task_summaries = []
 
-    completed = pm_data.get("completedTasks", 0)
-    total = pm_data.get("totalTasks", 0)
-    progress = (completed * 100 // total) if total > 0 else 0
+    for task_file in sorted(task_files):
+        task_data = read_json_file(task_file)
+        if task_data is None:
+            continue
 
-    # Update topic metadata
-    topic_json = TOPICS_DIR / slug / "topic.json"
-    update_json_field(topic_json, ".progress", progress)
+        status = task_data.get('status', 'unknown')
+        if status == 'completed':
+            completed_tasks += 1
 
-    # Update registry
+        # Build task summary
+        task_summaries.append({
+            "id": task_file.stem,
+            "name": task_data.get('focusArea', task_data.get('description', 'Unknown')),
+            "agent": task_data.get('agentName', task_data.get('assignedTo', 'unknown')),
+            "status": status,
+            "progress": task_data.get('progress', 0)
+        })
+
+    progress = round((completed_tasks / total_tasks * 100), 1) if total_tasks > 0 else 0
+
+    # Update topics.json
     registry_data = read_json_file(TOPICS_FILE)
     if registry_data is None:
         return False
 
-    for topic in registry_data.get("active", []):
+    topic_found = False
+    for topic in registry_data.get("topics", []):
         if topic["slug"] == slug:
             topic["progress"] = progress
-            topic["completedTasks"] = completed
-            topic["totalTasks"] = total
+            topic["completedTasks"] = completed_tasks
+            topic["totalTasks"] = total_tasks
+            topic["tasks"] = task_summaries
+            topic["lastActiveAt"] = timestamp_iso()
+            topic_found = True
             break
 
+    if not topic_found:
+        log_error(f"Topic not found in registry: {slug}")
+        return False
+
+    registry_data["lastUpdated"] = timestamp_iso()
     atomic_write(TOPICS_FILE, registry_data)
     log_info(f"Updated topic progress: {slug} ({progress}%)")
     return True
@@ -257,7 +272,7 @@ def update_topic_progress(slug: str) -> bool:
 
 def archive_topic(slug: str) -> bool:
     """
-    Archive completed topic
+    Archive completed topic (V2.0 - move directory, keep in topics.json)
 
     Args:
         slug: Topic slug
@@ -276,35 +291,11 @@ def archive_topic(slug: str) -> bool:
     ensure_directory(ARCHIVE_DIR)
 
     try:
-        # Move topic to archive
+        # Move topic directory to archive
         shutil.move(str(topic_dir), str(archive_dir))
 
-        # Update topics registry
-        registry_data = read_json_file(TOPICS_FILE)
-        if registry_data is None:
-            # Rollback
-            shutil.move(str(archive_dir), str(topic_dir))
-            return False
-
-        # Find topic in active list
-        topic_entry = None
-        active_topics = []
-        for topic in registry_data.get("active", []):
-            if topic["slug"] == slug:
-                topic_entry = topic.copy()
-                topic_entry["status"] = "completed"
-                topic_entry["completedAt"] = timestamp_iso()
-            else:
-                active_topics.append(topic)
-
-        registry_data["active"] = active_topics
-        if topic_entry:
-            registry_data["completed"].append(topic_entry)
-
-        if not atomic_write(TOPICS_FILE, registry_data):
-            # Rollback
-            shutil.move(str(archive_dir), str(topic_dir))
-            return False
+        # Topic stays in topics.json but marked as completed
+        # (Dashboard can filter by status)
 
         log_info(f"Archived topic: {slug}")
         return True
@@ -340,25 +331,20 @@ def resume_topic(slug: str) -> Optional[Dict]:
     return get_topic_status(slug)
 
 
-def get_active_topics_summary() -> Optional[str]:
+def get_active_topics_summary() -> str:
     """
-    Get summary of active topics for session start
+    Get summary of active topics for session start (V2.0)
 
     Returns:
-        Summary string or None if no active topics
+        Summary string (always returns a message)
     """
-    init_topics_registry()
+    active_topics = list_active_topics()
 
-    data = read_json_file(TOPICS_FILE)
-    if data is None:
-        return None
+    if not active_topics:
+        return "No pending topics - ready for new work!"
 
-    active = data.get("active", [])
-    if not active:
-        return None
-
-    summary = [f"Found {len(active)} active topic(s):"]
-    for topic in active:
+    summary = [f"Found {len(active_topics)} active topic(s):"]
+    for topic in active_topics:
         title = topic.get("title", "Unknown")
         progress = topic.get("progress", 0)
         completed = topic.get("completedTasks", 0)
@@ -370,7 +356,7 @@ def get_active_topics_summary() -> Optional[str]:
 
 def complete_topic(slug: str) -> bool:
     """
-    Mark topic as completed
+    Mark topic as completed (V2.0 - update topics.json)
 
     Args:
         slug: Topic slug
@@ -378,21 +364,29 @@ def complete_topic(slug: str) -> bool:
     Returns:
         True if successful, False otherwise
     """
-    topic_json = TOPICS_DIR / slug / "topic.json"
     timestamp = timestamp_iso()
 
-    if not topic_json.exists():
+    registry_data = read_json_file(TOPICS_FILE)
+    if registry_data is None:
+        return False
+
+    topic_found = False
+    for topic in registry_data.get("topics", []):
+        if topic["slug"] == slug:
+            topic["status"] = "completed"
+            topic["currentPhase"] = "completed"
+            topic["completedAt"] = timestamp
+            topic["lastActiveAt"] = timestamp
+            topic["progress"] = 100.0
+            topic_found = True
+            break
+
+    if not topic_found:
         log_error(f"Topic not found: {slug}")
         return False
 
-    # Update topic metadata
-    update_json_field(topic_json, ".status", "completed")
-    update_json_field(topic_json, ".completedAt", timestamp)
-    update_json_field(topic_json, ".progress", 100)
-
-    # Update PM state
-    pm_state = TOPICS_DIR / slug / "pm-state.json"
-    update_json_field(pm_state, ".overallStatus", "completed")
+    registry_data["lastUpdated"] = timestamp
+    atomic_write(TOPICS_FILE, registry_data)
 
     log_info(f"Marked topic as completed: {slug}")
 
@@ -402,7 +396,7 @@ def complete_topic(slug: str) -> bool:
 
 def delete_topic(slug: str, force: bool = False) -> bool:
     """
-    Delete topic (use with caution)
+    Delete topic (use with caution) (V2.0 - remove from topics.json)
 
     Args:
         slug: Topic slug
@@ -423,16 +417,17 @@ def delete_topic(slug: str, force: bool = False) -> bool:
             log_info("Topic deletion cancelled")
             return False
 
-    # Remove from registry
+    # Remove from topics.json
     registry_data = read_json_file(TOPICS_FILE)
     if registry_data is None:
         return False
 
-    registry_data["active"] = [
-        t for t in registry_data.get("active", [])
+    registry_data["topics"] = [
+        t for t in registry_data.get("topics", [])
         if t["slug"] != slug
     ]
 
+    registry_data["lastUpdated"] = timestamp_iso()
     atomic_write(TOPICS_FILE, registry_data)
 
     # Delete directory
@@ -445,17 +440,21 @@ def delete_topic(slug: str, force: bool = False) -> bool:
 def main():
     """Main CLI entry point"""
     parser = argparse.ArgumentParser(
-        description="Topic Manager - Topic lifecycle management"
+        description="Topic Manager - Topic lifecycle management (V2.0)"
     )
     subparsers = parser.add_subparsers(dest='command', help='Command to execute')
 
     # create_topic
     p = subparsers.add_parser('create_topic', help='Create new topic')
     p.add_argument('title', help='Topic title')
-    p.add_argument('description', nargs='?', default='', help='Topic description')
+    p.add_argument('--description', default='', help='Topic description')
+    p.add_argument('--user-request', default='', help='Original user request')
 
     # list_active_topics
     subparsers.add_parser('list_active_topics', help='List all active topics')
+
+    # list_completed_topics
+    subparsers.add_parser('list_completed_topics', help='List all completed topics')
 
     # get_topic_status
     p = subparsers.add_parser('get_topic_status', help='Get topic status')
@@ -497,7 +496,11 @@ def main():
 
     # Execute command
     if args.command == 'create_topic':
-        slug = create_topic(args.title, args.description)
+        slug = create_topic(
+            args.title,
+            args.description if hasattr(args, 'description') else '',
+            args.user_request if hasattr(args, 'user_request') else ''
+        )
         if slug:
             print(slug)
             return 0
@@ -507,10 +510,20 @@ def main():
         topics = list_active_topics()
         if topics:
             for topic in topics:
-                print(f"{topic['slug']} | {topic['title']} | {topic['progress']}% | "
-                      f"{topic['completedTasks']}/{topic['totalTasks']} tasks")
+                print(f"{topic['slug']} | {topic['title']} | {topic.get('progress', 0)}% | "
+                      f"{topic.get('completedTasks', 0)}/{topic.get('totalTasks', 0)} tasks")
         else:
             print("No active topics")
+        return 0
+
+    elif args.command == 'list_completed_topics':
+        topics = list_completed_topics()
+        if topics:
+            for topic in topics:
+                print(f"{topic['slug']} | {topic['title']} | "
+                      f"Completed: {topic.get('completedAt', 'N/A')}")
+        else:
+            print("No completed topics")
         return 0
 
     elif args.command == 'get_topic_status':
@@ -542,8 +555,7 @@ def main():
         summary = get_active_topics_summary()
         if summary:
             print(summary)
-            return 0
-        return 1
+        return 0  # No topics is not an error
 
     elif args.command == 'complete_topic':
         return 0 if complete_topic(args.slug) else 1

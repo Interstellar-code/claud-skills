@@ -14,14 +14,15 @@ from utils import (
     log_info, log_warn, log_error,
     timestamp_iso, atomic_write, ensure_directory,
     read_json_file, read_json_field, update_json_field, append_json_array,
-    validate_json
+    validate_json, find_project_root
 )
 
 
-# State template directory
+# Find project root and set absolute paths
+PROJECT_ROOT = find_project_root()
 SCRIPT_DIR = Path(__file__).parent
 TEMPLATES_DIR = SCRIPT_DIR.parent / "templates"
-STATE_DIR = Path(".claude/agents/state")
+STATE_DIR = PROJECT_ROOT / ".claude/agents/state"
 
 
 def get_template(template_name: str) -> Optional[Dict[str, Any]]:

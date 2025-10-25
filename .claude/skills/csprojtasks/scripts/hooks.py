@@ -1,450 +1,375 @@
 #!/usr/bin/env python3
 """
-Hook System for Claude Code Integration
-Syncs orchestration tasks with Claude Code's native TodoWrite tool
+Hooks System for csprojecttask workflow.
+Event-driven callbacks that integrate with the event bus.
 
-Part of: Hierarchical Multi-Agent Orchestration System v2.1.0
+Phase 2 - Advanced Features
 """
 
 import json
 import sys
+from typing import Dict, List, Any, Optional, Callable
+from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, Any, List, Optional
-from datetime import datetime
+import threading
 
-# Import utilities
-from utils import log_info, log_warn, log_error, read_json_file
+# Import event bus
+from event_bus import Event, EventHandler, get_event_bus
 
 
-class OrchestrationHooks:
-    """
-    Manages hooks for Claude Code integration
-    Syncs sub-agent tasks with Claude Code's TodoWrite tool
-    """
-
-    def __init__(self, config_path: Optional[str] = None):
+class HookThrottler:
+    """Throttles hook execution to prevent spam."""
+    
+    def __init__(self, throttle_seconds: int = 30):
         """
-        Initialize hook system
-
+        Initialize throttler.
+        
         Args:
-            config_path: Optional path to hooks configuration file
+            throttle_seconds: Minimum seconds between executions
         """
-        self.config_path = config_path or ".claude/agents/csprojecttask/hooks-config.json"
-        self.config = self._load_config()
-        self.active_tasks = {}  # Map task-id to Claude task index
-        self.todo_list = []  # Current todo list state
-
-    def _load_config(self) -> Dict[str, Any]:
-        """Load hooks configuration"""
-        default_config = {
-            "enabled": True,
-            "hooks": {
-                "pre_task_create": True,
-                "post_task_create": True,
-                "task_progress_update": True,
-                "task_complete": True,
-                "task_error": True,
-                "task_blocked": True
-            },
-            "progress_update_threshold": 10,  # Only update every 10% change
-            "sync_to_claude_tasks": True,
-            "task_prefix": "[A:orch]",  # Agent prefix for orchestrated tasks
-            "verbose": False
-        }
-
-        config_file = Path(self.config_path)
-        if config_file.exists():
-            try:
-                loaded_config = read_json_file(config_file)
-                if loaded_config:
-                    # Merge with defaults
-                    default_config.update(loaded_config)
-            except Exception as e:
-                log_warn(f"Failed to load hooks config: {e}, using defaults")
-
-        return default_config
-
-    def is_enabled(self, hook_name: str) -> bool:
+        self.throttle_seconds = throttle_seconds
+        self.last_execution: Dict[str, datetime] = {}
+        self.lock = threading.Lock()
+    
+    def should_execute(self, hook_id: str) -> bool:
         """
-        Check if a specific hook is enabled
-
+        Check if hook should execute (not throttled).
+        
         Args:
-            hook_name: Hook name to check
-
+            hook_id: Unique identifier for hook
+            
         Returns:
-            True if hook is enabled, False otherwise
+            True if hook should execute, False if throttled
         """
-        if not self.config.get("enabled", True):
+        with self.lock:
+            now = datetime.now()
+            
+            if hook_id not in self.last_execution:
+                self.last_execution[hook_id] = now
+                return True
+            
+            last_time = self.last_execution[hook_id]
+            elapsed = (now - last_time).total_seconds()
+            
+            if elapsed >= self.throttle_seconds:
+                self.last_execution[hook_id] = now
+                return True
+            
             return False
+    
+    def reset(self, hook_id: Optional[str] = None):
+        """Reset throttle state."""
+        with self.lock:
+            if hook_id:
+                self.last_execution.pop(hook_id, None)
+            else:
+                self.last_execution.clear()
 
-        return self.config.get("hooks", {}).get(hook_name, True)
 
-    def _format_task_content(self, task_data: Dict[str, Any]) -> str:
+class Hook:
+    """Represents a workflow hook."""
+    
+    def __init__(self, hook_id: str, event_type: str, 
+                 actions: List[str], 
+                 enabled: bool = True,
+                 throttle_seconds: Optional[int] = None,
+                 filter_func: Optional[Callable[[Event], bool]] = None,
+                 priority: int = 0):
         """
-        Format task content for Claude Code task list
-
+        Initialize hook.
+        
         Args:
-            task_data: Task metadata
-
-        Returns:
-            Formatted task content string
+            hook_id: Unique identifier
+            event_type: Event type to hook into
+            actions: List of action names to execute
+            enabled: Whether hook is enabled
+            throttle_seconds: Optional throttle time
+            filter_func: Optional filter function
+            priority: Execution priority
         """
-        prefix = self.config.get("task_prefix", "[A:orch]")
-        agent_name = task_data.get('agent', 'unknown')
-        description = task_data.get('description', 'Task')
-
-        return f"{prefix} {agent_name}: {description}"
-
-    def _format_active_form(self, message: str, progress: Optional[int] = None) -> str:
+        self.hook_id = hook_id
+        self.event_type = event_type
+        self.actions = actions
+        self.enabled = enabled
+        self.throttle_seconds = throttle_seconds
+        self.filter_func = filter_func
+        self.priority = priority
+        self.throttler = HookThrottler(throttle_seconds) if throttle_seconds else None
+        self.execution_count = 0
+        self.last_execution_time: Optional[datetime] = None
+    
+    def should_execute(self, event: Event) -> bool:
+        """Check if hook should execute for this event."""
+        if not self.enabled:
+            return False
+        
+        # Check filter
+        if self.filter_func and not self.filter_func(event):
+            return False
+        
+        # Check throttle
+        if self.throttler and not self.throttler.should_execute(self.hook_id):
+            return False
+        
+        return True
+    
+    def execute(self, event: Event, action_registry: 'ActionRegistry'):
         """
-        Format active form for task
-
+        Execute hook actions.
+        
         Args:
-            message: Current operation message
-            progress: Optional progress percentage
-
-        Returns:
-            Formatted active form string
+            event: Event that triggered hook
+            action_registry: Registry of available actions
         """
-        if progress is not None:
-            return f"{message} ({progress}%)"
-        return message
-
-    def _output_todo_write(self, todos: List[Dict[str, Any]]) -> None:
-        """
-        Output TodoWrite tool invocation for Claude Code
-
-        This outputs a special format that Claude Code can detect and execute.
-
-        Args:
-            todos: List of todo items
-        """
-        # Update internal state
-        self.todo_list = todos
-
-        # Output for Claude Code to execute
-        if self.config.get("sync_to_claude_tasks", True):
-            # This would be the actual TodoWrite tool call
-            # For now, we log what would be sent
-            if self.config.get("verbose", False):
-                log_info(f"📝 TodoWrite: {len(todos)} tasks")
-                for i, todo in enumerate(todos):
-                    status_icon = {"pending": "⏳", "in_progress": "🔄", "completed": "✅"}.get(todo['status'], "❓")
-                    log_info(f"  {status_icon} [{i+1}] {todo['content']}")
-
-    def pre_task_create(self, task_data: Dict[str, Any]) -> None:
-        """
-        Hook: Before creating a task
-        Creates corresponding Claude Code task as "pending"
-
-        Args:
-            task_data: Task metadata (id, description, agent, focus, dependencies)
-        """
-        if not self.is_enabled("pre_task_create"):
+        if not self.should_execute(event):
             return
-
-        task_id = task_data.get('id', 'unknown')
-        content = self._format_task_content(task_data)
-        active_form = self._format_active_form(f"Preparing {task_data.get('description', 'task')}")
-
-        # Create new todo item
-        new_todo = {
-            "content": content,
-            "status": "pending",
-            "activeForm": active_form
+        
+        self.execution_count += 1
+        self.last_execution_time = datetime.now()
+        
+        for action_name in self.actions:
+            try:
+                action_registry.execute_action(action_name, event)
+            except Exception as e:
+                print(f"ERROR: Hook {self.hook_id} action {action_name} failed: {e}", 
+                      file=sys.stderr)
+                import traceback
+                traceback.print_exc()
+    
+    def get_stats(self) -> Dict[str, Any]:
+        """Get hook statistics."""
+        return {
+            'hook_id': self.hook_id,
+            'event_type': self.event_type,
+            'enabled': self.enabled,
+            'execution_count': self.execution_count,
+            'last_execution': self.last_execution_time.isoformat() if self.last_execution_time else None,
+            'throttle_seconds': self.throttle_seconds,
+            'actions': self.actions
         }
 
-        # Add to todo list
-        self.todo_list.append(new_todo)
-        task_index = len(self.todo_list) - 1
 
-        # Store mapping
-        self.active_tasks[task_id] = task_index
-
-        # Output TodoWrite
-        self._output_todo_write(self.todo_list)
-
-        log_info(f"🔗 Hook: Created Claude task for {task_id}")
-        if self.config.get("verbose", False):
-            log_info(f"   Content: {content}")
-            log_info(f"   Status: pending")
-
-    def post_task_create(self, task_id: str, agent_name: str, state_file: str) -> None:
+class ActionRegistry:
+    """Registry of available hook actions."""
+    
+    def __init__(self):
+        """Initialize action registry."""
+        self.actions: Dict[str, Callable[[Event], None]] = {}
+    
+    def register(self, action_name: str, action_func: Callable[[Event], None]):
         """
-        Hook: After launching task
-        Updates Claude task to "in_progress"
-
+        Register an action.
+        
         Args:
-            task_id: Task identifier
-            agent_name: Agent name
-            state_file: Path to state file
+            action_name: Name of action
+            action_func: Function to execute
         """
-        if not self.is_enabled("post_task_create"):
-            return
-
-        if task_id in self.active_tasks:
-            task_index = self.active_tasks[task_id]
-
-            if task_index < len(self.todo_list):
-                self.todo_list[task_index]['status'] = 'in_progress'
-                self.todo_list[task_index]['activeForm'] = f"{agent_name} started"
-
-                # Output TodoWrite
-                self._output_todo_write(self.todo_list)
-
-                log_info(f"🔗 Hook: Updated Claude task {task_id} to in_progress")
-                if self.config.get("verbose", False):
-                    log_info(f"   Agent: {agent_name}")
-                    log_info(f"   State: {state_file}")
-
-    def task_progress_update(self, task_id: str, progress: int, message: str) -> None:
+        self.actions[action_name] = action_func
+    
+    def unregister(self, action_name: str):
+        """Unregister an action."""
+        self.actions.pop(action_name, None)
+    
+    def execute_action(self, action_name: str, event: Event):
         """
-        Hook: When task progress updates
-        Updates Claude task with progress info (throttled by threshold)
-
+        Execute an action.
+        
         Args:
-            task_id: Task identifier
-            progress: Progress percentage (0-100)
-            message: Current operation message
+            action_name: Name of action to execute
+            event: Event data
         """
-        if not self.is_enabled("task_progress_update"):
+        if action_name not in self.actions:
+            print(f"WARNING: Action {action_name} not registered", file=sys.stderr)
             return
+        
+        try:
+            self.actions[action_name](event)
+        except Exception as e:
+            print(f"ERROR: Action {action_name} failed: {e}", file=sys.stderr)
+            raise
+    
+    def get_available_actions(self) -> List[str]:
+        """Get list of available actions."""
+        return list(self.actions.keys())
 
-        if task_id in self.active_tasks:
-            task_index = self.active_tasks[task_id]
 
-            if task_index < len(self.todo_list):
-                # Check threshold to avoid too many updates
-                threshold = self.config.get("progress_update_threshold", 10)
-
-                # Get last progress
-                current_form = self.todo_list[task_index].get('activeForm', '')
-                try:
-                    # Extract last progress from activeForm like "Message (50%)"
-                    if '(' in current_form and '%' in current_form:
-                        last_progress_str = current_form.split('(')[-1].split('%')[0]
-                        last_progress = int(last_progress_str)
-                    else:
-                        last_progress = 0
-                except (ValueError, IndexError):
-                    last_progress = 0
-
-                # Only update if progress change exceeds threshold or at 100%
-                if abs(progress - last_progress) >= threshold or progress == 100:
-                    self.todo_list[task_index]['activeForm'] = self._format_active_form(message, progress)
-
-                    # Output TodoWrite
-                    self._output_todo_write(self.todo_list)
-
-                    if self.config.get("verbose", False):
-                        log_info(f"🔗 Hook: Progress update for {task_id}: {progress}%")
-                        log_info(f"   Message: {message}")
-
-    def task_blocked(self, task_id: str, question: str, context: str) -> None:
+class HooksManager:
+    """Manages workflow hooks and integrates with event bus."""
+    
+    def __init__(self, settings: Optional[Dict[str, Any]] = None):
         """
-        Hook: When task becomes blocked on a question
-        Updates Claude task to show blocked status
-
+        Initialize hooks manager.
+        
         Args:
-            task_id: Task identifier
-            question: Blocking question
-            context: Question context
+            settings: Optional settings dict with hooks configuration
         """
-        if not self.is_enabled("task_blocked"):
-            return
-
-        if task_id in self.active_tasks:
-            task_index = self.active_tasks[task_id]
-
-            if task_index < len(self.todo_list):
-                # Keep status as in_progress but update active form to show blocked
-                self.todo_list[task_index]['activeForm'] = f"⚠️ BLOCKED: {question[:50]}..."
-
-                # Output TodoWrite
-                self._output_todo_write(self.todo_list)
-
-                log_info(f"⚠️ Hook: Task {task_id} blocked")
-                if self.config.get("verbose", False):
-                    log_info(f"   Question: {question}")
-                    log_info(f"   Context: {context}")
-
-    def task_unblocked(self, task_id: str, answer: str) -> None:
+        self.hooks: Dict[str, Hook] = {}
+        self.action_registry = ActionRegistry()
+        self.event_bus = get_event_bus()
+        self.enabled = True
+        
+        # Register default actions
+        self._register_default_actions()
+        
+        # Load hooks from settings if provided
+        if settings:
+            self.load_hooks_from_settings(settings)
+    
+    def _register_default_actions(self):
+        """Register default workflow actions."""
+        
+        def log_to_audit(event: Event):
+            """Log event to audit trail."""
+            print(f"[AUDIT] {event.event_type}: {event.data}")
+        
+        def update_workflow_state(event: Event):
+            """Update workflow state."""
+            print(f"[STATE] Updating workflow state: {event.data}")
+        
+        def mark_step_complete(event: Event):
+            """Mark step as complete."""
+            print(f"[COMPLETE] Step completed: {event.data.get('step_id')}")
+        
+        def check_next_step(event: Event):
+            """Check for next step."""
+            print(f"[NEXT] Checking next step after: {event.data.get('step_id')}")
+        
+        self.action_registry.register('log_to_audit', log_to_audit)
+        self.action_registry.register('update_workflow_state', update_workflow_state)
+        self.action_registry.register('mark_step_complete', mark_step_complete)
+        self.action_registry.register('check_next_step', check_next_step)
+    
+    def register_action(self, action_name: str, action_func: Callable[[Event], None]):
+        """Register a custom action."""
+        self.action_registry.register(action_name, action_func)
+    
+    def add_hook(self, hook: Hook):
         """
-        Hook: When blocked task gets unblocked
-        Updates Claude task to show it's continuing
-
+        Add a hook and subscribe to event bus.
+        
         Args:
-            task_id: Task identifier
-            answer: Answer provided
+            hook: Hook to add
         """
-        if not self.is_enabled("task_blocked"):
-            return
-
-        if task_id in self.active_tasks:
-            task_index = self.active_tasks[task_id]
-
-            if task_index < len(self.todo_list):
-                self.todo_list[task_index]['activeForm'] = f"✅ Unblocked, continuing work"
-
-                # Output TodoWrite
-                self._output_todo_write(self.todo_list)
-
-                log_info(f"✅ Hook: Task {task_id} unblocked")
-
-    def task_complete(self, task_id: str, result_summary: str, files_created: List[str]) -> None:
+        self.hooks[hook.hook_id] = hook
+        
+        # Create event handler that executes hook
+        def hook_handler(event: Event):
+            if self.enabled:
+                hook.execute(event, self.action_registry)
+        
+        handler = EventHandler(
+            handler_id=f"hook-{hook.hook_id}",
+            callback=hook_handler,
+            filter_func=hook.filter_func,
+            priority=hook.priority
+        )
+        
+        self.event_bus.subscribe(hook.event_type, handler)
+    
+    def remove_hook(self, hook_id: str):
+        """Remove a hook."""
+        if hook_id in self.hooks:
+            hook = self.hooks[hook_id]
+            self.event_bus.unsubscribe(hook.event_type, f"hook-{hook_id}")
+            del self.hooks[hook_id]
+    
+    def enable_hook(self, hook_id: str):
+        """Enable a hook."""
+        if hook_id in self.hooks:
+            self.hooks[hook_id].enabled = True
+    
+    def disable_hook(self, hook_id: str):
+        """Disable a hook."""
+        if hook_id in self.hooks:
+            self.hooks[hook_id].enabled = False
+    
+    def load_hooks_from_settings(self, settings: Dict[str, Any]):
         """
-        Hook: When task completes
-        Marks Claude task as completed
-
+        Load hooks from settings configuration.
+        
         Args:
-            task_id: Task identifier
-            result_summary: Task result summary
-            files_created: List of created files
+            settings: Settings dict with hooks configuration
         """
-        if not self.is_enabled("task_complete"):
+        hooks_config = settings.get('hooks', {})
+        
+        if not hooks_config.get('enabled', True):
+            self.enabled = False
             return
-
-        if task_id in self.active_tasks:
-            task_index = self.active_tasks[task_id]
-
-            if task_index < len(self.todo_list):
-                self.todo_list[task_index]['status'] = 'completed'
-                files_count = len(files_created)
-                self.todo_list[task_index]['activeForm'] = f"Complete - {files_count} files created"
-
-                # Output TodoWrite
-                self._output_todo_write(self.todo_list)
-
-                log_info(f"✅ Hook: Completed Claude task {task_id}")
-                if self.config.get("verbose", False):
-                    log_info(f"   Result: {result_summary[:100]}")
-                    log_info(f"   Files: {files_count} created")
-
-                # Remove from active tracking after short delay
-                # (keep in todo list as completed)
-                # del self.active_tasks[task_id]  # Keep for now to allow updates
-
-    def task_error(self, task_id: str, error_message: str) -> None:
-        """
-        Hook: When task encounters error
-        Updates Claude task with error status
-
-        Args:
-            task_id: Task identifier
-            error_message: Error description
-        """
-        if not self.is_enabled("task_error"):
-            return
-
-        if task_id in self.active_tasks:
-            task_index = self.active_tasks[task_id]
-
-            if task_index < len(self.todo_list):
-                # Mark as pending (or could create custom "failed" status)
-                self.todo_list[task_index]['status'] = 'pending'
-                self.todo_list[task_index]['activeForm'] = f"❌ Error: {error_message[:50]}"
-
-                # Output TodoWrite
-                self._output_todo_write(self.todo_list)
-
-                log_error(f"❌ Hook: Error in Claude task {task_id}")
-                if self.config.get("verbose", False):
-                    log_error(f"   Error: {error_message}")
-
-    def get_current_todos(self) -> List[Dict[str, Any]]:
-        """
-        Get current todo list state
-
-        Returns:
-            List of todo items
-        """
-        return self.todo_list.copy()
+        
+        events_config = hooks_config.get('events', {})
+        
+        for event_type, event_config in events_config.items():
+            if not event_config.get('enabled', True):
+                continue
+            
+            hook = Hook(
+                hook_id=event_type,
+                event_type=event_type,
+                actions=event_config.get('actions', []),
+                enabled=event_config.get('enabled', True),
+                throttle_seconds=event_config.get('throttle_seconds'),
+                priority=event_config.get('priority', 0)
+            )
+            
+            self.add_hook(hook)
+    
+    def get_stats(self) -> Dict[str, Any]:
+        """Get hooks manager statistics."""
+        return {
+            'enabled': self.enabled,
+            'total_hooks': len(self.hooks),
+            'enabled_hooks': sum(1 for h in self.hooks.values() if h.enabled),
+            'available_actions': self.action_registry.get_available_actions(),
+            'hooks': {hook_id: hook.get_stats() for hook_id, hook in self.hooks.items()}
+        }
+    
+    def enable(self):
+        """Enable hooks manager."""
+        self.enabled = True
+    
+    def disable(self):
+        """Disable hooks manager."""
+        self.enabled = False
 
 
-# Global hook instance (singleton pattern)
-_hooks_instance: Optional[OrchestrationHooks] = None
+# Global hooks manager instance
+_global_hooks_manager: Optional[HooksManager] = None
 
 
-def get_hooks() -> OrchestrationHooks:
-    """
-    Get global hooks instance (singleton)
-
-    Returns:
-        OrchestrationHooks instance
-    """
-    global _hooks_instance
-    if _hooks_instance is None:
-        _hooks_instance = OrchestrationHooks()
-    return _hooks_instance
+def get_hooks_manager(settings: Optional[Dict[str, Any]] = None) -> HooksManager:
+    """Get global hooks manager instance (singleton)."""
+    global _global_hooks_manager
+    if _global_hooks_manager is None:
+        _global_hooks_manager = HooksManager(settings)
+    return _global_hooks_manager
 
 
-# Convenience functions for easy hook triggering
-def trigger_pre_task_create(task_data: Dict[str, Any]) -> None:
-    """Trigger pre-create hook"""
-    get_hooks().pre_task_create(task_data)
+def reset_hooks_manager():
+    """Reset global hooks manager (for testing)."""
+    global _global_hooks_manager
+    _global_hooks_manager = None
 
 
-def trigger_post_task_create(task_id: str, agent_name: str, state_file: str) -> None:
-    """Trigger post-create hook"""
-    get_hooks().post_task_create(task_id, agent_name, state_file)
-
-
-def trigger_task_progress(task_id: str, progress: int, message: str) -> None:
-    """Trigger progress hook"""
-    get_hooks().task_progress_update(task_id, progress, message)
-
-
-def trigger_task_blocked(task_id: str, question: str, context: str) -> None:
-    """Trigger blocked hook"""
-    get_hooks().task_blocked(task_id, question, context)
-
-
-def trigger_task_unblocked(task_id: str, answer: str) -> None:
-    """Trigger unblocked hook"""
-    get_hooks().task_unblocked(task_id, answer)
-
-
-def trigger_task_complete(task_id: str, result_summary: str, files_created: List[str]) -> None:
-    """Trigger completion hook"""
-    get_hooks().task_complete(task_id, result_summary, files_created)
-
-
-def trigger_task_error(task_id: str, error_message: str) -> None:
-    """Trigger error hook"""
-    get_hooks().task_error(task_id, error_message)
-
-
-if __name__ == '__main__':
-    # Fix Windows console encoding
-    if sys.platform == "win32":
-        if sys.stdout.encoding != 'utf-8':
-            import io
-            sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
-
-    # Test hook system
-    print("Testing Hook System...")
-
-    hooks = get_hooks()
-
-    # Test task creation
-    task_data = {
-        'id': 'task-001',
-        'agent': 'market-research-analyst',
-        'description': 'Market positioning analysis',
-        'focus': 'Competitive landscape'
-    }
-
-    trigger_pre_task_create(task_data)
-    trigger_post_task_create('task-001', 'market-research-analyst', 'task-001.json')
-    trigger_task_progress('task-001', 25, 'Identifying competitors')
-    trigger_task_progress('task-001', 50, 'Analyzing positioning')
-    trigger_task_progress('task-001', 75, 'Creating report')
-    trigger_task_complete('task-001', 'Market analysis complete', ['report.md', 'matrix.md'])
-
-    print("\nFinal Todo List:")
-    todos = hooks.get_current_todos()
-    for i, todo in enumerate(todos):
-        status_map = {"pending": "PENDING", "in_progress": "RUNNING", "completed": "DONE"}
-        status = status_map.get(todo['status'], todo['status'].upper())
-        print(f"{i+1}. [{status}] {todo['content']}")
-        print(f"   Active: {todo['activeForm']}")
+if __name__ == "__main__":
+    # Simple test
+    print("Hooks System - Simple Test")
+    print("=" * 80)
+    
+    # Create hooks manager
+    manager = get_hooks_manager()
+    
+    # Add a test hook
+    hook = Hook(
+        hook_id='test-step-started',
+        event_type='step_started',
+        actions=['log_to_audit', 'update_workflow_state']
+    )
+    manager.add_hook(hook)
+    
+    # Emit test event
+    from event_bus import emit_step_started
+    emit_step_started('test-topic', 'phase-1', 'parse-spec')
+    
+    # Show stats
+    print("\nHooks Manager Stats:")
+    print(json.dumps(manager.get_stats(), indent=2))

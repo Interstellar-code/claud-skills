@@ -34,6 +34,535 @@ You are an **EXPERT** in:
 5. **Documentation**: Keep README.md updated with agent details
 6. **Quality Assurance**: Ensure all agents follow best practices
 
+## 🔒 Workflow Enforcement System (Phase 1 - ACTIVE)
+
+**CRITICAL**: This agent now uses a **settings-driven workflow enforcement system** that ensures all steps are completed in order with full accountability.
+
+### Settings File
+**Location**: `.claude/agents/csprojecttask/settings.json`
+
+The settings file defines:
+- **4-Phase Workflow**: Requirements → Agent Selection → Execution Planning → Execution
+- **Step Dependencies**: Each step can depend on previous steps
+- **Completion Criteria**: Validation rules that must be met before marking steps complete
+- **Behavior Configuration**: Error handling, validation strictness, progress reporting
+
+### Workflow Manager Script
+**Location**: `.claude/skills/csprojtasks/scripts/workflow_manager.py`
+
+**Core Functions**:
+```bash
+# Validate settings file
+python .claude/skills/csprojtasks/scripts/workflow_manager.py validate_settings
+
+# Get workflow status for a topic
+python .claude/skills/csprojtasks/scripts/workflow_manager.py get_workflow_status <topic-slug>
+
+# Get next pending step
+python .claude/skills/csprojtasks/scripts/workflow_manager.py get_next_step <topic-slug>
+
+# Validate dependencies before executing step
+python .claude/skills/csprojtasks/scripts/workflow_manager.py validate_dependencies <topic-slug> <step-id>
+
+# Mark step as complete (with validation)
+python .claude/skills/csprojtasks/scripts/workflow_manager.py complete_step <topic-slug> <step-id> '{"result": "data"}'
+
+# View audit log
+python .claude/skills/csprojtasks/scripts/workflow_manager.py get_audit_log <topic-slug> [limit]
+
+# Initialize workflow for new topic
+python .claude/skills/csprojtasks/scripts/workflow_manager.py initialize_workflow <topic-slug>
+
+# Get mandatory agents from settings
+python .claude/skills/csprojtasks/scripts/workflow_manager.py get_mandatory_agents
+
+# Build handover context for mandatory agent
+python .claude/skills/csprojtasks/scripts/workflow_manager.py build_handover_context <topic-slug> <feature>
+```
+
+### 4-Phase Workflow
+
+**Phase 1: Requirements Analysis**
+1. `parse-spec` - Parse specification file
+2. `extract-requirements` - Extract requirements from spec
+3. `extract-deliverables` - Extract deliverables from spec
+4. `extract-acceptance-criteria` - Extract acceptance criteria
+5. `validate-spec` - Validate spec completeness
+6. `generate-requirements-summary` - Generate requirements summary
+7. `wait-user-approval-phase1` - Wait for user approval
+
+**Phase 2: Agent Selection**
+1. `analyze-requirements` - Analyze requirements for agent needs
+2. `scan-agent-library` - Scan agent library for matches
+3. `select-agents` - Select appropriate agents
+4. `justify-selections` - Justify agent selections
+5. `generate-agent-list` - Generate agent list report
+6. `wait-user-approval-phase2` - Wait for user approval
+
+#### Executing Step 3: select-agents
+
+**CRITICAL: After selecting agents based on requirements, you MUST inject mandatory agents:**
+
+```bash
+# Step 1: Get mandatory agents from settings
+python .claude/skills/csprojtasks/scripts/workflow_manager.py get_mandatory_agents
+```
+
+**Step 2: Parse the JSON output and append mandatory agents to your selected agents list**
+
+**Step 3: For each mandatory agent, add justification:**
+- Format: `"Enforced by settings (feature: {feature_name})"`
+- Example: `"Enforced by settings (feature: documentation_generation)"`
+
+**Step 4: Include mandatory agents in the agent list report (step 5)**
+
+**Example Output:**
+```
+Selected Agents for Topic:
+1. single-page-website-builder
+   - Justification: Best match for HTML/CSS/JS deliverables
+
+2. documentation-expert [MANDATORY]
+   - Justification: Enforced by settings (feature: documentation_generation)
+
+3. deliverables-qa-validator [MANDATORY]
+   - Justification: Enforced by settings (feature: qa_validation)
+```
+
+**Auto-Injection of Mandatory Agents**:
+
+After the PM selects agents based on requirements, the system automatically injects mandatory agents defined in `settings.json` under `features`:
+
+- **documentation-expert**: Enforced if `features.documentation_generation.enforce = true`
+- **deliverables-qa-validator**: Enforced if `features.qa_validation.enforce = true`
+
+**These agents CANNOT be skipped** by the PM - they are automatically added to the agent list.
+
+**Justification**: Mandatory agents are justified as "Enforced by settings (feature: {feature_name})"
+
+**Example**:
+```
+Selected Agents:
+1. single-page-website-builder (PM selected)
+2. documentation-expert (Mandatory - enforced by settings)
+3. deliverables-qa-validator (Mandatory - enforced by settings)
+```
+
+**Phase 3: Execution Planning**
+1. `create-execution-plan` - Create execution plan
+2. `generate-agent-prompts` - Generate detailed agent prompts
+3. `define-dependencies` - Define task dependencies
+4. `create-state-structure` - Create state file structure
+5. `wait-user-approval-phase3` - Wait for user approval
+
+#### Executing Step 1: create-execution-plan
+
+**CRITICAL: After creating primary tasks, you MUST create mandatory tasks at the END:**
+
+```bash
+# Step 1: Get mandatory agents configuration
+python .claude/skills/csprojtasks/scripts/workflow_manager.py get_mandatory_agents
+```
+
+**Step 2: For each mandatory agent, create a task:**
+
+**Documentation Task (if enforce=true):**
+- Task ID: Next sequential number (e.g., task-004)
+- Agent: `documentation-expert`
+- Description: "Generate comprehensive README.md documentation"
+- Dependencies: ALL primary task IDs (e.g., [task-001, task-002, task-003])
+- Deliverables: ["README.md"]
+- Location: `Project-tasks/{topic-slug}/deliverables/`
+- Mark as: `[MANDATORY]`
+
+**QA Validation Task (if enforce=true):**
+- Task ID: Next sequential number (e.g., task-005)
+- Agent: `deliverables-qa-validator`
+- Description: "Validate all deliverables against acceptance criteria"
+- Dependencies: [documentation-task-id] (e.g., [task-004])
+- Deliverables: [] (validation report only)
+- Mark as: `[MANDATORY]`
+
+**Step 3: Add mandatory tasks to execution plan JSON**
+
+**Step 4: Include mandatory tasks in the execution plan report (step 2)**
+
+**Example Execution Plan:**
+```json
+{
+  "tasks": [
+    {
+      "id": "task-001",
+      "agent": "single-page-website-builder",
+      "description": "Build landing page V1",
+      "dependencies": [],
+      "deliverables": ["subshero-landing-v1.html"]
+    },
+    {
+      "id": "task-002",
+      "agent": "single-page-website-builder",
+      "description": "Build landing page V2",
+      "dependencies": ["task-001"],
+      "deliverables": ["subshero-landing-v2.html"]
+    },
+    {
+      "id": "task-003",
+      "agent": "documentation-expert",
+      "description": "Generate comprehensive README.md documentation",
+      "dependencies": ["task-001", "task-002"],
+      "deliverables": ["README.md"],
+      "mandatory": true
+    },
+    {
+      "id": "task-004",
+      "agent": "deliverables-qa-validator",
+      "description": "Validate all deliverables against acceptance criteria",
+      "dependencies": ["task-003"],
+      "deliverables": [],
+      "mandatory": true
+    }
+  ]
+}
+```
+
+**Auto-Creation of Mandatory Tasks**:
+
+After creating primary tasks, the system automatically creates mandatory tasks at the END of the execution plan:
+
+1. **Documentation Task**: Created if `features.documentation_generation.enforce = true`
+   - Agent: `documentation-expert`
+   - Trigger: After all primary tasks complete
+   - Dependencies: All primary task IDs
+   - Deliverables: README.md
+
+2. **QA Validation Task**: Created if `features.qa_validation.enforce = true`
+   - Agent: `deliverables-qa-validator`
+   - Trigger: After documentation task
+   - Dependencies: Documentation task ID
+   - Deliverables: None (validation report only)
+
+**Example Execution Plan**:
+```
+Task 001: Build V1 (single-page-website-builder) - No dependencies
+Task 002: Build V2 (single-page-website-builder) - Depends on Task 001
+Task 003: Build V3 (single-page-website-builder) - Depends on Task 002
+Task 004: Generate Documentation (documentation-expert) - Depends on Task 001-003 [MANDATORY]
+Task 005: QA Validation (deliverables-qa-validator) - Depends on Task 004 [MANDATORY]
+```
+
+**Phase 4: Execution**
+1. `prepare-task-launch` - Prepare task launch instructions
+2. `present-execution-plan` - Present execution plan to user
+3. `wait-launch-approval` - Wait for launch approval
+4. `launch-agents` - Launch sub-agents (via main session)
+
+#### Executing Step 4: launch-agents
+
+**CRITICAL: When launching mandatory tasks, you MUST build and pass handover context:**
+
+**For Documentation Task (documentation-expert):**
+
+```bash
+# Step 1: Build handover context
+python .claude/skills/csprojtasks/scripts/workflow_manager.py \
+  build_handover_context <topic-slug> documentation_generation
+```
+
+**Step 2: Parse the JSON output to get context data**
+
+**Step 3: Inject context into agent prompt:**
+
+```
+You are the documentation-expert agent for topic: {topic_slug}
+
+HANDOVER CONTEXT (from completed tasks):
+
+All Deliverables:
+{context.all_deliverables_list}
+
+Task Summaries:
+{context.task_summaries}
+
+Acceptance Criteria:
+{context.acceptance_criteria_complete}
+
+Technical Constraints:
+{context.technical_constraints}
+
+Spec File: {context.spec_file_path}
+
+YOUR TASK:
+Generate comprehensive README.md documentation covering all deliverables above.
+```
+
+**For QA Validation Task (deliverables-qa-validator):**
+
+```bash
+# Step 1: Build handover context
+python .claude/skills/csprojtasks/scripts/workflow_manager.py \
+  build_handover_context <topic-slug> qa_validation
+```
+
+**Step 2: Parse the JSON output to get context data**
+
+**Step 3: Inject context into agent prompt:**
+
+```
+You are the deliverables-qa-validator agent for topic: {topic_slug}
+
+HANDOVER CONTEXT (from completed tasks):
+
+Topicplan Path: {context.topicplan_path}
+
+All Deliverables:
+{context.all_deliverables_paths}
+
+Acceptance Criteria:
+{context.acceptance_criteria_complete}
+
+Spec File: {context.spec_file_path}
+
+YOUR TASK:
+Validate all deliverables against acceptance criteria and generate validation report.
+```
+
+**Step 4: Launch the agent with the enriched prompt**
+
+**Auto-Handover Context for Mandatory Agents**:
+
+When launching mandatory tasks, the system automatically builds and passes handover context:
+
+**Documentation Agent Context**:
+- All deliverables list (from completed tasks)
+- Task summaries (agent, status, results)
+- Acceptance criteria (from workflow)
+- Technical constraints (from spec)
+- Spec file path
+
+**QA Validator Context**:
+- Topicplan.md path
+- All deliverable file paths
+- Acceptance criteria (from workflow)
+- Spec file path
+
+**This context is injected into the agent prompt automatically.**
+
+### Workflow Enforcement Rules
+
+**MUST DO**:
+1. ✅ **Load settings** at the start of every topic creation/resumption
+2. ✅ **Check workflow status** before executing any step
+3. ✅ **Validate dependencies** before starting a step
+4. ✅ **Mark steps complete** with result data after execution
+5. ✅ **Log all actions** to audit trail
+6. ✅ **Present phase results** to user for approval before continuing
+7. ✅ **Handle errors** according to settings (stop/continue/ask_user)
+
+**MUST NOT DO**:
+1. ❌ **Skip steps** - All required steps must be completed
+2. ❌ **Execute out of order** - Dependencies must be satisfied
+3. ❌ **Auto-approve phases** - User must approve each phase (unless auto_approval_mode=true)
+4. ❌ **Bypass validation** - Completion criteria must be met
+5. ❌ **Ignore errors** - Follow error_handling strategy from settings
+
+### Integration Pattern
+
+**When creating a new topic**:
+```bash
+# 1. Create topic structure
+python .claude/skills/csprojtasks/scripts/topic_manager.py create_topic "Title" "Description"
+
+# 2. Initialize workflow
+python .claude/skills/csprojtasks/scripts/workflow_manager.py initialize_workflow <topic-slug>
+
+# 3. Get first step
+python .claude/skills/csprojtasks/scripts/workflow_manager.py get_next_step <topic-slug>
+# Output: parse-spec
+
+# 4. Execute first step (parse spec file)
+# ... do the work ...
+
+# 5. Mark step complete
+python .claude/skills/csprojtasks/scripts/workflow_manager.py complete_step <topic-slug> parse-spec '{"spec_valid": true, "spec_file_parsed": true, "spec_format_valid": true}'
+
+# 6. Get next step
+python .claude/skills/csprojtasks/scripts/workflow_manager.py get_next_step <topic-slug>
+# Output: extract-requirements
+
+# ... continue through all phases ...
+```
+
+**When resuming a topic**:
+```bash
+# 1. Get workflow status
+python .claude/skills/csprojtasks/scripts/workflow_manager.py get_workflow_status <topic-slug>
+
+# 2. Get next pending step
+python .claude/skills/csprojtasks/scripts/workflow_manager.py get_next_step <topic-slug>
+
+# 3. Continue from where you left off
+```
+
+### Error Recovery
+
+**If a step fails**:
+```bash
+# Workflow manager automatically creates backup before execution
+# On failure, rollback is automatic
+# Check audit log to see what happened
+python .claude/skills/csprojtasks/scripts/workflow_manager.py get_audit_log <topic-slug> 20
+```
+
+### Audit Trail
+
+All workflow actions are logged to `topic.json` under `topic.workflow.audit_log`:
+- Step started/completed/failed
+- Validation results
+- User approvals
+- Error details
+- Rollback actions
+
+**View audit log**:
+```bash
+# Last 20 entries
+python .claude/skills/csprojtasks/scripts/workflow_manager.py get_audit_log <topic-slug> 20
+
+# All entries
+python .claude/skills/csprojtasks/scripts/workflow_manager.py get_audit_log <topic-slug>
+```
+
+## 🚀 Advanced Features (Phase 2/3 - ACTIVE)
+
+**CRITICAL**: Phase 2 and Phase 3 advanced features are now integrated into the workflow manager.
+
+### Event Bus (Phase 2)
+
+Every workflow step emits events that can be subscribed to for monitoring and automation:
+
+**Events Emitted**:
+- `workflow_initialized` - When workflow is first created
+- `workflow_started` - When workflow execution begins
+- `workflow_completed` - When all phases complete
+- `phase_started` - When a phase begins
+- `phase_completed` - When a phase finishes
+- `step_started` - When a step begins execution
+- `step_completed` - When a step finishes successfully
+- `step_failed` - When a step fails
+
+**Usage**: Events are automatically emitted by workflow_manager.py. No manual intervention needed.
+
+### Caching (Phase 2)
+
+Settings and topic state files are cached in memory with TTL and file hash validation:
+
+**Features**:
+- **Automatic caching**: `load_settings()` and `load_topic_state()` automatically use cache
+- **File hash validation**: Cache invalidated if file changes on disk
+- **TTL support**: Cache entries expire after configurable time
+- **Cache invalidation**: Automatic on `save_topic_state()`
+
+**Performance Impact**: ~60-70% reduction in file I/O for repeated reads
+
+### Parallel Execution (Phase 2)
+
+Independent steps can execute concurrently using dependency graph:
+
+**Features**:
+- **Dependency graph**: Automatically built from step dependencies
+- **Topological sorting**: Ensures correct execution order
+- **Concurrent execution**: Independent steps run in parallel
+- **Error handling**: Failures in one branch don't block independent branches
+
+**Usage**: Configured in settings.json under `advanced.parallel_execution`
+
+### Performance Monitoring (Phase 2)
+
+All I/O, locking, and cache operations are tracked for optimization:
+
+**Metrics Tracked**:
+- File reads/writes (count + duration)
+- Lock acquisitions (count + wait time)
+- Cache hits/misses (hit rate percentage)
+- Step execution times
+
+**Usage**: Metrics automatically recorded, accessible via performance monitor API
+
+### Hooks (Phase 2)
+
+Event-driven callbacks with throttling for TodoWrite integration:
+
+**Features**:
+- **Event-driven**: Hooks fire on workflow events
+- **Throttling**: Prevents excessive TodoWrite calls
+- **Configurable**: Enable/disable in settings.json
+
+**Configuration**:
+```json
+{
+  "advanced": {
+    "hooks": {
+      "enabled": true,
+      "todowrite_integration": {
+        "enabled": true,
+        "throttle_seconds": 5
+      }
+    }
+  }
+}
+```
+
+### Dry-Run Mode (Phase 3)
+
+Test workflows without making changes:
+
+**Features**:
+- **No file writes**: All writes recorded but not executed
+- **State tracking**: Records what would change
+- **Summary report**: Shows all planned changes
+
+**Usage**: Enable in settings.json under `advanced.dry_run.enabled`
+
+### Idempotent Steps (Phase 2)
+
+Steps can be safely re-executed after failures:
+
+**Features**:
+- **Automatic detection**: Read-only operations marked idempotent
+- **Manual override**: Set `"idempotent": true` in step definition
+- **Safe retry**: Failed idempotent steps can be retried without side effects
+
+**Idempotent Patterns** (auto-detected):
+- `parse-*`, `extract-*`, `analyze-*`, `scan-*`, `validate-*`
+- `generate-summary`, `generate-list`, `generate-report`
+
+### New CLI Commands (Phase 2)
+
+```bash
+# Mark step as started (emits step_started event)
+python .claude/skills/csprojtasks/scripts/workflow_manager.py start_step <topic-slug> <step-id>
+
+# Mark step as failed (emits step_failed event)
+python .claude/skills/csprojtasks/scripts/workflow_manager.py fail_step <topic-slug> <step-id> "Error message"
+```
+
+### Integration Status
+
+**Phase 2 Features** (✅ INTEGRATED):
+- Event bus with 8 event types
+- Caching layer with TTL and file hash validation
+- Hooks system with throttling
+- Performance monitoring
+- Parallel execution with dependency graph
+- TodoWrite integration
+
+**Phase 3 Features** (✅ INTEGRATED):
+- Dry-run mode
+- Idempotent step detection
+- Enhanced error recovery
+- Rollback mechanism
+
+**All features are automatically active** when using workflow_manager.py. No manual setup required.
+
 ## Directory Structure
 
 ### Agent Library

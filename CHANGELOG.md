@@ -7,6 +7,57 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.15.1] - 2025-10-25
+
+### Added
+- **Mandatory Agents Execution Layer** - Complete integration of mandatory agents system
+  - Added CLI commands to workflow_manager.py: `get_mandatory_agents` and `build_handover_context`
+  - Added execution instructions in agent.md for Phase 2 (select-agents step)
+  - Added execution instructions in agent.md for Phase 3 (create-execution-plan step)
+  - Added execution instructions in agent.md for Phase 4 (launch-agents step)
+  - CLI help text updated with new mandatory agent commands
+  - Complete workflow integration for auto-injection of documentation-expert and deliverables-qa-validator
+
+- **Settings System for csprojecttask Agent** - Configuration-driven mandatory agents
+  - settings.json: Feature configuration for documentation_generation and qa_validation
+  - settings.schema.json: JSON schema validation for settings structure
+  - settings.example.json: Example configuration for users
+  - Supports enforce=true flag to make agents mandatory (cannot be skipped)
+  - Handover context specifications for passing data between agents
+
+- **Workflow Manager Enhancements** - New utility functions for mandatory agents
+  - `get_mandatory_agents(settings)`: Extracts enforced agents from settings
+  - `build_handover_context(topic_slug, context_spec)`: Builds context data for mandatory agents
+  - 7 context extractors: all_deliverables_list, task_summaries, acceptance_criteria, technical_constraints, spec_file_path, topicplan_path, all_deliverables_paths
+
+### Changed
+- **agent.md Workflow Documentation** - Enhanced with actionable bash commands
+  - Phase 2 now includes step-by-step mandatory agent injection instructions
+  - Phase 3 now includes mandatory task creation instructions with dependency rules
+  - Phase 4 now includes handover context building and prompt injection examples
+  - Added example outputs showing [MANDATORY] markers for enforced agents
+
+### Fixed
+- **Execution Integration** - Completed missing 10% of mandatory agents implementation
+  - Connected helper functions to CLI interface (previously defined but not callable)
+  - Added executable workflow instructions (previously only documentation existed)
+  - System now fully operational for auto-injecting mandatory agents
+
+### Removed
+- **Documentation Cleanup** - Removed obsolete documentation files
+  - HOOKS-INTEGRATION-GUIDE.md (superseded by settings system)
+  - INTEGRATION-COMPLETE.md (temporary release verification file)
+  - MULTI-TOPIC-MANAGEMENT.md (integrated into main agent.md)
+  - WORKAROUND-DELEGATION-PATTERN.md (documented in agent.md)
+  - Test artifacts and completed test topics from Project-tasks/
+
+### Impact
+- ✅ **Mandatory agents now fully functional** - documentation-expert and qa-validator auto-inject
+- ✅ **Settings-driven enforcement** - no code changes needed to add/remove mandatory agents
+- ✅ **Complete workflow automation** - PM agent can now execute full 4-phase workflow
+- ✅ **Context handover working** - mandatory agents receive all task data automatically
+- ✅ **Production ready** - all execution layer components in place
+
 ## [1.15.0] - 2025-01-24
 
 ### Added

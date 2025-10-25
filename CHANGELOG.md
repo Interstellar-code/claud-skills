@@ -7,6 +7,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.17.1] - 2025-10-25
+
+### Fixed
+- **Session Hook Enhancement** - Updated display_pending_topics.py to v1.1.0
+  - Added support for v2.0 topics.json format (camelCase fields: title, createdAt, lastActiveAt, currentPhase)
+  - Enhanced topic display with description, current phase, and last active time
+  - Improved progress display compatibility for both v1 and v2 topic formats
+  - Better handling of totalTasks/completedTasks fields
+
+- **Workflow Manager CLI Fix** - Converted workflow_manager.py to use argparse
+  - Fixed multi-word argument handling (error messages, descriptions with spaces)
+  - Replaced manual sys.argv parsing with proper argparse subparsers
+  - Improved help text and usage examples
+  - Added argument validation and type checking
+
+- **Documentation** - Updated CLAUDE.md references
+  - Corrected all references from "csprojecttask" to "agenthero-ai"
+  - Fixed 13 agent name references throughout documentation
+  - Updated usage examples with correct agent name
+
+### Added
+- **Settings Configuration** - Added .claude/settings.json
+  - Configured SessionStart and PreCompact hooks
+  - Enables automatic pending topics display on session start
+
+### Documentation
+- Updated migration-state.json to reflect Phase 8 completion (Python Scripts Argparse Review)
+- Validated 23 Python scripts, found and fixed 1 argparse issue
+
 ## [1.17.0] - 2025-10-25
 
 ### Added
@@ -796,7 +825,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - N/A (Initial release)
 
-[Unreleased]: https://github.com/Interstellar-code/claud-skills/compare/v1.14.0...HEAD
+[Unreleased]: https://github.com/Interstellar-code/claud-skills/compare/v1.17.1...HEAD
+[1.17.1]: https://github.com/Interstellar-code/claud-skills/compare/v1.17.0...v1.17.1
+[1.17.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.14.0...v1.17.0
 [1.14.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.13.0...v1.14.0
 [1.13.0]: https://github.com/Interstellar-code/claud-skills/compare/v1.12.1...v1.13.0
 [1.12.1]: https://github.com/Interstellar-code/claud-skills/compare/v1.12.0...v1.12.1

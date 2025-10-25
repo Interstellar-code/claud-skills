@@ -4,7 +4,7 @@
 
 [![Agents](https://img.shields.io/badge/agents-14-blue)](docs/AGENT_CATALOG.md)
 [![Skills](https://img.shields.io/badge/skills-11-green)](docs/SKILL_CATALOG.md)
-[![Version](https://img.shields.io/badge/version-1.15.1-orange)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-1.17.1-orange)](CHANGELOG.md)
 [![Ecosystem](https://img.shields.io/badge/ecosystem-13_repos-purple)](docs/ECOSYSTEM.md)
 [![Docs](https://img.shields.io/badge/docs-auto--generated-brightgreen)](docs/)
 [![Token Savings](https://img.shields.io/badge/token_savings-61--88%25-brightgreen)](docs/PRODUCTIVITY_WINS.md)

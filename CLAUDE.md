@@ -1051,13 +1051,13 @@ All skills and agents MUST follow this pattern:
 
 See `.claude/skills/colored-output/skill.md` for full guidelines.
 
-## 🎯 csprojecttask Agent Usage - MANDATORY
+## 🎯 agenthero-ai Agent Usage - MANDATORY
 
-**CRITICAL: When user requests multi-step projects, topics, or mentions spec files - ALWAYS use csprojecttask agent**
+**CRITICAL: When user requests multi-step projects, topics, or mentions spec files - ALWAYS use agenthero-ai agent**
 
-### When to Use csprojecttask Agent (MANDATORY)
+### When to Use agenthero-ai Agent (MANDATORY)
 
-**✅ MUST use csprojecttask agent when user says:**
+**✅ MUST use agenthero-ai agent when user says:**
 - "create a topic using [spec-file.md]"
 - "build [project name] using spec"
 - "start a project from [spec]"
@@ -1068,7 +1068,7 @@ See `.claude/skills/colored-output/skill.md` for full guidelines.
 **❌ NEVER do these manually (always use agent):**
 - Create `Project-tasks/{slug}/` directories
 - Create `Project-tasks/{slug}/topicplan.md`
-- Create `.claude/agents/state/csprojecttask/topics/{slug}/` directories
+- Create `.claude/agents/state/agenthero-ai/topics/{slug}/` directories
 - Write `topic.json`, `task-*.json`, `pm-state.json` files
 - Manually execute the 3-phase workflow
 - Approve phases on behalf of the user
@@ -1078,7 +1078,7 @@ See `.claude/skills/colored-output/skill.md` for full guidelines.
 **Step 1: Invoke Agent**
 ```javascript
 Task(
-  subagent_type="csprojecttask",
+  subagent_type="agenthero-ai",
   description="Create topic from spec",
   prompt="Create a topic using the specification file: [spec-file.md]
 
@@ -1175,7 +1175,7 @@ if (message.includes("create a topic") ||
     message.includes("PM orchestration")) {
 
     // ✅ DO THIS:
-    Task(subagent_type="csprojecttask", prompt="...");
+    Task(subagent_type="agenthero-ai", prompt="...");
 
     // ❌ DO NOT DO THIS:
     // mkdir -p "Project-tasks/..."
@@ -1188,7 +1188,7 @@ if (message.includes("create a topic") ||
 ```
 User: "create a topic using test-spec-dashboard.md"
 
-Claude: [Invokes csprojecttask agent]
+Claude: [Invokes agenthero-ai agent]
 
 Agent returns: Phase 1 complete - here's the requirements...
 
@@ -1211,10 +1211,10 @@ Claude: [Invokes agent for Phase 2]
 ```
 User: "create a topic using test-spec-dashboard.md"
 
-Claude: ❌ "I'll create a topic using the dashboard spec. Starting the csprojecttask workflow now."
+Claude: ❌ "I'll create a topic using the dashboard spec. Starting the agenthero-ai workflow now."
 
 Claude: ❌ [Manually creates directories]
-mkdir -p "Project-tasks/csprojecttask-dashboard/spec"
+mkdir -p "Project-tasks/agenthero-ai-dashboard/spec"
 
 Claude: ❌ [Manually writes topic.json]
 Write(.claude/agents/state/.../topic.json, ...)
@@ -1226,21 +1226,21 @@ Claude: ❌ [Auto-approves on behalf of user]
 ### Enforcement Rules
 
 1. **Trigger Detection**: ALWAYS check for spec file mentions
-2. **Agent Invocation**: ALWAYS use Task tool with csprojecttask
+2. **Agent Invocation**: ALWAYS use Task tool with agenthero-ai
 3. **Manual Work**: NEVER create Project-tasks/ or state files manually
 4. **User Approval**: NEVER approve phases on behalf of user
 5. **Phase Separation**: ALWAYS wait for user between phases
 
 ### Why This Matters
 
-- ✅ Tests the csprojecttask agent properly (the whole point!)
+- ✅ Tests the agenthero-ai agent properly (the whole point!)
 - ✅ User controls the workflow (approves each phase)
 - ✅ Follows 3-phase architecture correctly
 - ✅ Creates proper topic structure and state files
 - ✅ Enables multi-topic management via menu system
 - ✅ Self-documenting via topicplan.md
 
-**When in doubt**: If user mentions spec files or multi-step projects → use csprojecttask agent!
+**When in doubt**: If user mentions spec files or multi-step projects → use agenthero-ai agent!
 
 ## Contributing
 

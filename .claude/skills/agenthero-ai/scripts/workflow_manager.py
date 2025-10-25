@@ -1266,112 +1266,127 @@ def initialize_topic_workflow(topic_slug: str, settings: Optional[Dict[str, Any]
 
 def main():
     """CLI interface for workflow manager."""
-    if len(sys.argv) < 2:
-        print("Usage: workflow_manager.py [command] [args...]")
-        print("\nCommands:")
-        print("  get_workflow_status <topic-slug>")
-        print("  get_next_step <topic-slug>")
-        print("  validate_dependencies <topic-slug> <step-id>")
-        print("  start_step <topic-slug> <step-id>                    # Phase 2: Mark step as started")
-        print("  complete_step <topic-slug> <step-id> <result-json>")
-        print("  fail_step <topic-slug> <step-id> <error-message>     # Phase 2: Mark step as failed")
-        print("  get_audit_log <topic-slug> [limit]")
-        print("  initialize_workflow <topic-slug>")
-        print("  validate_settings [settings-path]")
-        print("  get_mandatory_agents                                     # Get mandatory agents from settings")
-        print("  build_handover_context <topic-slug> <feature>            # Build handover context for mandatory agent")
-        print("  validate_agent_name <agent-name>                         # Validate agent name follows aghero- convention")
-        print("\nExamples:")
-        print("  python workflow_manager.py get_workflow_status my-topic")
-        print("  python workflow_manager.py start_step my-topic parse-spec")
-        print("  python workflow_manager.py complete_step my-topic parse-spec '{\"spec_valid\": true}'")
-        print("  python workflow_manager.py fail_step my-topic parse-spec 'File not found'")
-        print("  python workflow_manager.py get_audit_log my-topic 20")
-        print("  python workflow_manager.py get_mandatory_agents")
-        print("  python workflow_manager.py build_handover_context my-topic documentation_generation")
-        print("  python workflow_manager.py validate_agent_name aghero-testing-agent")
+    import argparse
+
+    parser = argparse.ArgumentParser(
+        description="Workflow Manager - Workflow orchestration and step management",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  python workflow_manager.py get_workflow_status my-topic
+  python workflow_manager.py start_step my-topic parse-spec
+  python workflow_manager.py complete_step my-topic parse-spec '{"spec_valid": true}'
+  python workflow_manager.py fail_step my-topic parse-spec "File not found"
+  python workflow_manager.py get_audit_log my-topic --limit 20
+  python workflow_manager.py get_mandatory_agents
+  python workflow_manager.py build_handover_context my-topic documentation_generation
+  python workflow_manager.py validate_agent_name aghero-testing-agent
+        """
+    )
+
+    subparsers = parser.add_subparsers(dest='command', help='Command to execute')
+
+    # get_workflow_status
+    p = subparsers.add_parser('get_workflow_status', help='Get workflow status for topic')
+    p.add_argument('topic_slug', help='Topic slug')
+
+    # get_next_step
+    p = subparsers.add_parser('get_next_step', help='Get next step to execute')
+    p.add_argument('topic_slug', help='Topic slug')
+
+    # validate_dependencies
+    p = subparsers.add_parser('validate_dependencies', help='Validate step dependencies')
+    p.add_argument('topic_slug', help='Topic slug')
+    p.add_argument('step_id', help='Step ID')
+
+    # start_step
+    p = subparsers.add_parser('start_step', help='Mark step as started')
+    p.add_argument('topic_slug', help='Topic slug')
+    p.add_argument('step_id', help='Step ID')
+
+    # complete_step
+    p = subparsers.add_parser('complete_step', help='Mark step as complete')
+    p.add_argument('topic_slug', help='Topic slug')
+    p.add_argument('step_id', help='Step ID')
+    p.add_argument('result_json', help='Result as JSON string')
+
+    # fail_step
+    p = subparsers.add_parser('fail_step', help='Mark step as failed')
+    p.add_argument('topic_slug', help='Topic slug')
+    p.add_argument('step_id', help='Step ID')
+    p.add_argument('error_message', help='Error message')
+
+    # get_audit_log
+    p = subparsers.add_parser('get_audit_log', help='Get audit log entries')
+    p.add_argument('topic_slug', help='Topic slug')
+    p.add_argument('--limit', type=int, default=None, help='Maximum number of entries')
+
+    # initialize_workflow
+    p = subparsers.add_parser('initialize_workflow', help='Initialize workflow for topic')
+    p.add_argument('topic_slug', help='Topic slug')
+
+    # validate_settings
+    p = subparsers.add_parser('validate_settings', help='Validate settings file')
+    p.add_argument('--settings-path', default='.claude/agents/agenthero-ai/settings.json',
+                   help='Path to settings.json (default: .claude/agents/agenthero-ai/settings.json)')
+
+    # get_mandatory_agents
+    subparsers.add_parser('get_mandatory_agents', help='Get mandatory agents from settings')
+
+    # build_handover_context
+    p = subparsers.add_parser('build_handover_context', help='Build handover context for mandatory agent')
+    p.add_argument('topic_slug', help='Topic slug')
+    p.add_argument('feature', help='Feature name (e.g., documentation_generation, qa_validation)')
+
+    # validate_agent_name
+    p = subparsers.add_parser('validate_agent_name', help='Validate agent name follows aghero- convention')
+    p.add_argument('agent_name', help='Agent name to validate')
+
+    args = parser.parse_args()
+
+    if not args.command:
+        parser.print_help()
         sys.exit(1)
 
-    command = sys.argv[1]
-
     try:
-        if command == "get_workflow_status":
-            if len(sys.argv) < 3:
-                print("ERROR: Missing topic-slug argument", file=sys.stderr)
-                sys.exit(1)
-            topic_slug = sys.argv[2]
-            get_workflow_status(topic_slug)
+        if args.command == "get_workflow_status":
+            get_workflow_status(args.topic_slug)
 
-        elif command == "get_next_step":
-            if len(sys.argv) < 3:
-                print("ERROR: Missing topic-slug argument", file=sys.stderr)
-                sys.exit(1)
-            topic_slug = sys.argv[2]
-            next_step = get_next_step(topic_slug)
+        elif args.command == "get_next_step":
+            next_step = get_next_step(args.topic_slug)
             if next_step:
                 print(f"Next step: {next_step}")
             else:
                 print("All steps completed!")
 
-        elif command == "validate_dependencies":
-            if len(sys.argv) < 4:
-                print("ERROR: Missing arguments. Usage: validate_dependencies <topic-slug> <step-id>", file=sys.stderr)
-                sys.exit(1)
-            topic_slug = sys.argv[2]
-            step_id = sys.argv[3]
-            valid, message = validate_dependencies(topic_slug, step_id)
+        elif args.command == "validate_dependencies":
+            valid, message = validate_dependencies(args.topic_slug, args.step_id)
             print(message)
             sys.exit(0 if valid else 1)
 
-        elif command == "start_step":
-            if len(sys.argv) < 4:
-                print("ERROR: Missing arguments. Usage: start_step <topic-slug> <step-id>", file=sys.stderr)
-                sys.exit(1)
-            topic_slug = sys.argv[2]
-            step_id = sys.argv[3]
-            mark_step_started(topic_slug, step_id)
-            print(f"OK Step {step_id} marked as started")
+        elif args.command == "start_step":
+            mark_step_started(args.topic_slug, args.step_id)
+            print(f"OK Step {args.step_id} marked as started")
 
-        elif command == "complete_step":
-            if len(sys.argv) < 5:
-                print("ERROR: Missing arguments. Usage: complete_step <topic-slug> <step-id> <result-json>", file=sys.stderr)
-                sys.exit(1)
-            topic_slug = sys.argv[2]
-            step_id = sys.argv[3]
-            result = json.loads(sys.argv[4])
-            mark_step_complete(topic_slug, step_id, result)
-            print(f"OK Step {step_id} marked complete")
+        elif args.command == "complete_step":
+            result = json.loads(args.result_json)
+            mark_step_complete(args.topic_slug, args.step_id, result)
+            print(f"OK Step {args.step_id} marked complete")
 
-        elif command == "fail_step":
-            if len(sys.argv) < 5:
-                print("ERROR: Missing arguments. Usage: fail_step <topic-slug> <step-id> <error-message>", file=sys.stderr)
-                sys.exit(1)
-            topic_slug = sys.argv[2]
-            step_id = sys.argv[3]
-            error_message = sys.argv[4]
-            mark_step_failed(topic_slug, step_id, error_message)
-            print(f"FAIL Step {step_id} marked as failed")
+        elif args.command == "fail_step":
+            mark_step_failed(args.topic_slug, args.step_id, args.error_message)
+            print(f"FAIL Step {args.step_id} marked as failed")
 
-        elif command == "get_audit_log":
-            if len(sys.argv) < 3:
-                print("ERROR: Missing topic-slug argument", file=sys.stderr)
-                sys.exit(1)
-            topic_slug = sys.argv[2]
-            limit = int(sys.argv[3]) if len(sys.argv) > 3 else None
-            get_audit_log(topic_slug, limit)
+        elif args.command == "get_audit_log":
+            get_audit_log(args.topic_slug, args.limit)
 
-        elif command == "initialize_workflow":
-            if len(sys.argv) < 3:
-                print("ERROR: Missing topic-slug argument", file=sys.stderr)
-                sys.exit(1)
-            topic_slug = sys.argv[2]
-            initialize_topic_workflow(topic_slug)
+        elif args.command == "initialize_workflow":
+            initialize_topic_workflow(args.topic_slug)
 
-        elif command == "validate_settings":
-            settings_path = sys.argv[2] if len(sys.argv) > 2 else ".claude/agents/agenthero-ai/settings.json"
+        elif args.command == "validate_settings":
             try:
-                settings = load_settings(settings_path)
-                print(f"OK Settings file is valid: {settings_path}")
+                settings = load_settings(args.settings_path)
+                print(f"OK Settings file is valid: {args.settings_path}")
                 print(f"  Version: {settings['version']}")
                 print(f"  Schema Version: {settings['schema_version']}")
                 print(f"  Phases: {len(settings['workflow']['phases'])}")
@@ -1381,50 +1396,32 @@ def main():
                 print(f"FAIL Settings validation failed: {e}", file=sys.stderr)
                 sys.exit(1)
 
-        elif command == "get_mandatory_agents":
+        elif args.command == "get_mandatory_agents":
             settings = load_settings()
             mandatory = get_mandatory_agents(settings)
             print(json.dumps(mandatory, indent=2))
 
-        elif command == "build_handover_context":
-            if len(sys.argv) < 4:
-                print("ERROR: Missing arguments. Usage: build_handover_context <topic-slug> <feature>", file=sys.stderr)
-                print("  feature: 'documentation_generation' or 'qa_validation'", file=sys.stderr)
-                sys.exit(1)
-            topic_slug = sys.argv[2]
-            feature = sys.argv[3]
+        elif args.command == "build_handover_context":
             settings = load_settings()
 
-            if feature not in settings.get("features", {}):
-                print(f"ERROR: Unknown feature: {feature}", file=sys.stderr)
+            if args.feature not in settings.get("features", {}):
+                print(f"ERROR: Unknown feature: {args.feature}", file=sys.stderr)
                 print(f"  Available features: {list(settings.get('features', {}).keys())}", file=sys.stderr)
                 sys.exit(1)
 
-            context_spec = settings["features"][feature].get("handover_context", {})
+            context_spec = settings["features"][args.feature].get("handover_context", {})
             if not context_spec:
-                print(f"ERROR: Feature '{feature}' has no handover_context configuration", file=sys.stderr)
+                print(f"ERROR: Feature '{args.feature}' has no handover_context configuration", file=sys.stderr)
                 sys.exit(1)
 
-            context = build_handover_context(topic_slug, context_spec, settings)
+            context = build_handover_context(args.topic_slug, context_spec, settings)
             print(json.dumps(context, indent=2))
 
-        elif command == "validate_agent_name":
-            if len(sys.argv) < 3:
-                print("ERROR: Missing agent-name argument", file=sys.stderr)
-                print("Usage: validate_agent_name <agent-name>", file=sys.stderr)
-                print("\nExamples:", file=sys.stderr)
-                print("  python workflow_manager.py validate_agent_name aghero-testing-agent", file=sys.stderr)
-                print("  python workflow_manager.py validate_agent_name documentation-expert", file=sys.stderr)
-                sys.exit(1)
-            agent_name = sys.argv[2]
+        elif args.command == "validate_agent_name":
             settings = load_settings()
-            is_valid, message = validate_agent_name(agent_name, settings)
+            is_valid, message = validate_agent_name(args.agent_name, settings)
             print(message)
             sys.exit(0 if is_valid else 1)
-
-        else:
-            print(f"ERROR: Unknown command: {command}", file=sys.stderr)
-            sys.exit(1)
 
     except FileNotFoundError as e:
         print(f"ERROR: {e}", file=sys.stderr)

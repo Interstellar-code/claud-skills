@@ -7,7 +7,13 @@ starts or resumes from a context limit. It provides a quick overview of
 work that needs attention.
 
 Author: AgentHero AI
-Version: 1.0.1
+Version: 1.1.0
+
+Changelog:
+- v1.1.0: Added support for v2.0 topics.json format (camelCase fields)
+          Added description, current phase, and last active time display
+          Improved progress display for both v1 and v2 formats
+- v1.0.1: Initial release
 """
 
 import json
@@ -91,26 +97,60 @@ def display_topic(topic: Dict[str, Any]) -> None:
     """
     status = topic.get('status', 'pending')
     status_icon = get_status_icon(status)
-    name = topic.get('name', 'Unnamed Topic')
+    # Support both 'name' and 'title' fields (v1 vs v2 compatibility)
+    name = topic.get('title') or topic.get('name', 'Unnamed Topic')
 
     # Display topic header
     print(f"\n{status_icon} {name} [{status.upper()}]")
+
+    # Display description if available
+    description = topic.get('description', '')
+    if description:
+        # Truncate long descriptions
+        max_len = 80
+        if len(description) > max_len:
+            description = description[:max_len] + '...'
+        print(f"   📝 {description}")
 
     # Display slug
     slug = topic.get('slug', 'unknown')
     print(f"   📂 Slug: {slug}")
 
-    # Display creation date
-    created = topic.get('created_at', 'Unknown')
+    # Display current phase if available
+    current_phase = topic.get('currentPhase')
+    if current_phase:
+        print(f"   🎯 Phase: {current_phase.replace('-', ' ').title()}")
+
+    # Display creation date (support both camelCase and snake_case)
+    created = topic.get('createdAt') or topic.get('created_at', 'Unknown')
     print(f"   📅 Created: {format_date(created)}")
 
-    # Display progress
-    completed, total = calculate_progress(topic)
-    if total > 0:
-        percentage = int((completed / total) * 100)
+    # Display last active time if available
+    last_active = topic.get('lastActiveAt') or topic.get('last_active_at')
+    if last_active and last_active != created:
+        print(f"   🕐 Last Active: {format_date(last_active)}")
+
+    # Display progress (support both v1 and v2 formats)
+    # V2 format has totalTasks/completedTasks at topic level
+    total_tasks = topic.get('totalTasks', 0)
+    completed_tasks = topic.get('completedTasks', 0)
+
+    # V1 format has tasks array
+    if total_tasks == 0 and completed_tasks == 0:
+        completed_tasks, total_tasks = calculate_progress(topic)
+
+    if total_tasks > 0:
+        percentage = int((completed_tasks / total_tasks) * 100)
         progress_bar = '█' * (percentage // 10) + '░' * (10 - (percentage // 10))
-        print(f"   ✓  Progress: {completed}/{total} tasks completed ({percentage}%)")
+        print(f"   ✓  Progress: {completed_tasks}/{total_tasks} tasks completed ({percentage}%)")
         print(f"   {progress_bar}")
+    else:
+        # Show overall progress percentage if available
+        progress_pct = topic.get('progress', 0)
+        if progress_pct > 0:
+            progress_bar = '█' * int(progress_pct / 10) + '░' * (10 - int(progress_pct / 10))
+            print(f"   ✓  Progress: {int(progress_pct)}%")
+            print(f"   {progress_bar}")
 
     # Display priority
     priority = topic.get('priority', 'normal')

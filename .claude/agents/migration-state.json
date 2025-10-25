@@ -73,6 +73,35 @@
     "phase_2": "git reset --hard pre-agenthero-rebrand && git clean -fd .claude/",
     "phase_3": "Restore from backup: tar -xzf ~/backups/agenthero-rebrand/state-backup-*.tar.gz",
     "full_rollback": "git reset --hard pre-agenthero-rebrand && git clean -fd && restore backup"
+  },
+  "python_scripts_review": {
+    "phase": "Phase 8: Python Scripts Argparse Review & Fix",
+    "status": "complete",
+    "completed_at": "2025-10-25T20:30:00+02:00",
+    "scripts_reviewed": 23,
+    "scripts_with_argparse": 9,
+    "issues_found": 1,
+    "issues_fixed": 1,
+    "details": {
+      "workflow_manager.py": {
+        "issue": "Used manual sys.argv parsing instead of argparse",
+        "impact": "Multi-word arguments (error messages, descriptions) could fail",
+        "fix": "Converted to use argparse with subparsers",
+        "status": "fixed",
+        "tested": true
+      }
+    },
+    "scripts_validated": [
+      "topic_manager.py - Uses argparse with subparsers correctly",
+      "state_manager.py - Uses argparse with subparsers correctly",
+      "audit_viewer.py - Uses argparse with optional flags correctly",
+      "check_topics_file.py - Uses argparse with optional flags correctly",
+      "migrate_settings.py - Uses argparse correctly",
+      "monitor-dashboard.py - Uses argparse correctly",
+      "multi_topic_dashboard.py - Uses argparse correctly",
+      "setup_project_structure.py - Uses argparse correctly",
+      "sync_topics_to_dashboard.py - Uses argparse correctly"
+    ]
   }
 }
 

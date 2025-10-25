@@ -1,0 +1,594 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://claude.ai/schemas/agenthero-ai-settings.json",
+  "title": "AgentHero AI Agent Settings Schema",
+  "description": "JSON Schema for validating AgentHero AI agent settings configuration",
+  "type": "object",
+  "required": ["version", "schema_version", "workflow", "behavior", "features", "paths", "validation_rules", "advanced"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Settings file version (semantic versioning)"
+    },
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Schema version for compatibility checking"
+    },
+    "last_updated": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 timestamp of last update"
+    },
+    "description": {
+      "type": "string",
+      "description": "Human-readable description of this settings file"
+    },
+    "workflow": {
+      "type": "object",
+      "required": ["enabled", "enforce_step_order", "require_user_approval_between_phases", "phases"],
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable/disable workflow enforcement"
+        },
+        "enforce_step_order": {
+          "type": "boolean",
+          "description": "Enforce strict step ordering"
+        },
+        "require_user_approval_between_phases": {
+          "type": "boolean",
+          "description": "Require user approval between phases"
+        },
+        "auto_approval_mode": {
+          "type": "boolean",
+          "description": "Auto-approve phases (testing only)"
+        },
+        "phases": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/phase"
+          }
+        }
+      }
+    },
+    "behavior": {
+      "type": "object",
+      "required": ["error_handling", "validation", "progress_reporting"],
+      "properties": {
+        "error_handling": {
+          "$ref": "#/definitions/errorHandling"
+        },
+        "validation": {
+          "$ref": "#/definitions/validationBehavior"
+        },
+        "progress_reporting": {
+          "$ref": "#/definitions/progressReporting"
+        },
+        "user_interaction": {
+          "$ref": "#/definitions/userInteraction"
+        }
+      }
+    },
+    "features": {
+      "type": "object",
+      "properties": {
+        "documentation_generation": {
+          "$ref": "#/definitions/documentationGenerationFeature"
+        },
+        "qa_validation": {
+          "$ref": "#/definitions/qaValidationFeature"
+        },
+        "dashboard": {
+          "$ref": "#/definitions/feature"
+        },
+        "parallel_execution": {
+          "$ref": "#/definitions/feature"
+        },
+        "agent_library": {
+          "$ref": "#/definitions/feature"
+        }
+      }
+    },
+    "paths": {
+      "type": "object",
+      "required": ["state_directory", "topics_directory", "project_tasks_directory"],
+      "properties": {
+        "state_directory": {
+          "type": "string",
+          "pattern": "^[^\\0]+$"
+        },
+        "topics_directory": {
+          "type": "string",
+          "pattern": "^[^\\0]+$"
+        },
+        "archive_directory": {
+          "type": "string",
+          "pattern": "^[^\\0]+$"
+        },
+        "project_tasks_directory": {
+          "type": "string",
+          "pattern": "^[^\\0]+$"
+        },
+        "agent_library": {
+          "type": "string",
+          "pattern": "^[^\\0]+$"
+        },
+        "templates": {
+          "type": "object",
+          "properties": {
+            "spec_template": {"type": "string"},
+            "topicplan_template": {"type": "string"},
+            "agent_template": {"type": "string"}
+          }
+        }
+      }
+    },
+    "validation_rules": {
+      "type": "object",
+      "required": ["spec_file"],
+      "properties": {
+        "spec_file": {
+          "type": "object",
+          "required": ["required_sections", "min_requirements", "min_deliverables", "min_acceptance_criteria"],
+          "properties": {
+            "required_sections": {
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "required_metadata": {
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "min_requirements": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "min_deliverables": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "min_acceptance_criteria": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "deliverables": {
+          "type": "object",
+          "properties": {
+            "required_fields": {
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "valid_types": {
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "path_format": {
+              "type": "string",
+              "enum": ["relative", "absolute"]
+            }
+          }
+        },
+        "state_files": {
+          "type": "object",
+          "properties": {
+            "schema_version": {"type": "string"},
+            "required_fields": {"type": "object"}
+          }
+        }
+      }
+    },
+    "monitoring": {
+      "type": "object",
+      "properties": {
+        "state_update_frequency_seconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "progress_reporting_frequency_seconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "dashboard_refresh_interval_seconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "log_level": {
+          "type": "string",
+          "enum": ["debug", "info", "warning", "error", "critical"]
+        },
+        "log_to_file": {
+          "type": "boolean"
+        },
+        "log_file_path": {
+          "type": "string"
+        }
+      }
+    },
+    "hooks": {
+      "type": "object",
+      "description": "Phase 2 feature - hooks system",
+      "properties": {
+        "enabled": {"type": "boolean"},
+        "sync_to_todowrite": {"type": "boolean"},
+        "task_prefix": {"type": "string"},
+        "progress_update_threshold": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 100
+        },
+        "verbose": {"type": "boolean"},
+        "events": {"type": "object"},
+        "todowrite_integration": {"type": "object"},
+        "notification": {"type": "object"}
+      }
+    },
+    "advanced": {
+      "type": "object",
+      "description": "Phase 2 advanced features configuration",
+      "required": ["hooks", "event_bus", "caching", "parallel_execution", "dry_run"],
+      "properties": {
+        "hooks": {
+          "type": "object",
+          "description": "Hooks system configuration",
+          "required": ["enabled"],
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable/disable hooks system"
+            },
+            "throttle_seconds": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Default throttle time for hooks (seconds)"
+            },
+            "todowrite_integration": {
+              "type": "boolean",
+              "description": "Enable TodoWrite integration"
+            }
+          }
+        },
+        "event_bus": {
+          "type": "object",
+          "description": "Event bus configuration",
+          "required": ["enabled"],
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable/disable event bus"
+            },
+            "max_history": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "Maximum events to keep in history"
+            }
+          }
+        },
+        "caching": {
+          "type": "object",
+          "description": "Caching layer configuration",
+          "required": ["enabled"],
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable/disable caching"
+            },
+            "settings_ttl": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "TTL for settings cache (seconds)"
+            },
+            "topic_state_ttl": {
+              "type": "integer",
+              "minimum": 0,
+              "description": "TTL for topic state cache (seconds)"
+            }
+          }
+        },
+        "parallel_execution": {
+          "type": "object",
+          "description": "Parallel execution configuration",
+          "required": ["enabled"],
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable/disable parallel execution"
+            },
+            "max_workers": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 16,
+              "description": "Maximum concurrent workers"
+            }
+          }
+        },
+        "dry_run": {
+          "type": "object",
+          "description": "Dry-run mode configuration",
+          "required": ["enabled"],
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Enable/disable dry-run mode"
+            },
+            "validate_before_execution": {
+              "type": "boolean",
+              "description": "Validate workflow before execution"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "phase": {
+      "type": "object",
+      "required": ["id", "name", "order", "required", "steps"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^phase-\\d+-[a-z-]+$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "depends_on": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/definitions/step"
+          }
+        }
+      }
+    },
+    "step": {
+      "type": "object",
+      "required": ["id", "name", "required"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9-]*$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "depends_on": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "validation": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "completion_criteria": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "note": {
+          "type": "string"
+        }
+      }
+    },
+    "errorHandling": {
+      "type": "object",
+      "required": ["strategy", "log_errors", "max_retries"],
+      "properties": {
+        "strategy": {
+          "type": "string",
+          "enum": ["stop", "continue", "ask_user"]
+        },
+        "options": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "log_errors": {
+          "type": "boolean"
+        },
+        "max_retries": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10
+        }
+      }
+    },
+    "validationBehavior": {
+      "type": "object",
+      "required": ["strictness", "fail_on_missing_required", "fail_on_invalid_format"],
+      "properties": {
+        "strictness": {
+          "type": "string",
+          "enum": ["strict", "moderate", "relaxed"]
+        },
+        "options": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "fail_on_missing_required": {
+          "type": "boolean"
+        },
+        "fail_on_invalid_format": {
+          "type": "boolean"
+        }
+      }
+    },
+    "progressReporting": {
+      "type": "object",
+      "required": ["enabled"],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "frequency_seconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "log_to_state_file": {
+          "type": "boolean"
+        },
+        "update_todowrite": {
+          "type": "boolean"
+        }
+      }
+    },
+    "userInteraction": {
+      "type": "object",
+      "properties": {
+        "require_approval_between_phases": {
+          "type": "boolean"
+        },
+        "approval_timeout_seconds": {
+          "type": ["integer", "null"],
+          "minimum": 1
+        },
+        "allow_phase_skip": {
+          "type": "boolean"
+        }
+      }
+    },
+    "feature": {
+      "type": "object",
+      "required": ["enabled"],
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": true
+    },
+    "documentationGenerationFeature": {
+      "type": "object",
+      "required": ["enabled", "enforce", "agent"],
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable/disable documentation generation feature"
+        },
+        "auto_generate": {
+          "type": "boolean",
+          "description": "Automatically generate documentation"
+        },
+        "enforce": {
+          "type": "boolean",
+          "description": "Make documentation generation mandatory (cannot be skipped)"
+        },
+        "agent": {
+          "type": "string",
+          "description": "Agent to use for documentation generation",
+          "enum": ["documentation-expert"]
+        },
+        "trigger": {
+          "type": "string",
+          "description": "When to trigger documentation generation",
+          "enum": ["after_all_primary_tasks", "after_phase3", "after_phase4"]
+        },
+        "format": {
+          "type": "string",
+          "description": "Documentation format"
+        },
+        "deliverables": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "List of documentation deliverables to create"
+        },
+        "location": {
+          "type": "string",
+          "description": "Location to save documentation files"
+        },
+        "handover_context": {
+          "type": "object",
+          "properties": {
+            "include": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "all_deliverables_list",
+                  "task_summaries",
+                  "acceptance_criteria_complete",
+                  "technical_constraints",
+                  "spec_file_path"
+                ]
+              },
+              "description": "List of context items to pass to the documentation agent"
+            }
+          }
+        }
+      }
+    },
+    "qaValidationFeature": {
+      "type": "object",
+      "required": ["enabled", "enforce", "validator_agent"],
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Enable/disable QA validation feature"
+        },
+        "auto_validate": {
+          "type": "boolean",
+          "description": "Automatically validate deliverables"
+        },
+        "enforce": {
+          "type": "boolean",
+          "description": "Make QA validation mandatory (cannot be skipped)"
+        },
+        "validator_agent": {
+          "type": "string",
+          "description": "Agent to use for QA validation"
+        },
+        "trigger": {
+          "type": "string",
+          "description": "When to trigger QA validation",
+          "enum": ["after_documentation", "after_all_tasks", "after_phase4"]
+        },
+        "depends_on": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Features that must complete before QA validation"
+        },
+        "handover_context": {
+          "type": "object",
+          "properties": {
+            "include": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "topicplan_path",
+                  "all_deliverables_paths",
+                  "acceptance_criteria_complete",
+                  "spec_file_path"
+                ]
+              },
+              "description": "List of context items to pass to the QA validator agent"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+

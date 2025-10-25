@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="agenthero-ai Dashboard V2 - Monitor multi-topic project tasks">
+    <title>agenthero-ai Dashboard V2</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header__container">
+            <h1 class="header__title">agenthero-ai Dashboard</h1>
+            <div class="header__actions">
+                <span class="header__timestamp" id="lastUpdated">Last updated: Never</span>
+                <button class="btn btn--refresh" id="refreshBtn" aria-label="Refresh dashboard">
+                    <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21.5 2v6h-6M2.5 22v-6h6M2 11.5a10 10 0 0 1 18.8-4.3M22 12.5a10 10 0 0 1-18.8 4.2"/>
+                    </svg>
+                    Refresh
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main">
+        <!-- Dashboard View -->
+        <section class="dashboard" id="dashboardView">
+            <div class="dashboard__container">
+                <div class="dashboard__header">
+                    <h2 class="dashboard__heading">Active Topics</h2>
+                    <p class="dashboard__subtitle">Monitor all project topics and their progress</p>
+                </div>
+                <div class="dashboard__grid" id="topicsGrid">
+                    <!-- Topic cards will be injected here -->
+                </div>
+                <div class="dashboard__empty" id="emptyState" style="display: none;">
+                    <svg class="empty__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 11l3 3L22 4"/>
+                        <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+                    </svg>
+                    <h3 class="empty__title">No Topics Found</h3>
+                    <p class="empty__message">There are no topics to display. Create a new topic to get started.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Detail View -->
+        <section class="detail" id="detailView" style="display: none;">
+            <div class="detail__container">
+                <div class="detail__header">
+                    <button class="btn btn--back" id="backBtn" aria-label="Back to dashboard">
+                        <svg class="btn__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"/>
+                        </svg>
+                        Back to Dashboard
+                    </button>
+                </div>
+                <div class="detail__content" id="detailContent">
+                    <!-- Topic details will be injected here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Error State -->
+        <div class="error" id="errorState" style="display: none;">
+            <div class="error__container">
+                <svg class="error__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="12" y1="8" x2="12" y2="12"/>
+                    <line x1="12" y1="16" x2="12.01" y2="16"/>
+                </svg>
+                <h3 class="error__title">Error Loading Data</h3>
+                <p class="error__message" id="errorMessage"></p>
+                <button class="btn btn--primary" onclick="location.reload()">Retry</button>
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div class="loading" id="loadingState" style="display: none;">
+            <div class="loading__spinner"></div>
+            <p class="loading__text">Loading topics...</p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer__container">
+            <p class="footer__text">agenthero-ai Dashboard V2.0 | Built with vanilla JavaScript</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <!-- Load topics data first (works with file:// protocol) -->
+    <script src="data/topics.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/components.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

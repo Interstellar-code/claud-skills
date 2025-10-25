@@ -7,6 +7,60 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.16.0] - 2025-10-25
+
+### Changed
+- **MAJOR REBRAND: csprojecttask → AgentHero AI** - Complete system-wide rebrand with fresh start
+  - Agent renamed: `csprojecttask` → `agenthero-ai`
+  - Skill renamed: `csprojtasks` → `agenthero-ai`
+  - Display name: **AgentHero AI** - PM Project Orchestrator
+  - All directories renamed to use `agenthero-ai` naming convention
+  - All file paths and references updated throughout codebase
+  - 270+ references updated across documentation and code
+  - Python scripts updated with new path references
+  - Configuration files synchronized (settings.json, settings.local.json)
+  - Dashboard project renamed: `csprojecttask-dashboard-v2` → `agenthero-ai-dashboard-v2`
+
+### Added
+- **Agent Naming Convention - aghero- Prefix** - All agents created by AgentHero AI use standardized prefix
+  - Mandatory prefix: `aghero-*` for all created agents
+  - Examples: `aghero-testing-agent`, `aghero-api-builder`, `aghero-data-analyzer`
+  - Distinguishes AgentHero AI-created agents from standalone agents
+  - System validation enforces naming convention
+  - Added `validate_agent_name()` function in workflow_manager.py
+  - Documentation added to agent.md and README.md
+  - Clear ownership and namespace separation
+
+### Removed
+- **Fresh Start - State Cleanup** - Complete deletion of old state files
+  - Deleted entire `.claude/agents/state/csprojecttask/` directory
+  - Removed 20+ JSON state files from old topics
+  - Removed 9 topic directories (archived before deletion)
+  - Created fresh empty state structure at `.claude/agents/state/agenthero-ai/`
+  - New topics start from clean slate
+  - State backups created and stored in `~/backups/agenthero-rebrand/`
+  - No backward compatibility - intentional fresh start
+
+### Fixed
+- **Python Cache Cleanup** - Removed all `__pycache__` directories from old structure
+- **Nested Artifact Removal** - Cleaned up incorrectly nested `.claude/` directory in scripts
+- **Settings Synchronization** - Updated `.claude/settings.local.json` with new skill name
+
+### Migration
+- **BREAKING CHANGE**: All previous topics and state files deleted
+- **No Migration Path**: Intentional fresh start - old topics not preserved
+- **Backup Available**: State backups created before deletion at `~/backups/agenthero-rebrand/`
+- **Git Safety Tag**: Created `pre-agenthero-rebrand` tag before migration
+- **New Agent Prefix**: All future agents must use `aghero-` prefix (system enforced)
+
+### Documentation
+- Updated agent.md with AgentHero AI branding and aghero- prefix requirements
+- Updated README.md with agent naming convention section
+- Updated skill.md with new skill name and paths
+- Updated all template files (topicplan, spec, orchestrated-sub-agent)
+- Updated ARCHITECTURE-FLOW.md and AGENT-WORKFLOW-DIAGRAM.md
+- Added migration-state.json for tracking rebrand progress
+
 ## [1.15.1] - 2025-10-25
 
 ### Added

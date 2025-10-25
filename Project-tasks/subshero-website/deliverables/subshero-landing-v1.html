@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SubsHero - Manage all your subscriptions from Netflix, Spotify, Adobe and more in one centralized dashboard. Never miss a renewal again.">
+    <meta name="keywords" content="subscription management, subscription tracker, cancel subscriptions, subscription dashboard">
+    <meta name="author" content="SubsHero">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="SubsHero - Manage All Your Subscriptions">
+    <meta property="og:description" content="All your subscriptions from all platforms under a single dashboard">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://subshero.com">
+
+    <title>SubsHero - Manage All Your Subscriptions</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ================================
+           CSS VARIABLES
+           ================================ */
+        :root {
+            /* Primary Colors */
+            --color-primary: #004547;
+            --color-accent: #FFD63C;
+            --color-secondary: #0A3638;
+
+            /* Backgrounds */
+            --color-bg-light: #F3FEFF;
+            --color-bg-lighter: #F7FAFC;
+            --color-white: #FFFFFF;
+
+            /* Text */
+            --color-text-dark: #2C2F32;
+            --color-text-medium: #2D3748;
+
+            /* Accent Hover */
+            --color-accent-hover: #FFBE00;
+
+            /* Spacing */
+            --spacing-xs: 8px;
+            --spacing-sm: 16px;
+            --spacing-md: 24px;
+            --spacing-lg: 32px;
+            --spacing-xl: 48px;
+            --spacing-2xl: 64px;
+            --spacing-3xl: 80px;
+
+            /* Container */
+            --container-max-width: 1200px;
+            --container-padding-mobile: 24px;
+            --container-padding-desktop: 48px;
+
+            /* Border Radius */
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+
+            /* Transitions */
+            --transition-base: 0.3s ease;
+        }
+
+        /* ================================
+           RESET & BASE STYLES
+           ================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--color-text-dark);
+            background-color: var(--color-white);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        button {
+            font-family: inherit;
+            cursor: pointer;
+            border: none;
+            outline: none;
+        }
+
+        input, textarea {
+            font-family: inherit;
+            outline: none;
+        }
+
+        /* ================================
+           TYPOGRAPHY
+           ================================ */
+        h1, h2, h3, h4, h5, h6 {
+            line-height: 1.2;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        h1 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 800;
+        }
+
+        h2 {
+            font-size: clamp(1.75rem, 4vw, 2.5rem);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        h3 {
+            font-size: clamp(1.25rem, 3vw, 1.5rem);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        p {
+            margin-bottom: var(--spacing-md);
+            color: var(--color-text-medium);
+        }
+
+        /* ================================
+           CONTAINER & LAYOUT
+           ================================ */
+        .container {
+            max-width: var(--container-max-width);
+            margin: 0 auto;
+            padding: 0 var(--container-padding-mobile);
+        }
+
+        section {
+            padding: var(--spacing-2xl) 0;
+        }
+
+        /* ================================
+           BUTTONS
+           ================================ */
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all var(--transition-base);
+            text-align: center;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--color-accent);
+            color: var(--color-text-dark);
+        }
+
+        .btn-primary:hover {
+            background: var(--color-accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(255, 214, 60, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-primary);
+            color: var(--color-white);
+        }
+
+        /* ================================
+           HERO SECTION
+           ================================ */
+        .hero {
+            background: linear-gradient(135deg, var(--color-bg-light) 0%, var(--color-white) 100%);
+            padding: var(--spacing-3xl) 0;
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-xl);
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            margin-bottom: var(--spacing-md);
+            color: var(--color-primary);
+        }
+
+        .hero-text .subtitle {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: var(--color-text-medium);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: var(--spacing-sm);
+            flex-wrap: wrap;
+        }
+
+        .hero-image {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-2xl);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 300px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-image::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 214, 60, 0.1) 0%, transparent 70%);
+        }
+
+        .hero-image-placeholder {
+            font-size: 4rem;
+            color: rgba(255, 255, 255, 0.3);
+            z-index: 1;
+        }
+
+        /* ================================
+           FEATURES SECTION
+           ================================ */
+        .features {
+            background: var(--color-white);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .section-header p {
+            font-size: 1.125rem;
+            color: var(--color-text-medium);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-lg);
+        }
+
+        .feature-card {
+            background: var(--color-white);
+            border: 1px solid #e2e8f0;
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            transition: all var(--transition-base);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 69, 71, 0.1);
+            border-color: var(--color-accent);
+        }
+
+        .feature-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-accent-hover) 100%);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .feature-icon svg {
+            width: 28px;
+            height: 28px;
+            stroke: var(--color-text-dark);
+            stroke-width: 2;
+            fill: none;
+        }
+
+        .feature-card h3 {
+            color: var(--color-primary);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .feature-card p {
+            margin-bottom: 0;
+            color: var(--color-text-medium);
+        }
+
+        /* ================================
+           BENEFITS SECTION
+           ================================ */
+        .benefits {
+            background: var(--color-bg-lighter);
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-xl);
+        }
+
+        .benefit-item {
+            display: flex;
+            gap: var(--spacing-md);
+            align-items: flex-start;
+        }
+
+        .benefit-number {
+            flex-shrink: 0;
+            width: 48px;
+            height: 48px;
+            background: var(--color-accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.25rem;
+            color: var(--color-text-dark);
+        }
+
+        .benefit-content h3 {
+            color: var(--color-primary);
+        }
+
+        .benefit-content p {
+            margin-bottom: 0;
+        }
+
+        /* ================================
+           CTA SECTION
+           ================================ */
+        .cta-section {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            color: var(--color-white);
+        }
+
+        .cta-content {
+            text-align: center;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .cta-content h2 {
+            color: var(--color-white);
+        }
+
+        .cta-content p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.125rem;
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .email-form {
+            display: flex;
+            gap: var(--spacing-sm);
+            max-width: 500px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        .email-form input {
+            flex: 1;
+            min-width: 250px;
+            padding: 14px 20px;
+            border: 2px solid transparent;
+            border-radius: var(--radius-sm);
+            font-size: 1rem;
+        }
+
+        .email-form input:focus {
+            border-color: var(--color-accent);
+        }
+
+        .email-form input.error {
+            border-color: #ef4444;
+        }
+
+        .email-form button {
+            padding: 14px 32px;
+        }
+
+        .form-message {
+            margin-top: var(--spacing-sm);
+            font-size: 0.875rem;
+            min-height: 20px;
+        }
+
+        .form-message.success {
+            color: var(--color-accent);
+        }
+
+        .form-message.error {
+            color: #fca5a5;
+        }
+
+        /* ================================
+           FOOTER
+           ================================ */
+        .footer {
+            background: var(--color-primary);
+            color: var(--color-white);
+            padding: var(--spacing-xl) 0 var(--spacing-md);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .footer-section h3 {
+            color: var(--color-accent);
+            font-size: 1.125rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .footer-section p {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            transition: color var(--transition-base);
+        }
+
+        .footer-links a:hover {
+            color: var(--color-accent);
+        }
+
+        .social-links {
+            display: flex;
+            gap: var(--spacing-sm);
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-base);
+        }
+
+        .social-link:hover {
+            background: var(--color-accent);
+            transform: translateY(-2px);
+        }
+
+        .social-link svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--color-white);
+            fill: none;
+            stroke-width: 2;
+        }
+
+        .social-link:hover svg {
+            stroke: var(--color-text-dark);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: var(--spacing-md);
+            text-align: center;
+        }
+
+        .footer-bottom p {
+            color: rgba(255, 255, 255, 0.6);
+            margin: 0;
+            font-size: 0.875rem;
+        }
+
+        /* ================================
+           RESPONSIVE DESIGN
+           ================================ */
+
+        /* Tablet (768px+) */
+        @media (min-width: 768px) {
+            .container {
+                padding: 0 var(--container-padding-desktop);
+            }
+
+            section {
+                padding: var(--spacing-3xl) 0;
+            }
+
+            .hero-content {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .features-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .benefits-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .footer-content {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .email-form {
+                flex-wrap: nowrap;
+            }
+        }
+
+        /* Desktop (1024px+) */
+        @media (min-width: 1024px) {
+            .features-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* ================================
+           ACCESSIBILITY
+           ================================ */
+
+        /* Focus styles for keyboard navigation */
+        a:focus,
+        button:focus,
+        input:focus {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* Reduced motion for users who prefer it */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+                scroll-behavior: auto !important;
+            }
+        }
+
+        /* Skip to main content link for screen readers */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--color-accent);
+            color: var(--color-text-dark);
+            padding: 8px;
+            z-index: 100;
+            font-weight: 600;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip to main content for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- ================================
+         HERO SECTION
+         ================================ -->
+    <section class="hero" id="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>SubsHero manages your subscriptions from all the platforms under a single dashboard</h1>
+                    <p class="subtitle">Never miss a renewal, trial end, or price change again. Manage Netflix, Spotify, Adobe, and all your subscriptions in one place.</p>
+                    <div class="hero-cta">
+                        <button class="btn btn-primary" onclick="scrollToSection('cta')">Get Started Free</button>
+                        <button class="btn btn-secondary" onclick="scrollToSection('features')">See How It Works</button>
+                    </div>
+                </div>
+                <div class="hero-image" role="img" aria-label="Subscription management dashboard illustration">
+                    <div class="hero-image-placeholder">
+                        <!-- SVG Dashboard Icon -->
+                        <svg width="200" height="200" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="3" y="3" width="7" height="7" rx="1" stroke="white" stroke-width="1.5" stroke-opacity="0.6"/>
+                            <rect x="3" y="14" width="7" height="7" rx="1" stroke="white" stroke-width="1.5" stroke-opacity="0.6"/>
+                            <rect x="14" y="3" width="7" height="7" rx="1" stroke="white" stroke-width="1.5" stroke-opacity="0.6"/>
+                            <rect x="14" y="14" width="7" height="7" rx="1" stroke="white" stroke-width="1.5" stroke-opacity="0.6"/>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================
+         FEATURES SECTION
+         ================================ -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <h2>Everything You Need to Manage Subscriptions</h2>
+                <p>Powerful features to help you take control of your recurring payments</p>
+            </div>
+
+            <div class="features-grid">
+                <!-- Feature 1: Automated Management -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9 11l3 3L22 4" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Automated Management</h3>
+                    <p>Manage all subscriptions from Netflix, Spotify, Adobe, and more in one place. Connect your accounts and let SubsHero do the tracking.</p>
+                </div>
+
+                <!-- Feature 2: Smart Reminders -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Smart Reminders</h3>
+                    <p>Get notified before renewals, trial ends, or price changes. Stay informed and make decisions before charges hit your account.</p>
+                </div>
+
+                <!-- Feature 3: Easy Cancellation -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M15 9l-6 6M9 9l6 6" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Easy Cancellation</h3>
+                    <p>Cancel unwanted subscriptions with one click, no hassle. We handle the process and confirm when it's done.</p>
+                </div>
+
+                <!-- Feature 4: Re-subscription -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 4v6h6M23 20v-6h-6" stroke-linecap="round" stroke-linejoin="round"/>
+                            <path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Re-subscription</h3>
+                    <p>Easily reactivate paused or cancelled subscriptions when you need them again. Pick up right where you left off.</p>
+                </div>
+
+                <!-- Feature 5: Centralized Dashboard -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="3" y="3" width="7" height="7" rx="1"/>
+                            <rect x="14" y="3" width="7" height="7" rx="1"/>
+                            <rect x="14" y="14" width="7" height="7" rx="1"/>
+                            <rect x="3" y="14" width="7" height="7" rx="1"/>
+                        </svg>
+                    </div>
+                    <h3>Centralized Dashboard</h3>
+                    <p>See all your subscriptions, spending, and upcoming charges at a glance. Your complete financial picture in one view.</p>
+                </div>
+
+                <!-- Feature 6: Cost Tracking -->
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </div>
+                    <h3>Cost Tracking</h3>
+                    <p>Track monthly, yearly spending and find savings opportunities. Identify unused subscriptions draining your budget.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================
+         BENEFITS SECTION
+         ================================ -->
+    <section class="benefits" id="benefits">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why SubsHero?</h2>
+                <p>Join thousands who've taken control of their subscription spending</p>
+            </div>
+
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-number">1</div>
+                    <div class="benefit-content">
+                        <h3>Save Time and Money</h3>
+                        <p>Stop wasting hours tracking down subscriptions across multiple platforms. SubsHero users save an average of $300/year by identifying and cancelling unused services.</p>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-number">2</div>
+                    <div class="benefit-content">
+                        <h3>Never Miss Important Dates</h3>
+                        <p>Get timely reminders before trials convert to paid plans, before renewals hit your card, and when prices increase. Make informed decisions, not rushed ones.</p>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-number">3</div>
+                    <div class="benefit-content">
+                        <h3>Complete Visibility</h3>
+                        <p>See exactly where your money goes each month. Track spending trends, identify patterns, and make data-driven decisions about your subscriptions.</p>
+                    </div>
+                </div>
+
+                <div class="benefit-item">
+                    <div class="benefit-number">4</div>
+                    <div class="benefit-content">
+                        <h3>Stress-Free Management</h3>
+                        <p>No more forgotten passwords, hidden cancel buttons, or customer service calls. SubsHero streamlines the entire process so you can focus on what matters.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================
+         CTA SECTION
+         ================================ -->
+    <section class="cta-section" id="cta">
+        <div class="container">
+            <div class="cta-content">
+                <h2>Ready to Take Control?</h2>
+                <p>Start managing your subscriptions smarter. Join thousands of users who've simplified their digital life with SubsHero.</p>
+
+                <form class="email-form" id="emailForm" novalidate>
+                    <input
+                        type="email"
+                        id="emailInput"
+                        placeholder="Enter your email address"
+                        aria-label="Email address"
+                        required
+                    >
+                    <button type="submit" class="btn btn-primary">Get Started Free</button>
+                </form>
+                <div class="form-message" id="formMessage" role="alert" aria-live="polite"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================================
+         FOOTER
+         ================================ -->
+    <footer class="footer" id="footer">
+        <div class="container">
+            <div class="footer-content">
+                <!-- About Section -->
+                <div class="footer-section">
+                    <h3>SubsHero</h3>
+                    <p>Simplifying subscription management for everyone. Take control of your recurring payments and never miss an important date.</p>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#benefits">Benefits</a></li>
+                        <li><a href="#cta">Get Started</a></li>
+                        <li><a href="#" aria-label="Privacy Policy">Privacy Policy</a></li>
+                        <li><a href="#" aria-label="Terms of Service">Terms of Service</a></li>
+                    </ul>
+                </div>
+
+                <!-- Connect Section -->
+                <div class="footer-section">
+                    <h3>Connect With Us</h3>
+                    <div class="social-links">
+                        <a href="#" class="social-link" aria-label="Twitter">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M23 3a10.9 10.9 0 01-3.14 1.53 4.48 4.48 0 00-7.86 3v1A10.66 10.66 0 013 4s-4 9 5 13a11.64 11.64 0 01-7 2c9 5 20 0 20-11.5a4.5 4.5 0 00-.08-.83A7.72 7.72 0 0023 3z" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="LinkedIn">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z" stroke-linecap="round" stroke-linejoin="round"/>
+                                <circle cx="4" cy="4" r="2" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Facebook">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </a>
+                        <a href="#" class="social-link" aria-label="Instagram">
+                            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                                <path d="M16 11.37A4 4 0 1112.63 8 4 4 0 0116 11.37z"/>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke-linecap="round"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2025 SubsHero. All rights reserved. Made with care for subscription management.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ================================
+         JAVASCRIPT
+         ================================ -->
+    <script>
+        // Smooth scroll to section
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // Email form validation and submission
+        document.getElementById('emailForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const emailInput = document.getElementById('emailInput');
+            const formMessage = document.getElementById('formMessage');
+            const email = emailInput.value.trim();
+
+            // Email validation regex
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            // Clear previous messages
+            formMessage.textContent = '';
+            formMessage.className = 'form-message';
+            emailInput.classList.remove('error');
+
+            // Validate email
+            if (!email) {
+                emailInput.classList.add('error');
+                formMessage.className = 'form-message error';
+                formMessage.textContent = 'Please enter your email address';
+                emailInput.focus();
+                return;
+            }
+
+            if (!emailRegex.test(email)) {
+                emailInput.classList.add('error');
+                formMessage.className = 'form-message error';
+                formMessage.textContent = 'Please enter a valid email address';
+                emailInput.focus();
+                return;
+            }
+
+            // Success - in production, this would submit to a backend
+            formMessage.className = 'form-message success';
+            formMessage.textContent = 'Thanks for signing up! We\'ll be in touch soon.';
+
+            // Log to console for demo purposes
+            console.log('Email submitted:', email);
+
+            // Clear form
+            emailInput.value = '';
+
+            // Hide message after 5 seconds
+            setTimeout(() => {
+                formMessage.textContent = '';
+                formMessage.className = 'form-message';
+            }, 5000);
+        });
+
+        // Add keyboard navigation support for buttons
+        document.querySelectorAll('.btn').forEach(button => {
+            button.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.click();
+                }
+            });
+        });
+
+        // Announce page load for screen readers
+        window.addEventListener('load', function() {
+            console.log('SubsHero landing page loaded successfully');
+        });
+
+        // Handle form input accessibility
+        document.getElementById('emailInput').addEventListener('input', function() {
+            if (this.classList.contains('error')) {
+                this.classList.remove('error');
+            }
+        });
+    </script>
+</body>
+</html>

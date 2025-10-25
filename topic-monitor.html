@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>csprojecttask Topic Monitor</title>
+    <style>
+        /* CSS Variables for theming */
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #ffffff;
+            --text-primary: #212121;
+            --text-secondary: #757575;
+            --border-color: #e0e0e0;
+            --shadow: 0 2px 4px rgba(0,0,0,0.1);
+            --shadow-hover: 0 4px 8px rgba(0,0,0,0.15);
+            --primary: #2196F3;
+            --success: #4CAF50;
+            --warning: #FF9800;
+            --error: #F44336;
+            --info: #00BCD4;
+            --pending: #9E9E9E;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #121212;
+            --bg-secondary: #1e1e1e;
+            --bg-card: #2d2d2d;
+            --text-primary: #e0e0e0;
+            --text-secondary: #b0b0b0;
+            --border-color: #404040;
+            --shadow: 0 2px 4px rgba(0,0,0,0.3);
+            --shadow-hover: 0 4px 8px rgba(0,0,0,0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* Header */
+        .header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1976D2;
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border-color);
+        }
+
+        .btn-icon {
+            padding: 0.5rem;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Breadcrumb */
+        .breadcrumb {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        .breadcrumb a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover {
+            text-decoration: underline;
+        }
+
+        /* Filters */
+        .filters {
+            background: var(--bg-card);
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow);
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .filter-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+            color: var(--text-secondary);
+        }
+
+        .filter-group input,
+        .filter-group select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            font-size: 0.875rem;
+        }
+
+        /* Cards Grid */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        /* Topic Card */
+        .topic-card {
+            background: var(--bg-card);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: all 0.2s;
+            cursor: pointer;
+            border: 1px solid var(--border-color);
+        }
+
+        .topic-card:hover {
+            box-shadow: var(--shadow-hover);
+            transform: translateY(-2px);
+        }
+
+        .topic-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 1rem;
+        }
+
+        .topic-card h3 {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+
+        .topic-card-description {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        /* Status Badge */
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+
+        .badge-completed { background: #E8F5E9; color: #2E7D32; }
+        .badge-in_progress { background: #E3F2FD; color: #1565C0; }
+        .badge-pending { background: #F5F5F5; color: #616161; }
+        .badge-failed { background: #FFEBEE; color: #C62828; }
+        .badge-blocked { background: #FFF3E0; color: #E65100; }
+
+        [data-theme="dark"] .badge-completed { background: #1B5E20; color: #A5D6A7; }
+        [data-theme="dark"] .badge-in_progress { background: #0D47A1; color: #90CAF9; }
+        [data-theme="dark"] .badge-pending { background: #424242; color: #BDBDBD; }
+        [data-theme="dark"] .badge-failed { background: #B71C1C; color: #EF9A9A; }
+        [data-theme="dark"] .badge-blocked { background: #E65100; color: #FFCC80; }
+
+        /* Progress Bar */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--success);
+            transition: width 0.3s;
+        }
+
+        .progress-fill.warning { background: var(--warning); }
+        .progress-fill.error { background: var(--error); }
+
+        /* Stats */
+        .stats {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            margin-top: 1rem;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        /* Hidden */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <h1>🎯 csprojecttask Monitor</h1>
+            <div class="header-actions">
+                <button class="btn btn-primary" id="loadStateBtn">📁 Load State Directory</button>
+                <button class="btn-icon" id="refreshBtn" title="Refresh">🔄</button>
+                <button class="btn-icon" id="themeToggle" title="Toggle Theme">🌙</button>
+                <label class="btn-secondary" style="cursor: pointer;">
+                    <input type="checkbox" id="autoRefreshToggle" style="margin-right: 0.5rem;">
+                    Auto-refresh (5s)
+                </label>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Breadcrumb -->
+        <div class="breadcrumb" id="breadcrumb">
+            <a href="#" data-view="home">Home</a>
+        </div>
+
+        <!-- Home View -->
+        <div id="homeView">
+            <!-- Filters -->
+            <div class="filters">
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label>Search Topics</label>
+                        <input type="text" id="searchInput" placeholder="Search by title or description...">
+                    </div>
+                    <div class="filter-group">
+                        <label>Status</label>
+                        <select id="statusFilter">
+                            <option value="">All Statuses</option>
+                            <option value="in_progress">In Progress</option>
+                            <option value="completed">Completed</option>
+                            <option value="pending">Pending</option>
+                            <option value="failed">Failed</option>
+                            <option value="blocked">Blocked</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Phase</label>
+                        <select id="phaseFilter">
+                            <option value="">All Phases</option>
+                            <option value="requirements-analysis">Phase 1: Requirements</option>
+                            <option value="agent-selection">Phase 2: Agent Selection</option>
+                            <option value="execution-planning">Phase 3: Planning</option>
+                            <option value="ready-for-execution">Phase 4: Execution</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Topics Grid -->
+            <div class="cards-grid" id="topicsGrid"></div>
+
+            <!-- Empty State -->
+            <div class="empty-state hidden" id="emptyState">
+                <div class="empty-state-icon">📂</div>
+                <h2>No State Directory Loaded</h2>
+                <p>Click "Load State Directory" to select your .claude/agents/state/csprojecttask/ folder</p>
+            </div>
+        </div>
+
+        <!-- Topic Detail View -->
+        <div id="topicDetailView" class="hidden"></div>
+
+        <!-- Task Detail View -->
+        <div id="taskDetailView" class="hidden"></div>
+    </div>
+
+    <script>
+        // Application State
+        const AppState = {
+            stateDirectory: null,
+            topics: [],
+            currentView: 'home',
+            currentTopic: null,
+            currentTask: null,
+            autoRefreshInterval: null,
+            theme: localStorage.getItem('theme') || 'light'
+        };
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeTheme();
+            attachEventListeners();
+            showEmptyState();
+        });
+
+        function initializeTheme() {
+            document.documentElement.setAttribute('data-theme', AppState.theme);
+            updateThemeIcon();
+        }
+
+        function updateThemeIcon() {
+            const icon = AppState.theme === 'dark' ? '☀️' : '🌙';
+            document.getElementById('themeToggle').textContent = icon;
+        }
+
+        function attachEventListeners() {
+            document.getElementById('loadStateBtn').addEventListener('click', loadStateDirectory);
+            document.getElementById('refreshBtn').addEventListener('click', refreshData);
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            document.getElementById('autoRefreshToggle').addEventListener('change', toggleAutoRefresh);
+            document.getElementById('searchInput').addEventListener('input', applyFilters);
+            document.getElementById('statusFilter').addEventListener('change', applyFilters);
+            document.getElementById('phaseFilter').addEventListener('change', applyFilters);
+        }
+
+        function toggleTheme() {
+            AppState.theme = AppState.theme === 'light' ? 'dark' : 'light';
+            localStorage.setItem('theme', AppState.theme);
+            document.documentElement.setAttribute('data-theme', AppState.theme);
+            updateThemeIcon();
+        }
+
+        function toggleAutoRefresh(e) {
+            if (e.target.checked) {
+                AppState.autoRefreshInterval = setInterval(refreshData, 5000);
+            } else {
+                clearInterval(AppState.autoRefreshInterval);
+                AppState.autoRefreshInterval = null;
+            }
+        }
+
+        async function loadStateDirectory() {
+            try {
+                const dirHandle = await window.showDirectoryPicker();
+                AppState.stateDirectory = dirHandle;
+                await loadTopicsData();
+                hideEmptyState();
+                renderTopics();
+            } catch (err) {
+                if (err.name !== 'AbortError') {
+                    console.error('Error loading directory:', err);
+                    alert('Error loading state directory. Please try again.');
+                }
+            }
+        }
+
+        async function loadTopicsData() {
+            try {
+                // Read topics.json
+                const topicsFileHandle = await AppState.stateDirectory.getFileHandle('topics.json');
+                const topicsFile = await topicsFileHandle.getFile();
+                const topicsText = await topicsFile.text();
+                const topicsData = JSON.parse(topicsText);
+
+                AppState.topics = topicsData.topics || [];
+
+                // Load task details for each topic
+                const topicsDir = await AppState.stateDirectory.getDirectoryHandle('topics');
+
+                for (const topic of AppState.topics) {
+                    try {
+                        const topicDir = await topicsDir.getDirectoryHandle(topic.slug);
+                        topic.taskDetails = [];
+
+                        // Load all task-*.json files
+                        for await (const entry of topicDir.values()) {
+                            if (entry.kind === 'file' && entry.name.startsWith('task-') && entry.name.endsWith('.json')) {
+                                const taskFile = await entry.getFile();
+                                const taskText = await taskFile.text();
+                                const taskData = JSON.parse(taskText);
+                                topic.taskDetails.push({
+                                    filename: entry.name,
+                                    ...taskData
+                                });
+                            }
+                        }
+                    } catch (err) {
+                        console.warn(`Could not load task details for topic ${topic.slug}:`, err);
+                    }
+                }
+            } catch (err) {
+                console.error('Error loading topics data:', err);
+                throw err;
+            }
+        }
+
+        async function refreshData() {
+            if (!AppState.stateDirectory) return;
+
+            const refreshBtn = document.getElementById('refreshBtn');
+            refreshBtn.style.animation = 'spin 0.5s linear';
+
+            try {
+                await loadTopicsData();
+
+                if (AppState.currentView === 'home') {
+                    renderTopics();
+                } else if (AppState.currentView === 'topic' && AppState.currentTopic) {
+                    showTopicDetail(AppState.currentTopic);
+                } else if (AppState.currentView === 'task' && AppState.currentTask) {
+                    showTaskDetail(AppState.currentTask);
+                }
+            } catch (err) {
+                console.error('Error refreshing data:', err);
+            }
+
+            setTimeout(() => {
+                refreshBtn.style.animation = '';
+            }, 500);
+        }
+
+        function showEmptyState() {
+            document.getElementById('emptyState').classList.remove('hidden');
+            document.getElementById('topicsGrid').classList.add('hidden');
+        }
+
+        function hideEmptyState() {
+            document.getElementById('emptyState').classList.add('hidden');
+            document.getElementById('topicsGrid').classList.remove('hidden');
+        }
+
+        function renderTopics() {
+            const grid = document.getElementById('topicsGrid');
+            const filteredTopics = getFilteredTopics();
+
+            if (filteredTopics.length === 0) {
+                grid.innerHTML = '<div class="empty-state"><div class="empty-state-icon">🔍</div><h2>No Topics Found</h2><p>Try adjusting your filters</p></div>';
+                return;
+            }
+
+            grid.innerHTML = filteredTopics.map(topic => createTopicCard(topic)).join('');
+
+            // Attach click handlers
+            grid.querySelectorAll('.topic-card').forEach((card, index) => {
+                card.addEventListener('click', () => showTopicDetail(filteredTopics[index]));
+            });
+        }
+
+        function getFilteredTopics() {
+            const search = document.getElementById('searchInput').value.toLowerCase();
+            const status = document.getElementById('statusFilter').value;
+            const phase = document.getElementById('phaseFilter').value;
+
+            return AppState.topics.filter(topic => {
+                const matchesSearch = !search ||
+                    topic.title.toLowerCase().includes(search) ||
+                    (topic.description && topic.description.toLowerCase().includes(search));
+
+                const matchesStatus = !status || topic.status === status;
+                const matchesPhase = !phase || topic.currentPhase === phase;
+
+                return matchesSearch && matchesStatus && matchesPhase;
+            });
+        }
+
+        function applyFilters() {
+            renderTopics();
+        }
+
+        function createTopicCard(topic) {
+            const progress = topic.progress || 0;
+            const progressClass = progress === 100 ? '' : progress > 50 ? 'warning' : 'error';
+            const statusBadge = `<span class="badge badge-${topic.status}">${topic.status.replace('_', ' ')}</span>`;
+
+            const createdDate = topic.createdAt ? new Date(topic.createdAt).toLocaleDateString() : 'N/A';
+            const lastActive = topic.lastActiveAt ? new Date(topic.lastActiveAt).toLocaleDateString() : 'N/A';
+
+            return `
+                <div class="topic-card" data-slug="${topic.slug}">
+                    <div class="topic-card-header">
+                        <div>
+                            <h3>${escapeHtml(topic.title)}</h3>
+                            ${statusBadge}
+                        </div>
+                    </div>
+                    <div class="topic-card-description">
+                        ${escapeHtml(topic.description || 'No description')}
+                    </div>
+                    <div>
+                        <small style="color: var(--text-secondary);">Phase: ${formatPhase(topic.currentPhase)}</small>
+                        <div class="progress-bar">
+                            <div class="progress-fill ${progressClass}" style="width: ${progress}%"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-secondary);">
+                            <span>${progress.toFixed(0)}% Complete</span>
+                            <span>${topic.completedTasks || 0}/${topic.totalTasks || 0} tasks</span>
+                        </div>
+                    </div>
+                    <div class="stats">
+                        <div class="stat">📅 Created: ${createdDate}</div>
+                        <div class="stat">🕐 Active: ${lastActive}</div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function formatPhase(phase) {
+            const phases = {
+                'requirements-analysis': 'Phase 1: Requirements',
+                'agent-selection': 'Phase 2: Agent Selection',
+                'execution-planning': 'Phase 3: Planning',
+                'ready-for-execution': 'Phase 4: Execution',
+                'completed': 'Completed'
+            };
+            return phases[phase] || phase;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function showTopicDetail(topic) {
+            AppState.currentView = 'topic';
+            AppState.currentTopic = topic;
+
+            // Update breadcrumb
+            updateBreadcrumb([
+                { text: 'Home', view: 'home' },
+                { text: topic.title, view: 'topic' }
+            ]);
+
+            // Hide home view, show topic detail
+            document.getElementById('homeView').classList.add('hidden');
+            document.getElementById('taskDetailView').classList.add('hidden');
+            const detailView = document.getElementById('topicDetailView');
+            detailView.classList.remove('hidden');
+
+            // Render topic detail
+            detailView.innerHTML = createTopicDetailView(topic);
+
+            // Attach task click handlers
+            detailView.querySelectorAll('.task-row').forEach((row, index) => {
+                const taskDetails = topic.taskDetails || [];
+                if (taskDetails[index]) {
+                    row.addEventListener('click', () => showTaskDetail(taskDetails[index], topic));
+                }
+            });
+        }
+
+        function createTopicDetailView(topic) {
+            const progress = topic.progress || 0;
+            const progressClass = progress === 100 ? '' : progress > 50 ? 'warning' : 'error';
+
+            // Phase stepper
+            const phases = [
+                { id: 'requirements-analysis', name: 'Requirements Analysis', icon: '📋' },
+                { id: 'agent-selection', name: 'Agent Selection', icon: '🤖' },
+                { id: 'execution-planning', name: 'Execution Planning', icon: '📝' },
+                { id: 'ready-for-execution', name: 'Execution', icon: '🚀' }
+            ];
+
+            const currentPhaseIndex = phases.findIndex(p => p.id === topic.currentPhase);
+
+            const phaseStepper = `
+                <div style="display: flex; gap: 1rem; margin: 2rem 0; overflow-x: auto;">
+                    ${phases.map((phase, index) => {
+                        const isActive = index === currentPhaseIndex;
+                        const isCompleted = index < currentPhaseIndex || topic.status === 'completed';
+                        const style = isCompleted ? 'background: var(--success); color: white;' :
+                                     isActive ? 'background: var(--primary); color: white;' :
+                                     'background: var(--bg-secondary); color: var(--text-secondary);';
+
+                        return `
+                            <div style="flex: 1; min-width: 150px; padding: 1rem; border-radius: 8px; text-align: center; ${style}">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">${phase.icon}</div>
+                                <div style="font-size: 0.75rem; font-weight: 600;">Phase ${index + 1}</div>
+                                <div style="font-size: 0.875rem;">${phase.name}</div>
+                            </div>
+                        `;
+                    }).join('')}
+                </div>
+            `;
+
+            // Tasks table
+            const tasksTable = topic.taskDetails && topic.taskDetails.length > 0 ? `
+                <div style="background: var(--bg-card); border-radius: 8px; padding: 1.5rem; box-shadow: var(--shadow); margin-top: 2rem;">
+                    <h2 style="margin-bottom: 1rem;">📋 Tasks</h2>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="border-bottom: 2px solid var(--border-color);">
+                                    <th style="text-align: left; padding: 0.75rem; font-size: 0.875rem; color: var(--text-secondary);">Task ID</th>
+                                    <th style="text-align: left; padding: 0.75rem; font-size: 0.875rem; color: var(--text-secondary);">Agent</th>
+                                    <th style="text-align: left; padding: 0.75rem; font-size: 0.875rem; color: var(--text-secondary);">Status</th>
+                                    <th style="text-align: left; padding: 0.75rem; font-size: 0.875rem; color: var(--text-secondary);">Progress</th>
+                                    <th style="text-align: left; padding: 0.75rem; font-size: 0.875rem; color: var(--text-secondary);">Started</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${topic.taskDetails.map(task => `
+                                    <tr class="task-row" style="border-bottom: 1px solid var(--border-color); cursor: pointer; transition: background 0.2s;"
+                                        onmouseover="this.style.background='var(--bg-secondary)'"
+                                        onmouseout="this.style.background='transparent'">
+                                        <td style="padding: 0.75rem; font-size: 0.875rem;">${escapeHtml(task.taskId || task.filename)}</td>
+                                        <td style="padding: 0.75rem; font-size: 0.875rem;">${escapeHtml(task.agentName || 'N/A')}</td>
+                                        <td style="padding: 0.75rem;"><span class="badge badge-${task.status}">${task.status}</span></td>
+                                        <td style="padding: 0.75rem;">
+                                            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                                <div class="progress-bar" style="width: 100px; margin: 0;">
+                                                    <div class="progress-fill" style="width: ${task.progress || 0}%"></div>
+                                                </div>
+                                                <span style="font-size: 0.75rem; color: var(--text-secondary);">${task.progress || 0}%</span>
+                                            </div>
+                                        </td>
+                                        <td style="padding: 0.75rem; font-size: 0.875rem; color: var(--text-secondary);">
+                                            ${task.startedAt ? new Date(task.startedAt).toLocaleString() : 'Not started'}
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            ` : '<div class="empty-state"><p>No task details available</p></div>';
+
+            // Token usage
+            const tokenUsage = topic.tokenUsage ? `
+                <div style="background: var(--bg-card); border-radius: 8px; padding: 1.5rem; box-shadow: var(--shadow); margin-top: 2rem;">
+                    <h2 style="margin-bottom: 1rem;">💰 Token Usage</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem;">
+                        <div style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
+                            <div style="font-size: 1.5rem; font-weight: 600; color: var(--primary);">${topic.tokenUsage.total || 0}</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Total Tokens</div>
+                        </div>
+                        <div style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
+                            <div style="font-size: 1.5rem; font-weight: 600; color: var(--success);">${topic.tokenUsage.pmAgent || 0}</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">PM Agent</div>
+                        </div>
+                        <div style="text-align: center; padding: 1rem; background: var(--bg-secondary); border-radius: 8px;">
+                            <div style="font-size: 1.5rem; font-weight: 600; color: var(--info);">${topic.tokenUsage.savings || 0}</div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Savings</div>
+                        </div>
+                    </div>
+                </div>
+            ` : '';
+
+            // Deliverables
+            const deliverables = topic.files ? `
+                <div style="background: var(--bg-card); border-radius: 8px; padding: 1.5rem; box-shadow: var(--shadow); margin-top: 2rem;">
+                    <h2 style="margin-bottom: 1rem;">📁 Deliverables</h2>
+                    <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                        ${topic.files.topicPlan ? `<div>📄 <strong>Topic Plan:</strong> ${escapeHtml(topic.files.topicPlan)}</div>` : ''}
+                        ${topic.files.spec ? `<div>📋 <strong>Spec:</strong> ${escapeHtml(topic.files.spec)}</div>` : ''}
+                        ${topic.files.deliverables ? `<div>📦 <strong>Deliverables:</strong> ${escapeHtml(topic.files.deliverables)}</div>` : ''}
+                        ${topic.files.qaReport ? `<div>✅ <strong>QA Report:</strong> ${escapeHtml(topic.files.qaReport)}</div>` : ''}
+                    </div>
+                </div>
+            ` : '';
+
+            return `
+                <div style="background: var(--bg-card); border-radius: 8px; padding: 2rem; box-shadow: var(--shadow);">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                        <div>
+                            <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">${escapeHtml(topic.title)}</h1>
+                            <p style="color: var(--text-secondary); margin-bottom: 1rem;">${escapeHtml(topic.description || '')}</p>
+                        </div>
+                        <span class="badge badge-${topic.status}">${topic.status.replace('_', ' ')}</span>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                        <div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Created</div>
+                            <div style="font-weight: 600;">${topic.createdAt ? new Date(topic.createdAt).toLocaleString() : 'N/A'}</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Last Active</div>
+                            <div style="font-weight: 600;">${topic.lastActiveAt ? new Date(topic.lastActiveAt).toLocaleString() : 'N/A'}</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Completed</div>
+                            <div style="font-weight: 600;">${topic.completedAt ? new Date(topic.completedAt).toLocaleString() : 'In Progress'}</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Overall Progress</div>
+                        <div class="progress-bar">
+                            <div class="progress-fill ${progressClass}" style="width: ${progress}%"></div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.875rem; color: var(--text-secondary); margin-top: 0.5rem;">
+                            <span>${progress.toFixed(0)}% Complete</span>
+                            <span>${topic.completedTasks || 0}/${topic.totalTasks || 0} tasks completed</span>
+                        </div>
+                    </div>
+
+                    ${phaseStepper}
+                </div>
+
+                ${tasksTable}
+                ${tokenUsage}
+                ${deliverables}
+            `;
+        }
+
+        function showTaskDetail(task, topic) {
+            AppState.currentView = 'task';
+            AppState.currentTask = task;
+
+            // Update breadcrumb
+            updateBreadcrumb([
+                { text: 'Home', view: 'home' },
+                { text: topic.title, view: 'topic', data: topic },
+                { text: task.taskId || task.filename, view: 'task' }
+            ]);
+
+            // Hide other views, show task detail
+            document.getElementById('homeView').classList.add('hidden');
+            document.getElementById('topicDetailView').classList.add('hidden');
+            const detailView = document.getElementById('taskDetailView');
+            detailView.classList.remove('hidden');
+
+            // Render task detail
+            detailView.innerHTML = createTaskDetailView(task);
+        }
+
+        function createTaskDetailView(task) {
+            const logs = task.logs || [];
+            const filesCreated = task.filesCreated || [];
+            const filesModified = task.filesModified || [];
+
+            const logsSection = logs.length > 0 ? `
+                <div style="background: var(--bg-card); border-radius: 8px; padding: 1.5rem; box-shadow: var(--shadow); margin-top: 2rem;">
+                    <h2 style="margin-bottom: 1rem;">📜 Execution Logs</h2>
+                    <div style="max-height: 400px; overflow-y: auto;">
+                        ${logs.map(log => `
+                            <div style="padding: 0.75rem; border-left: 3px solid ${log.level === 'error' ? 'var(--error)' : log.level === 'warning' ? 'var(--warning)' : 'var(--info)'}; margin-bottom: 0.5rem; background: var(--bg-secondary); border-radius: 4px;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.25rem;">
+                                    <span style="font-weight: 600; font-size: 0.75rem; text-transform: uppercase; color: ${log.level === 'error' ? 'var(--error)' : log.level === 'warning' ? 'var(--warning)' : 'var(--info)'};">${log.level}</span>
+                                    <span style="font-size: 0.75rem; color: var(--text-secondary);">${log.timestamp ? new Date(log.timestamp).toLocaleString() : ''}</span>
+                                </div>
+                                <div style="font-size: 0.875rem;">${escapeHtml(log.message)}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            ` : '';
+
+            const filesSection = (filesCreated.length > 0 || filesModified.length > 0) ? `
+                <div style="background: var(--bg-card); border-radius: 8px; padding: 1.5rem; box-shadow: var(--shadow); margin-top: 2rem;">
+                    <h2 style="margin-bottom: 1rem;">📂 File Changes</h2>
+                    ${filesCreated.length > 0 ? `
+                        <div style="margin-bottom: 1rem;">
+                            <h3 style="font-size: 1rem; color: var(--success); margin-bottom: 0.5rem;">✨ Created (${filesCreated.length})</h3>
+                            ${filesCreated.map(file => `
+                                <div style="padding: 0.5rem; background: var(--bg-secondary); border-radius: 4px; margin-bottom: 0.25rem; font-size: 0.875rem; font-family: monospace;">
+                                    ${escapeHtml(file.path || file)}
+                                    ${file.timestamp ? `<span style="color: var(--text-secondary); margin-left: 1rem; font-size: 0.75rem;">${new Date(file.timestamp).toLocaleString()}</span>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                    ${filesModified.length > 0 ? `
+                        <div>
+                            <h3 style="font-size: 1rem; color: var(--warning); margin-bottom: 0.5rem;">✏️ Modified (${filesModified.length})</h3>
+                            ${filesModified.map(file => `
+                                <div style="padding: 0.5rem; background: var(--bg-secondary); border-radius: 4px; margin-bottom: 0.25rem; font-size: 0.875rem; font-family: monospace;">
+                                    ${escapeHtml(file.path || file)}
+                                    ${file.timestamp ? `<span style="color: var(--text-secondary); margin-left: 1rem; font-size: 0.75rem;">${new Date(file.timestamp).toLocaleString()}</span>` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+                </div>
+            ` : '';
+
+            const blockingQuestion = task.blockingQuestion ? `
+                <div style="background: #FFF3E0; border: 2px solid var(--warning); border-radius: 8px; padding: 1.5rem; margin-top: 2rem;">
+                    <h2 style="color: var(--warning); margin-bottom: 1rem;">⚠️ Blocking Question</h2>
+                    <p style="font-size: 0.875rem;">${escapeHtml(task.blockingQuestion)}</p>
+                </div>
+            ` : '';
+
+            const result = task.result ? `
+                <div style="background: var(--bg-card); border-radius: 8px; padding: 1.5rem; box-shadow: var(--shadow); margin-top: 2rem;">
+                    <h2 style="margin-bottom: 1rem;">✅ Result</h2>
+                    <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 4px;">
+                        <div style="font-size: 0.875rem; white-space: pre-wrap;">${escapeHtml(task.result.summary || JSON.stringify(task.result, null, 2))}</div>
+                    </div>
+                </div>
+            ` : '';
+
+            const error = task.error ? `
+                <div style="background: #FFEBEE; border: 2px solid var(--error); border-radius: 8px; padding: 1.5rem; margin-top: 2rem;">
+                    <h2 style="color: var(--error); margin-bottom: 1rem;">❌ Error</h2>
+                    <pre style="font-size: 0.875rem; white-space: pre-wrap; font-family: monospace;">${escapeHtml(task.error)}</pre>
+                </div>
+            ` : '';
+
+            return `
+                <div style="background: var(--bg-card); border-radius: 8px; padding: 2rem; box-shadow: var(--shadow);">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                        <div>
+                            <h1 style="font-size: 2rem; margin-bottom: 0.5rem;">${escapeHtml(task.taskId || task.filename)}</h1>
+                            <p style="color: var(--text-secondary);">${escapeHtml(task.focusArea || task.agentName || '')}</p>
+                        </div>
+                        <span class="badge badge-${task.status}">${task.status}</span>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                        <div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Agent</div>
+                            <div style="font-weight: 600;">${escapeHtml(task.agentName || 'N/A')}</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Progress</div>
+                            <div style="font-weight: 600;">${task.progress || 0}%</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Assigned</div>
+                            <div style="font-weight: 600;">${task.assignedAt ? new Date(task.assignedAt).toLocaleString() : 'N/A'}</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Started</div>
+                            <div style="font-weight: 600;">${task.startedAt ? new Date(task.startedAt).toLocaleString() : 'Not started'}</div>
+                        </div>
+                        <div>
+                            <div style="font-size: 0.875rem; color: var(--text-secondary);">Completed</div>
+                            <div style="font-weight: 600;">${task.completedAt ? new Date(task.completedAt).toLocaleString() : 'In progress'}</div>
+                        </div>
+                    </div>
+
+                    ${task.currentOperation ? `
+                        <div style="background: var(--bg-secondary); padding: 1rem; border-radius: 4px; margin-bottom: 1rem;">
+                            <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.25rem;">Current Operation</div>
+                            <div style="font-weight: 600;">${escapeHtml(task.currentOperation)}</div>
+                        </div>
+                    ` : ''}
+
+                    ${task.dependencies && task.dependencies.length > 0 ? `
+                        <div style="margin-bottom: 1rem;">
+                            <div style="font-size: 0.875rem; color: var(--text-secondary); margin-bottom: 0.5rem;">Dependencies</div>
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                ${task.dependencies.map(dep => `<span class="badge badge-pending">${escapeHtml(dep)}</span>`).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+
+                ${blockingQuestion}
+                ${logsSection}
+                ${filesSection}
+                ${result}
+                ${error}
+            `;
+        }
+
+        function updateBreadcrumb(items) {
+            const breadcrumb = document.getElementById('breadcrumb');
+            breadcrumb.innerHTML = items.map((item, index) => {
+                const isLast = index === items.length - 1;
+                if (isLast) {
+                    return `<span>${escapeHtml(item.text)}</span>`;
+                } else {
+                    return `<a href="#" data-view="${item.view}">${escapeHtml(item.text)}</a><span> / </span>`;
+                }
+            }).join('');
+
+            // Attach click handlers
+            breadcrumb.querySelectorAll('a').forEach((link, index) => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const view = link.getAttribute('data-view');
+                    if (view === 'home') {
+                        showHomeView();
+                    } else if (view === 'topic') {
+                        showTopicDetail(AppState.currentTopic);
+                    }
+                });
+            });
+        }
+
+        function showHomeView() {
+            AppState.currentView = 'home';
+            AppState.currentTopic = null;
+            AppState.currentTask = null;
+
+            updateBreadcrumb([{ text: 'Home', view: 'home' }]);
+
+            document.getElementById('homeView').classList.remove('hidden');
+            document.getElementById('topicDetailView').classList.add('hidden');
+            document.getElementById('taskDetailView').classList.add('hidden');
+
+            renderTopics();
+        }
+
+        // Add CSS animation for refresh button
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes spin {
+                from { transform: rotate(0deg); }
+                to { transform: rotate(360deg); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
+

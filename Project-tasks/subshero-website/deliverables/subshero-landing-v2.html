@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SubsHero manages your subscriptions from all platforms under a single dashboard. Never miss a renewal again.">
+    <meta name="keywords" content="subscription management, recurring payments, subscription tracker, cancel subscriptions">
+    <meta name="author" content="SubsHero">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="SubsHero - Manage All Your Subscriptions">
+    <meta property="og:description" content="Manage subscriptions from Netflix, Spotify, Adobe, and more in one centralized dashboard.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://subshero.com">
+
+    <title>SubsHero - Manage All Your Subscriptions in One Dashboard</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        /* ===== CSS VARIABLES ===== */
+        :root {
+            /* Primary Colors */
+            --color-primary: #004547;
+            --color-accent: #FFD63C;
+            --color-secondary: #0A3638;
+
+            /* Backgrounds */
+            --color-bg-light: #F3FEFF;
+            --color-bg-lighter: #F7FAFC;
+            --color-white: #FFFFFF;
+
+            /* Text */
+            --color-text-dark: #2C2F32;
+            --color-text-medium: #2D3748;
+
+            /* Accent Hover */
+            --color-accent-hover: #FFBE00;
+
+            /* Spacing */
+            --section-padding: 80px;
+            --section-padding-mobile: 60px;
+            --container-max-width: 1200px;
+            --container-padding: 48px;
+            --container-padding-mobile: 24px;
+
+            /* Transitions */
+            --transition-base: 0.3s ease;
+            --transition-slow: 0.5s ease;
+        }
+
+        /* ===== RESET & BASE STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            color: var(--color-text-dark);
+            background-color: var(--color-white);
+            overflow-x: hidden;
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+
+            html {
+                scroll-behavior: auto;
+            }
+        }
+
+        /* ===== TYPOGRAPHY ===== */
+        h1, h2, h3, h4, h5, h6 {
+            line-height: 1.2;
+            font-weight: 700;
+            color: var(--color-primary);
+        }
+
+        h1 {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 800;
+        }
+
+        h2 {
+            font-size: clamp(2rem, 4vw, 2.75rem);
+        }
+
+        h3 {
+            font-size: clamp(1.5rem, 3vw, 1.875rem);
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        /* ===== UTILITIES ===== */
+        .container {
+            max-width: var(--container-max-width);
+            margin: 0 auto;
+            padding: 0 var(--container-padding);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 var(--container-padding-mobile);
+            }
+        }
+
+        .section {
+            padding: var(--section-padding) 0;
+        }
+
+        @media (max-width: 768px) {
+            .section {
+                padding: var(--section-padding-mobile) 0;
+            }
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        /* ===== BUTTONS ===== */
+        .btn {
+            display: inline-block;
+            padding: 14px 32px;
+            border-radius: 6px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all var(--transition-base);
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--color-accent);
+            color: var(--color-text-dark);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--color-accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(255, 214, 60, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--color-primary);
+            border: 2px solid var(--color-primary);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--color-primary);
+            color: var(--color-white);
+        }
+
+        /* ===== HEADER / NAVIGATION ===== */
+        .header {
+            background-color: var(--color-white);
+            padding: 1rem 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            transition: all var(--transition-base);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0);
+        }
+
+        .header.scrolled {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding: 0.5rem 0;
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--color-primary);
+            text-decoration: none;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            color: var(--color-text-dark);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color var(--transition-base);
+        }
+
+        .nav-menu a:hover {
+            color: var(--color-primary);
+        }
+
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 8px;
+        }
+
+        .menu-toggle span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background-color: var(--color-primary);
+            transition: all var(--transition-base);
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -6px);
+        }
+
+        @media (max-width: 768px) {
+            .menu-toggle {
+                display: flex;
+            }
+
+            .nav-menu {
+                position: fixed;
+                top: 60px;
+                left: 0;
+                right: 0;
+                background-color: var(--color-white);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1rem;
+                box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+                transform: translateY(-100%);
+                opacity: 0;
+                visibility: hidden;
+                transition: all var(--transition-base);
+            }
+
+            .nav-menu.active {
+                transform: translateY(0);
+                opacity: 1;
+                visibility: visible;
+            }
+        }
+
+        /* ===== HERO SECTION ===== */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, var(--color-bg-light) 0%, var(--color-white) 100%);
+            padding-top: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(0, 69, 71, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 214, 60, 0.05) 0%, transparent 50%);
+            z-index: 0;
+        }
+
+        .hero .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-content {
+            max-width: 700px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .hero-title {
+            margin-bottom: 1.5rem;
+            animation: fadeInUp 1s ease-out 0.2s both;
+        }
+
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--color-text-medium);
+            margin-bottom: 2rem;
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 0.6s both;
+        }
+
+        /* ===== FEATURES SECTION ===== */
+        .features {
+            background-color: var(--color-white);
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background-color: var(--color-bg-lighter);
+            padding: 2rem;
+            border-radius: 12px;
+            transition: all var(--transition-base);
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 69, 71, 0.15);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background-color: var(--color-accent);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            font-size: 1.75rem;
+            transition: all var(--transition-base);
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.1) rotate(5deg);
+        }
+
+        .feature-title {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            color: var(--color-primary);
+        }
+
+        .feature-description {
+            color: var(--color-text-medium);
+            margin: 0;
+        }
+
+        /* Icon animations on scroll */
+        .feature-card.animate-in .feature-icon {
+            animation: bounceIn 0.6s ease-out;
+        }
+
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(0.3);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* ===== STATISTICS SECTION ===== */
+        .statistics {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            color: var(--color-white);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--color-accent);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 1.125rem;
+            color: var(--color-bg-light);
+            margin: 0;
+        }
+
+        /* ===== BENEFITS SECTION ===== */
+        .benefits {
+            background-color: var(--color-bg-lighter);
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+
+        .benefit-item {
+            text-align: center;
+        }
+
+        .benefit-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: var(--color-white);
+        }
+
+        .benefit-title {
+            font-size: 1.375rem;
+            margin-bottom: 1rem;
+            color: var(--color-primary);
+        }
+
+        .benefit-description {
+            color: var(--color-text-medium);
+            margin: 0;
+        }
+
+        /* ===== FAQ SECTION ===== */
+        .faq {
+            background-color: var(--color-white);
+        }
+
+        .faq-list {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            margin-bottom: 1rem;
+            border: 2px solid var(--color-bg-lighter);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .faq-question {
+            width: 100%;
+            padding: 1.5rem;
+            background-color: var(--color-bg-lighter);
+            border: none;
+            text-align: left;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--color-primary);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color var(--transition-base);
+        }
+
+        .faq-question:hover {
+            background-color: var(--color-bg-light);
+        }
+
+        .faq-question::after {
+            content: '+';
+            font-size: 1.5rem;
+            font-weight: 700;
+            transition: transform var(--transition-base);
+        }
+
+        .faq-question.active::after {
+            transform: rotate(45deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height var(--transition-base);
+        }
+
+        .faq-answer.active {
+            max-height: 500px;
+        }
+
+        .faq-answer-content {
+            padding: 1.5rem;
+            color: var(--color-text-medium);
+            line-height: 1.7;
+        }
+
+        /* Keyboard focus styles for accessibility */
+        .faq-question:focus {
+            outline: 2px solid var(--color-accent);
+            outline-offset: 2px;
+        }
+
+        /* ===== CTA SECTION ===== */
+        .cta {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+            color: var(--color-white);
+            text-align: center;
+        }
+
+        .cta h2 {
+            color: var(--color-white);
+            margin-bottom: 1.5rem;
+        }
+
+        .cta p {
+            font-size: 1.25rem;
+            margin-bottom: 2rem;
+            color: var(--color-bg-light);
+        }
+
+        .cta-form {
+            max-width: 500px;
+            margin: 0 auto;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .cta-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 14px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .cta-input:focus {
+            box-shadow: 0 0 0 3px rgba(255, 214, 60, 0.3);
+        }
+
+        /* ===== FOOTER ===== */
+        .footer {
+            background-color: var(--color-text-dark);
+            color: var(--color-white);
+            padding: 3rem 0 1.5rem;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            color: var(--color-accent);
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.75rem;
+        }
+
+        .footer-links a {
+            color: var(--color-bg-light);
+            text-decoration: none;
+            transition: color var(--transition-base);
+        }
+
+        .footer-links a:hover {
+            color: var(--color-accent);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-white);
+            text-decoration: none;
+            transition: all var(--transition-base);
+        }
+
+        .social-icon:hover {
+            background-color: var(--color-accent);
+            color: var(--color-text-dark);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--color-bg-light);
+        }
+
+        .newsletter-form {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 6px;
+            outline: none;
+        }
+
+        .newsletter-btn {
+            padding: 10px 20px;
+            background-color: var(--color-accent);
+            color: var(--color-text-dark);
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color var(--transition-base);
+        }
+
+        .newsletter-btn:hover {
+            background-color: var(--color-accent-hover);
+        }
+
+        /* ===== BACK TO TOP BUTTON ===== */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--color-accent);
+            color: var(--color-text-dark);
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition-base);
+            z-index: 999;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background-color: var(--color-accent-hover);
+            transform: translateY(-5px);
+        }
+
+        /* ===== RESPONSIVE STYLES ===== */
+        @media (max-width: 768px) {
+            .hero {
+                min-height: 80vh;
+                text-align: center;
+            }
+
+            .hero-content {
+                max-width: 100%;
+            }
+
+            .hero-cta {
+                justify-content: center;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .benefits-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .cta-form {
+                flex-direction: column;
+            }
+
+            .cta-input {
+                min-width: 100%;
+            }
+
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+
+            .back-to-top {
+                bottom: 20px;
+                right: 20px;
+                width: 45px;
+                height: 45px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.75rem;
+            }
+
+            .btn {
+                padding: 12px 24px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header / Navigation -->
+    <header class="header" id="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="#" class="logo">SubsHero</a>
+                <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" aria-expanded="false">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="#features">Features</a></li>
+                    <li><a href="#benefits">Benefits</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                    <li><a href="#cta" class="btn btn-primary">Get Started</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">SubsHero manages your subscriptions from all the platforms under a single dashboard</h1>
+                <p class="hero-subtitle">Never miss a renewal, cancel unwanted subscriptions, and track your spending all in one place. Take control of your subscription chaos today.</p>
+                <div class="hero-cta">
+                    <a href="#cta" class="btn btn-primary">Get Started Free</a>
+                    <a href="#features" class="btn btn-secondary">See How It Works</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features section" id="features">
+        <div class="container">
+            <h2 class="section-title">Powerful Features to Simplify Your Life</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">Centralized Dashboard</h3>
+                    <p class="feature-description">See all your subscriptions, spending, and upcoming charges at a glance in one beautiful dashboard.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔔</div>
+                    <h3 class="feature-title">Smart Reminders</h3>
+                    <p class="feature-description">Get notified before renewals, when trials end, or when prices change so you never get surprised.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">✂️</div>
+                    <h3 class="feature-title">Easy Cancellation</h3>
+                    <p class="feature-description">Cancel unwanted subscriptions with one click. No more navigating complicated account settings.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3 class="feature-title">Re-subscription Management</h3>
+                    <p class="feature-description">Easily reactivate paused or cancelled subscriptions when you need them again.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3 class="feature-title">Cost Tracking</h3>
+                    <p class="feature-description">Track monthly and yearly spending, find savings opportunities, and optimize your budget.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3 class="feature-title">Automated Management</h3>
+                    <p class="feature-description">Manage subscriptions from Netflix, Spotify, Adobe, and 100+ platforms automatically.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics Section -->
+    <section class="statistics section" id="statistics">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number" data-target="10000">0</span>
+                    <p class="stat-label">Subscriptions Managed</p>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="5000">0</span>
+                    <p class="stat-label">Active Users</p>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" data-target="95">0</span>
+                    <p class="stat-label">Satisfaction Rate (%)</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section class="benefits section" id="benefits">
+        <div class="container">
+            <h2 class="section-title">Why Choose SubsHero?</h2>
+            <div class="benefits-grid">
+                <div class="benefit-item">
+                    <div class="benefit-icon">💸</div>
+                    <h3 class="benefit-title">Save Money</h3>
+                    <p class="benefit-description">Users save an average of $300 per year by identifying and canceling forgotten subscriptions.</p>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">⏱️</div>
+                    <h3 class="benefit-title">Save Time</h3>
+                    <p class="benefit-description">No more hunting through emails or websites. Manage everything from one centralized location.</p>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">🔒</div>
+                    <h3 class="benefit-title">Secure & Private</h3>
+                    <p class="benefit-description">Bank-level encryption keeps your data safe. We never share your information with third parties.</p>
+                </div>
+                <div class="benefit-item">
+                    <div class="benefit-icon">📱</div>
+                    <h3 class="benefit-title">Access Anywhere</h3>
+                    <p class="benefit-description">Manage subscriptions from your phone, tablet, or desktop. Your data syncs across all devices.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq section" id="faq">
+        <div class="container">
+            <h2 class="section-title">Frequently Asked Questions</h2>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false" aria-controls="faq1">
+                        How does SubsHero track my subscriptions?
+                    </button>
+                    <div class="faq-answer" id="faq1">
+                        <div class="faq-answer-content">
+                            SubsHero securely connects to your email and bank accounts (with your permission) to automatically detect recurring charges. You can also manually add subscriptions for complete tracking.
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false" aria-controls="faq2">
+                        Is my financial data secure?
+                    </button>
+                    <div class="faq-answer" id="faq2">
+                        <div class="faq-answer-content">
+                            Absolutely. We use bank-level 256-bit encryption and never store your banking credentials. SubsHero is SOC 2 certified and compliant with all major security standards.
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false" aria-controls="faq3">
+                        Can SubsHero cancel subscriptions for me?
+                    </button>
+                    <div class="faq-answer" id="faq3">
+                        <div class="faq-answer-content">
+                            Yes! For supported platforms, SubsHero can cancel subscriptions with one click. For others, we provide direct links and step-by-step instructions to make cancellation as easy as possible.
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false" aria-controls="faq4">
+                        How much does SubsHero cost?
+                    </button>
+                    <div class="faq-answer" id="faq4">
+                        <div class="faq-answer-content">
+                            SubsHero offers a free plan for up to 5 subscriptions. Our Pro plan ($4.99/month) includes unlimited subscriptions, advanced analytics, and priority support. Most users save more than the subscription cost within the first month!
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false" aria-controls="faq5">
+                        Which platforms does SubsHero support?
+                    </button>
+                    <div class="faq-answer" id="faq5">
+                        <div class="faq-answer-content">
+                            SubsHero supports 100+ platforms including Netflix, Spotify, Adobe Creative Cloud, Amazon Prime, Disney+, Hulu, and many more. New platforms are added regularly based on user requests.
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false" aria-controls="faq6">
+                        Can I use SubsHero on multiple devices?
+                    </button>
+                    <div class="faq-answer" id="faq6">
+                        <div class="faq-answer-content">
+                            Yes! SubsHero works seamlessly across desktop, tablet, and mobile devices. Your data syncs automatically so you always have access to your subscription information wherever you are.
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false" aria-controls="faq7">
+                        What happens to my data if I cancel SubsHero?
+                    </button>
+                    <div class="faq-answer" id="faq7">
+                        <div class="faq-answer-content">
+                            You can export all your subscription data at any time. If you cancel, we'll keep your data for 30 days in case you change your mind, then permanently delete it from our servers.
+                        </div>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <button class="faq-question" aria-expanded="false" aria-controls="faq8">
+                        Do you offer customer support?
+                    </button>
+                    <div class="faq-answer" id="faq8">
+                        <div class="faq-answer-content">
+                            Yes! Free users get email support with 24-hour response times. Pro users get priority email support and live chat during business hours. We're here to help you succeed!
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta section" id="cta">
+        <div class="container">
+            <h2>Ready to Take Control?</h2>
+            <p>Join thousands of users who have saved time and money with SubsHero.</p>
+            <form class="cta-form" id="ctaForm">
+                <input type="email" class="cta-input" placeholder="Enter your email" required aria-label="Email address">
+                <button type="submit" class="btn btn-primary">Start Free Trial</button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>SubsHero</h3>
+                    <p>Simplifying subscription management for everyone. Take control of your recurring payments today.</p>
+                    <div class="social-icons">
+                        <a href="#" class="social-icon" aria-label="Twitter">𝕏</a>
+                        <a href="#" class="social-icon" aria-label="Facebook">f</a>
+                        <a href="#" class="social-icon" aria-label="LinkedIn">in</a>
+                        <a href="#" class="social-icon" aria-label="Instagram">📷</a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#benefits">Benefits</a></li>
+                        <li><a href="#faq">FAQ</a></li>
+                        <li><a href="#cta">Get Started</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Company</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Newsletter</h3>
+                    <p>Get tips on saving money and managing subscriptions.</p>
+                    <form class="newsletter-form" id="newsletterForm">
+                        <input type="email" class="newsletter-input" placeholder="Your email" required aria-label="Newsletter email">
+                        <button type="submit" class="newsletter-btn">Subscribe</button>
+                    </form>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 SubsHero. All rights reserved. | <a href="#" style="color: var(--color-accent);">Privacy Policy</a> | <a href="#" style="color: var(--color-accent);">Terms of Service</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" aria-label="Back to top">↑</button>
+
+    <!-- JavaScript -->
+    <script>
+        // ===== MOBILE MENU TOGGLE =====
+        const menuToggle = document.getElementById('menuToggle');
+        const navMenu = document.getElementById('navMenu');
+
+        menuToggle.addEventListener('click', () => {
+            menuToggle.classList.toggle('active');
+            navMenu.classList.toggle('active');
+
+            // Update ARIA attribute
+            const isExpanded = navMenu.classList.contains('active');
+            menuToggle.setAttribute('aria-expanded', isExpanded);
+        });
+
+        // Close menu when clicking on a link
+        navMenu.querySelectorAll('a').forEach(link => {
+            link.addEventListener('click', () => {
+                menuToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+                menuToggle.setAttribute('aria-expanded', 'false');
+            });
+        });
+
+        // ===== STICKY HEADER ON SCROLL =====
+        const header = document.getElementById('header');
+        let lastScrollY = window.scrollY;
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // ===== BACK TO TOP BUTTON =====
+        const backToTop = document.getElementById('backToTop');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // ===== FAQ ACCORDION =====
+        const faqQuestions = document.querySelectorAll('.faq-question');
+
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', () => {
+                const isActive = question.classList.contains('active');
+
+                // Close all other FAQ items
+                faqQuestions.forEach(q => {
+                    q.classList.remove('active');
+                    q.setAttribute('aria-expanded', 'false');
+                    q.nextElementSibling.classList.remove('active');
+                });
+
+                // Toggle clicked item
+                if (!isActive) {
+                    question.classList.add('active');
+                    question.setAttribute('aria-expanded', 'true');
+                    question.nextElementSibling.classList.add('active');
+                }
+            });
+
+            // Keyboard navigation
+            question.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    question.click();
+                }
+
+                // Arrow key navigation
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    const nextQuestion = question.parentElement.nextElementSibling?.querySelector('.faq-question');
+                    if (nextQuestion) nextQuestion.focus();
+                }
+
+                if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    const prevQuestion = question.parentElement.previousElementSibling?.querySelector('.faq-question');
+                    if (prevQuestion) prevQuestion.focus();
+                }
+            });
+        });
+
+        // ===== ANIMATED COUNTERS (STATISTICS SECTION) =====
+        const statNumbers = document.querySelectorAll('.stat-number');
+        let hasAnimated = false;
+
+        const animateCounter = (element) => {
+            const target = parseInt(element.getAttribute('data-target'));
+            const duration = 2000; // 2 seconds
+            const increment = target / (duration / 16); // 60fps
+            let current = 0;
+
+            const updateCounter = () => {
+                current += increment;
+                if (current < target) {
+                    element.textContent = Math.floor(current).toLocaleString() + (target === 95 ? '' : '+');
+                    requestAnimationFrame(updateCounter);
+                } else {
+                    element.textContent = target.toLocaleString() + (target === 95 ? '' : '+');
+                }
+            };
+
+            updateCounter();
+        };
+
+        // Intersection Observer for statistics
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting && !hasAnimated) {
+                    hasAnimated = true;
+                    statNumbers.forEach(stat => animateCounter(stat));
+                }
+            });
+        }, { threshold: 0.5 });
+
+        const statsSection = document.getElementById('statistics');
+        if (statsSection) {
+            statsObserver.observe(statsSection);
+        }
+
+        // ===== FEATURE CARDS ANIMATION ON SCROLL =====
+        const featureCards = document.querySelectorAll('.feature-card');
+
+        const featureObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, { threshold: 0.2 });
+
+        featureCards.forEach(card => {
+            featureObserver.observe(card);
+        });
+
+        // ===== FORM VALIDATION & SUBMISSION =====
+        const ctaForm = document.getElementById('ctaForm');
+        const newsletterForm = document.getElementById('newsletterForm');
+
+        const handleFormSubmit = (e) => {
+            e.preventDefault();
+            const email = e.target.querySelector('input[type="email"]').value;
+
+            // Simple email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (emailRegex.test(email)) {
+                alert(`Thank you! We'll send updates to ${email}`);
+                e.target.reset();
+            } else {
+                alert('Please enter a valid email address.');
+            }
+        };
+
+        ctaForm.addEventListener('submit', handleFormSubmit);
+        newsletterForm.addEventListener('submit', handleFormSubmit);
+
+        // ===== SMOOTH SCROLL POLYFILL (for older browsers) =====
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (href === '#' || href === '') return;
+
+                e.preventDefault();
+                const target = document.querySelector(href);
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // ===== ACCESSIBILITY: Skip to main content =====
+        // (Could add a skip link if needed for keyboard users)
+
+        console.log('SubsHero V2 Enhanced Landing Page - Loaded Successfully! 🚀');
+    </script>
+</body>
+</html>

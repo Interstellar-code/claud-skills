@@ -44,8 +44,8 @@ All agents created by AgentHero AI during topic execution follow the `aghero-*` 
 
 These agents exist independently and don't use the `aghero-` prefix:
 
-- `documentation-expert` - Professional documentation generator
-- `deliverables-qa-validator` - Quality assurance validator
+- `agenthero-docs-expert` - Professional documentation generator
+- `agenthero-qa-validate` - Quality assurance validator
 - `single-page-website-builder` - Website creation specialist
 
 ### Why the Prefix?

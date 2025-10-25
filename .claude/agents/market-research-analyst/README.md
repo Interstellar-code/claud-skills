@@ -44,7 +44,7 @@ Specialist sub-agent for conducting comprehensive market research and competitiv
 
 ### Step 2: Verify in Agent Library
 
-The agent should be registered in `.claude/agents/csprojecttask/README.md`
+The agent should be registered in `.claude/agents/agenthero-ai/README.md`
 
 ### Step 3: Use via PM Orchestrator
 

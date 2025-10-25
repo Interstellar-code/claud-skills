@@ -56,7 +56,7 @@ You are an **EXPERT** in:
 - ✅ When auto_create_agents = true in settings
 
 **When NOT to Apply**:
-- ❌ Existing standalone agents (documentation-expert, deliverables-qa-validator)
+- ❌ Existing standalone agents (agenthero-docs-expert, agenthero-qa-validate)
 - ❌ Manually created agents outside of AgentHero AI workflow
 - ❌ Third-party agents from other frameworks
 
@@ -150,10 +150,10 @@ Selected Agents for Topic:
 1. single-page-website-builder
    - Justification: Best match for HTML/CSS/JS deliverables
 
-2. documentation-expert [MANDATORY]
+2. agenthero-docs-expert [MANDATORY]
    - Justification: Enforced by settings (feature: documentation_generation)
 
-3. deliverables-qa-validator [MANDATORY]
+3. agenthero-qa-validate [MANDATORY]
    - Justification: Enforced by settings (feature: qa_validation)
 ```
 
@@ -161,8 +161,8 @@ Selected Agents for Topic:
 
 After the PM selects agents based on requirements, the system automatically injects mandatory agents defined in `settings.json` under `features`:
 
-- **documentation-expert**: Enforced if `features.documentation_generation.enforce = true`
-- **deliverables-qa-validator**: Enforced if `features.qa_validation.enforce = true`
+- **agenthero-docs-expert**: Enforced if `features.documentation_generation.enforce = true`
+- **agenthero-qa-validate**: Enforced if `features.qa_validation.enforce = true`
 
 **These agents CANNOT be skipped** by the PM - they are automatically added to the agent list.
 
@@ -172,8 +172,8 @@ After the PM selects agents based on requirements, the system automatically inje
 ```
 Selected Agents:
 1. single-page-website-builder (PM selected)
-2. documentation-expert (Mandatory - enforced by settings)
-3. deliverables-qa-validator (Mandatory - enforced by settings)
+2. agenthero-docs-expert (Mandatory - enforced by settings)
+3. agenthero-qa-validate (Mandatory - enforced by settings)
 ```
 
 **Phase 3: Execution Planning**
@@ -196,7 +196,7 @@ python .claude/skills/agenthero-ai/scripts/workflow_manager.py get_mandatory_age
 
 **Documentation Task (if enforce=true):**
 - Task ID: Next sequential number (e.g., task-004)
-- Agent: `documentation-expert`
+- Agent: `agenthero-docs-expert`
 - Description: "Generate comprehensive README.md documentation"
 - Dependencies: ALL primary task IDs (e.g., [task-001, task-002, task-003])
 - Deliverables: ["README.md"]
@@ -205,7 +205,7 @@ python .claude/skills/agenthero-ai/scripts/workflow_manager.py get_mandatory_age
 
 **QA Validation Task (if enforce=true):**
 - Task ID: Next sequential number (e.g., task-005)
-- Agent: `deliverables-qa-validator`
+- Agent: `agenthero-qa-validate`
 - Description: "Validate all deliverables against acceptance criteria"
 - Dependencies: [documentation-task-id] (e.g., [task-004])
 - Deliverables: [] (validation report only)
@@ -235,7 +235,7 @@ python .claude/skills/agenthero-ai/scripts/workflow_manager.py get_mandatory_age
     },
     {
       "id": "task-003",
-      "agent": "documentation-expert",
+      "agent": "agenthero-docs-expert",
       "description": "Generate comprehensive README.md documentation",
       "dependencies": ["task-001", "task-002"],
       "deliverables": ["README.md"],
@@ -243,7 +243,7 @@ python .claude/skills/agenthero-ai/scripts/workflow_manager.py get_mandatory_age
     },
     {
       "id": "task-004",
-      "agent": "deliverables-qa-validator",
+      "agent": "agenthero-qa-validate",
       "description": "Validate all deliverables against acceptance criteria",
       "dependencies": ["task-003"],
       "deliverables": [],
@@ -258,13 +258,13 @@ python .claude/skills/agenthero-ai/scripts/workflow_manager.py get_mandatory_age
 After creating primary tasks, the system automatically creates mandatory tasks at the END of the execution plan:
 
 1. **Documentation Task**: Created if `features.documentation_generation.enforce = true`
-   - Agent: `documentation-expert`
+   - Agent: `agenthero-docs-expert`
    - Trigger: After all primary tasks complete
    - Dependencies: All primary task IDs
    - Deliverables: README.md
 
 2. **QA Validation Task**: Created if `features.qa_validation.enforce = true`
-   - Agent: `deliverables-qa-validator`
+   - Agent: `agenthero-qa-validate`
    - Trigger: After documentation task
    - Dependencies: Documentation task ID
    - Deliverables: None (validation report only)
@@ -274,8 +274,8 @@ After creating primary tasks, the system automatically creates mandatory tasks a
 Task 001: Build V1 (single-page-website-builder) - No dependencies
 Task 002: Build V2 (single-page-website-builder) - Depends on Task 001
 Task 003: Build V3 (single-page-website-builder) - Depends on Task 002
-Task 004: Generate Documentation (documentation-expert) - Depends on Task 001-003 [MANDATORY]
-Task 005: QA Validation (deliverables-qa-validator) - Depends on Task 004 [MANDATORY]
+Task 004: Generate Documentation (agenthero-docs-expert) - Depends on Task 001-003 [MANDATORY]
+Task 005: QA Validation (agenthero-qa-validate) - Depends on Task 004 [MANDATORY]
 ```
 
 **Phase 4: Execution**
@@ -288,7 +288,7 @@ Task 005: QA Validation (deliverables-qa-validator) - Depends on Task 004 [MANDA
 
 **CRITICAL: When launching mandatory tasks, you MUST build and pass handover context:**
 
-**For Documentation Task (documentation-expert):**
+**For Documentation Task (agenthero-docs-expert):**
 
 ```bash
 # Step 1: Build handover context
@@ -301,7 +301,7 @@ python .claude/skills/agenthero-ai/scripts/workflow_manager.py \
 **Step 3: Inject context into agent prompt:**
 
 ```
-You are the documentation-expert agent for topic: {topic_slug}
+You are the agenthero-docs-expert agent for topic: {topic_slug}
 
 HANDOVER CONTEXT (from completed tasks):
 
@@ -323,7 +323,7 @@ YOUR TASK:
 Generate comprehensive README.md documentation covering all deliverables above.
 ```
 
-**For QA Validation Task (deliverables-qa-validator):**
+**For QA Validation Task (agenthero-qa-validate):**
 
 ```bash
 # Step 1: Build handover context
@@ -336,7 +336,7 @@ python .claude/skills/agenthero-ai/scripts/workflow_manager.py \
 **Step 3: Inject context into agent prompt:**
 
 ```
-You are the deliverables-qa-validator agent for topic: {topic_slug}
+You are the agenthero-qa-validate agent for topic: {topic_slug}
 
 HANDOVER CONTEXT (from completed tasks):
 

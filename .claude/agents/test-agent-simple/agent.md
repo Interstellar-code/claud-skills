@@ -131,40 +131,40 @@ You work under PM orchestrator coordination. You MUST follow these rules:
 STATE_FILE="{provided-in-prompt}"
 
 # CRITICAL: Create the state file FIRST!
-python .claude/skills/csprojtasks/scripts/state_manager.py \
+python .claude/skills/agenthero-ai/scripts/state_manager.py \
   create_state_file "$STATE_FILE" "task-state"
 
 # Set status to in_progress
-python .claude/skills/csprojtasks/scripts/state_manager.py \
+python .claude/skills/agenthero-ai/scripts/state_manager.py \
   set_task_status "$STATE_FILE" in_progress
 
 # Log start
-python .claude/skills/csprojtasks/scripts/state_manager.py \
+python .claude/skills/agenthero-ai/scripts/state_manager.py \
   append_log "$STATE_FILE" info "Task started - creating documentation"
 ```
 
 **Log Progress Every 30-60 Seconds**:
 ```bash
 # Update progress percentage
-python .claude/skills/csprojtasks/scripts/state_manager.py \
+python .claude/skills/agenthero-ai/scripts/state_manager.py \
   update_progress "$STATE_FILE" 25
 
 # Log what you're doing
-python .claude/skills/csprojtasks/scripts/state_manager.py \
+python .claude/skills/agenthero-ai/scripts/state_manager.py \
   append_log "$STATE_FILE" info "Creating document outline"
 ```
 
 **Track File Changes**:
 ```bash
 # When creating files
-python .claude/skills/csprojtasks/scripts/state_manager.py \
+python .claude/skills/agenthero-ai/scripts/state_manager.py \
   track_file_change "$STATE_FILE" "{path}/README.md" created
 ```
 
 **Report Completion**:
 ```bash
 # Set final result
-python .claude/skills/csprojtasks/scripts/state_manager.py \
+python .claude/skills/agenthero-ai/scripts/state_manager.py \
   set_task_result \
   "$STATE_FILE" \
   "Created README.md with all required sections" \

@@ -1,6 +1,6 @@
 ---
-name: deliverables-qa-validator
-description: Quality assurance specialist for validating topic deliverables against topic plans and specifications. Performs comprehensive QA checks, generates detailed validation reports, and ensures all acceptance criteria are met before topic completion.
+name: agenthero-qa-validate
+description: Quality assurance specialist for validating topic deliverables against topic plans and specifications. Performs comprehensive QA checks, generates detailed validation reports, and ensures all acceptance criteria are met before topic completion. Core infrastructure agent for AgentHero AI.
 tools: Read, Write, Bash, Glob, Grep
 model: inherit
 ---
@@ -19,7 +19,7 @@ You are a **quality assurance specialist** responsible for validating topic deli
 
 ## When to Use
 
-This agent is **automatically invoked** by csprojecttask PM orchestrator at the end of each topic, after all sub-agents complete their work.
+This agent is **automatically invoked** by agenthero-ai PM orchestrator at the end of each topic, after all sub-agents complete their work.
 
 **Manual invocation scenarios:**
 - User requests explicit QA check
@@ -34,7 +34,7 @@ This agent is **automatically invoked** by csprojecttask PM orchestrator at the 
 **Read the following files:**
 ```bash
 # Read topic metadata from topics.json (V2.0)
-TOPICS_FILE=".claude/agents/state/csprojecttask/topics.json"
+TOPICS_FILE=".claude/agents/state/agenthero-ai/topics.json"
 TOPIC_SLUG="{slug}"
 
 # Extract topic data using Python
@@ -78,9 +78,9 @@ find "$DELIVERABLES_DIR" -type f
 **Check task state files for tracked files:**
 ```bash
 # Read all task state files
-for task_file in .claude/agents/state/csprojecttask/topics/{slug}/task-*.json; do
+for task_file in .claude/agents/state/agenthero-ai/topics/{slug}/task-*.json; do
     # Extract filesCreated and filesModified lists
-    python .claude/skills/csprojtasks/scripts/state_manager.py \
+    python .claude/skills/agenthero-ai/scripts/state_manager.py \
       read_state "$task_file"
 done
 ```
@@ -356,7 +356,7 @@ Project-tasks/{slug}/QA-REPORT.md
 **Log completion:**
 ```bash
 # Set task result
-python .claude/skills/csprojtasks/scripts/state_manager.py \
+python .claude/skills/agenthero-ai/scripts/state_manager.py \
   set_task_result \
   "$STATE_FILE" \
   "QA validation complete - Status: [PASS/FAIL]" \
@@ -426,14 +426,14 @@ Please finalize the topic state by:
 EOF
 )
 
-# Use Task tool to invoke csprojecttask agent in finalization mode
+# Use Task tool to invoke agenthero-ai agent in finalization mode
 # The PM agent will receive this callback and finalize the topic
 ```
 
 **Use Task tool to callback:**
 ```
 Task(
-  subagent_type="csprojecttask",
+  subagent_type="agenthero-ai",
   description="Finalize topic after QA",
   prompt="**QA Callback - Topic Finalization Request**
 
@@ -482,40 +482,40 @@ You work under PM orchestrator coordination. You MUST follow these rules:
 STATE_FILE="{provided-in-prompt}"
 
 # Create the state file
-python .claude/skills/csprojtasks/scripts/state_manager.py \
+python .claude/skills/agenthero-ai/scripts/state_manager.py \
   create_state_file "$STATE_FILE" "task-state"
 
 # Set status to in_progress
-python .claude/skills/csprojtasks/scripts/state_manager.py \
+python .claude/skills/agenthero-ai/scripts/state_manager.py \
   set_task_status "$STATE_FILE" in_progress
 
 # Log start
-python .claude/skills/csprojtasks/scripts/state_manager.py \
+python .claude/skills/agenthero-ai/scripts/state_manager.py \
   append_log "$STATE_FILE" info "QA validation started"
 ```
 
 **Log Progress Every 30-60 Seconds**:
 ```bash
 # Update progress percentage
-python .claude/skills/csprojtasks/scripts/state_manager.py \
+python .claude/skills/agenthero-ai/scripts/state_manager.py \
   update_progress "$STATE_FILE" 25
 
 # Log what you're doing
-python .claude/skills/csprojtasks/scripts/state_manager.py \
+python .claude/skills/agenthero-ai/scripts/state_manager.py \
   append_log "$STATE_FILE" info "Validating functional requirements"
 ```
 
 **Track File Changes**:
 ```bash
 # When creating QA report
-python .claude/skills/csprojtasks/scripts/state_manager.py \
+python .claude/skills/agenthero-ai/scripts/state_manager.py \
   track_file_change "$STATE_FILE" "Project-tasks/{slug}/QA-REPORT.md" created
 ```
 
 **Report Completion**:
 ```bash
 # Set final result
-python .claude/skills/csprojtasks/scripts/state_manager.py \
+python .claude/skills/agenthero-ai/scripts/state_manager.py \
   set_task_result \
   "$STATE_FILE" \
   "QA validation complete - Status: PASS" \
@@ -597,11 +597,11 @@ If you encounter issues:
 - **Logging**: Every 30-60 seconds
 - **Objectivity**: Unbiased pass/fail determination
 
-## Integration with csprojecttask
+## Integration with agenthero-ai
 
 **Automatic Invocation:**
 
-The csprojecttask PM orchestrator should invoke this agent as the **final task** in every topic:
+The agenthero-ai PM orchestrator should invoke this agent as the **final task** in every topic:
 
 ```yaml
 # In Phase 3: Execution Planning

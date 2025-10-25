@@ -64,7 +64,7 @@ Each build produces:
 
 ## Installation
 
-This agent is managed by the PM orchestrator (`csprojecttask`). It doesn't require manual installation.
+This agent is managed by the PM orchestrator (`agenthero-ai`). It doesn't require manual installation.
 
 ### Usage via PM Orchestrator
 
@@ -179,6 +179,6 @@ PM: [Creates task and launches single-page-website-builder agent]
 
 ---
 
-**Maintainer**: PM Orchestrator (csprojecttask)
+**Maintainer**: PM Orchestrator (agenthero-ai)
 **Status**: Active
 **Last Updated**: 2025-10-22

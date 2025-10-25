@@ -66,8 +66,8 @@
       "status": "pending"
     }
   },
-  "last_checkpoint": "validation_complete",
-  "can_resume": true,
+  "last_checkpoint": "core_infrastructure_agents_renamed",
+  "can_resume": false,
   "rollback_instructions": {
     "phase_1": "No rollback needed - no changes made yet",
     "phase_2": "git reset --hard pre-agenthero-rebrand && git clean -fd .claude/",

@@ -7,6 +7,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.17.0] - 2025-10-25
+
+### Added
+- **Session Hooks System** - Display pending topics on Claude Code start/resume
+  - Created `.claude/hooks/display_pending_topics.py` - Python hook script
+  - Shows pending/in-progress topics automatically when session starts
+  - Beautiful formatted output with progress bars and status icons
+  - Cross-platform UTF-8 support (Windows, Linux, Mac)
+  - Configured in `.claude/settings.local.json` for SessionStart and PreCompact hooks
+  - Hook displays: topic name, slug, creation date, task progress (X/Y completed with %), priority
+  - Added `.claude/hooks/README.md` with complete documentation
+
+- **Agent Prefix Enforcement - Mandatory Agents** - Renamed mandatory agents to follow aghero- convention
+  - Renamed `documentation-expert` → `agenthero-docs-expert`
+  - Renamed `deliverables-qa-validator` → `agenthero-qa-validate`
+  - Updated all agent references in settings.json and workflow_manager.py
+  - Ensures all AgentHero AI-created agents follow consistent naming
+
+### Changed
+- **Agent Documentation Updates** - Updated agent.md files to reflect aghero- prefix
+  - Updated single-page-website-builder agent with aghero- prefix examples
+  - Updated feature-comparison-analyst, market-research-analyst, pricing-research-analyst agents
+  - Updated test-agent-simple with consistent agent prefix references
+  - All agents now document the mandatory aghero- prefix requirement
+
+### Removed
+- **Cleanup Completed Tasks** - Moved completed specification files to done/
+  - Moved `AGENT-SETTINGS-SYSTEM.md` to `Project-tasks/done/`
+  - Moved `MANDATORY-AGENTS-IMPLEMENTATION.md` to `Project-tasks/done/`
+  - Moved `agenthero-ai-rebranding-spec-v2.md` to `Project-tasks/done/`
+  - Deleted `TASK-HIERARCHICAL-MULTI-AGENT-ORCHESTRATION.md` (2744 lines - superseded by implementation)
+  - Deleted `check-dependencies.sh` (temporary script)
+  - Removed `javascript-library-developer` agent (196 lines - deprecated)
+
+### Fixed
+- **Migration State** - Updated migration-state.json with completion status
+- **Settings Schema** - Updated settings.schema.json with aghero- prefix examples
+
+### Documentation
+- Created comprehensive hook system documentation in `.claude/hooks/README.md`
+- Documented session hook configuration and usage
+- Added troubleshooting guide for hook system
+- Updated agent READMEs with aghero- prefix requirements
+
 ## [1.16.0] - 2025-10-25
 
 ### Changed

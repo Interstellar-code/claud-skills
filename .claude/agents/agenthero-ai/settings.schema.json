@@ -494,7 +494,7 @@
         "agent": {
           "type": "string",
           "description": "Agent to use for documentation generation",
-          "enum": ["documentation-expert"]
+          "enum": ["agenthero-docs-expert"]
         },
         "trigger": {
           "type": "string",

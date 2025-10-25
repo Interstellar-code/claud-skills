@@ -344,7 +344,7 @@
       "enabled": true,
       "auto_generate": true,
       "enforce": true,
-      "agent": "documentation-expert",
+      "agent": "agenthero-docs-expert",
       "trigger": "after_all_primary_tasks",
       "format": "markdown",
       "deliverables": ["README.md"],
@@ -363,7 +363,7 @@
       "enabled": true,
       "auto_validate": true,
       "enforce": true,
-      "validator_agent": "deliverables-qa-validator",
+      "validator_agent": "agenthero-qa-validate",
       "trigger": "after_documentation",
       "depends_on": ["documentation_generation"],
       "handover_context": {

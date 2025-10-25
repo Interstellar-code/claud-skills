@@ -337,7 +337,7 @@ def get_mandatory_agents(settings: Dict[str, Any]) -> List[Dict[str, Any]]:
     Example:
         [
             {
-                "name": "documentation-expert",
+                "name": "agenthero-docs-expert",
                 "feature": "documentation_generation",
                 "trigger": "after_all_primary_tasks",
                 "depends_on": [],
@@ -345,7 +345,7 @@ def get_mandatory_agents(settings: Dict[str, Any]) -> List[Dict[str, Any]]:
                 "handover_context": {...}
             },
             {
-                "name": "deliverables-qa-validator",
+                "name": "agenthero-qa-validate",
                 "feature": "qa_validation",
                 "trigger": "after_documentation",
                 "depends_on": ["documentation_generation"],
@@ -361,7 +361,7 @@ def get_mandatory_agents(settings: Dict[str, Any]) -> List[Dict[str, Any]]:
     doc_gen = features.get("documentation_generation", {})
     if doc_gen.get("enabled", False) and doc_gen.get("enforce", False):
         mandatory.append({
-            "name": doc_gen.get("agent", "documentation-expert"),
+            "name": doc_gen.get("agent", "agenthero-docs-expert"),
             "feature": "documentation_generation",
             "trigger": doc_gen.get("trigger", "after_all_primary_tasks"),
             "depends_on": [],
@@ -374,7 +374,7 @@ def get_mandatory_agents(settings: Dict[str, Any]) -> List[Dict[str, Any]]:
     qa_val = features.get("qa_validation", {})
     if qa_val.get("enabled", False) and qa_val.get("enforce", False):
         mandatory.append({
-            "name": qa_val.get("validator_agent", "deliverables-qa-validator"),
+            "name": qa_val.get("validator_agent", "agenthero-qa-validate"),
             "feature": "qa_validation",
             "trigger": qa_val.get("trigger", "after_documentation"),
             "depends_on": qa_val.get("depends_on", ["documentation_generation"]),
@@ -406,8 +406,8 @@ def validate_agent_name(agent_name: str, settings: Optional[Dict[str, Any]] = No
         >>> validate_agent_name("testing-agent")
         (False, "❌ Agent name must start with 'aghero-' prefix...")
 
-        >>> validate_agent_name("documentation-expert")
-        (True, "✅ Valid standalone agent")
+        >>> validate_agent_name("agenthero-docs-expert")
+        (True, "✅ Valid standalone agent: agenthero-docs-expert")
     """
     # Load settings if not provided
     if settings is None:
@@ -424,9 +424,10 @@ def validate_agent_name(agent_name: str, settings: Optional[Dict[str, Any]] = No
         return True, "✅ Naming convention enforcement disabled"
 
     # List of standalone agents that don't require aghero- prefix
+    # NOTE: Core infrastructure agents now use agenthero- prefix
     STANDALONE_AGENTS = [
-        "documentation-expert",
-        "deliverables-qa-validator",
+        "agenthero-docs-expert",      # Core infrastructure: Documentation generation
+        "agenthero-qa-validate",      # Core infrastructure: QA validation
         "single-page-website-builder",
         "market-research-analyst",
         "feature-comparison-analyst"
@@ -458,9 +459,11 @@ AgentHero AI Naming Convention:
 Your agent name: {agent_name}
 Suggested name: aghero-{agent_name}
 
-Standalone agents (no prefix required):
-- documentation-expert
-- deliverables-qa-validator
+Core infrastructure agents (agenthero- prefix):
+- agenthero-docs-expert (documentation generation)
+- agenthero-qa-validate (QA validation)
+
+Other standalone agents:
 - single-page-website-builder
 """
 

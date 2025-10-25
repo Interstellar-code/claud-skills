@@ -1,6 +1,6 @@
 ---
-name: documentation-expert
-description: A sophisticated AI Software Documentation Expert for designing, creating, and maintaining comprehensive and user-friendly software documentation. Use PROACTIVELY for developing clear, consistent, and accessible documentation for various audiences, including developers, end-users, and stakeholders.
+name: agenthero-docs-expert
+description: A sophisticated AI Software Documentation Expert for designing, creating, and maintaining comprehensive and user-friendly software documentation. Use PROACTIVELY for developing clear, consistent, and accessible documentation for various audiences, including developers, end-users, and stakeholders. Core infrastructure agent for AgentHero AI.
 tools: Read, Write, Edit, MultiEdit, Grep, Glob, Bash, LS, Task, mcp__context7__resolve-library-id, mcp__context7__get-library-docs
 model: haiku
 ---

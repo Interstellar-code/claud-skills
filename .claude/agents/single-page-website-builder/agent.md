@@ -146,43 +146,43 @@ You work under PM orchestrator coordination. You MUST follow these rules:
 STATE_FILE="{provided-in-prompt}"
 
 # STEP 1: Create the state file (CRITICAL - must be first!)
-python .claude/skills/csprojtasks/scripts/state_manager.py \
+python .claude/skills/agenthero-ai/scripts/state_manager.py \
   create_state_file "$STATE_FILE" "task-state"
 
 # STEP 2: Set status to in_progress
-python .claude/skills/csprojtasks/scripts/state_manager.py \
+python .claude/skills/agenthero-ai/scripts/state_manager.py \
   set_task_status "$STATE_FILE" in_progress
 
 # STEP 3: Log start
-python .claude/skills/csprojtasks/scripts/state_manager.py \
+python .claude/skills/agenthero-ai/scripts/state_manager.py \
   append_log "$STATE_FILE" info "Task started - creating ${THEME} theme website"
 ```
 
 **Log Progress Every 30-60 Seconds**:
 ```bash
 # Update progress percentage
-python .claude/skills/csprojtasks/scripts/state_manager.py \
+python .claude/skills/agenthero-ai/scripts/state_manager.py \
   update_progress "$STATE_FILE" 20
 
 # Log what you're doing
-python .claude/skills/csprojtasks/scripts/state_manager.py \
+python .claude/skills/agenthero-ai/scripts/state_manager.py \
   append_log "$STATE_FILE" info "HTML structure created with all components"
 ```
 
 **Track File Changes**:
 ```bash
 # When creating files
-python .claude/skills/csprojtasks/scripts/state_manager.py \
+python .claude/skills/agenthero-ai/scripts/state_manager.py \
   track_file_change "$STATE_FILE" "index-light.html" created
 
-python .claude/skills/csprojtasks/scripts/state_manager.py \
+python .claude/skills/agenthero-ai/scripts/state_manager.py \
   track_file_change "$STATE_FILE" "style-light.css" created
 ```
 
 **Report Completion**:
 ```bash
 # Set final result
-python .claude/skills/csprojtasks/scripts/state_manager.py \
+python .claude/skills/agenthero-ai/scripts/state_manager.py \
   set_task_result \
   "$STATE_FILE" \
   "Created ${THEME} theme landing page with all components" \
@@ -218,24 +218,24 @@ Log at these milestones:
 
 ```bash
 # 1. Initialize
-STATE_FILE=".claude/agents/state/csprojecttask/topics/my-topic/task-001-light-mode.json"
-python .claude/skills/csprojtasks/scripts/state_manager.py set_task_status "$STATE_FILE" in_progress
-python .claude/skills/csprojtasks/scripts/state_manager.py append_log "$STATE_FILE" info "Starting Light Mode theme"
+STATE_FILE=".claude/agents/state/agenthero-ai/topics/my-topic/task-001-light-mode.json"
+python .claude/skills/agenthero-ai/scripts/state_manager.py set_task_status "$STATE_FILE" in_progress
+python .claude/skills/agenthero-ai/scripts/state_manager.py append_log "$STATE_FILE" info "Starting Light Mode theme"
 
 # 2. Create HTML (progress 20%)
-python .claude/skills/csprojtasks/scripts/state_manager.py update_progress "$STATE_FILE" 20
-python .claude/skills/csprojtasks/scripts/state_manager.py append_log "$STATE_FILE" info "Creating HTML structure"
+python .claude/skills/agenthero-ai/scripts/state_manager.py update_progress "$STATE_FILE" 20
+python .claude/skills/agenthero-ai/scripts/state_manager.py append_log "$STATE_FILE" info "Creating HTML structure"
 # ... use Write tool to create index-light.html ...
-python .claude/skills/csprojtasks/scripts/state_manager.py track_file_change "$STATE_FILE" "index-light.html" created
+python .claude/skills/agenthero-ai/scripts/state_manager.py track_file_change "$STATE_FILE" "index-light.html" created
 
 # 3. Create CSS (progress 40%)
-python .claude/skills/csprojtasks/scripts/state_manager.py update_progress "$STATE_FILE" 40
-python .claude/skills/csprojtasks/scripts/state_manager.py append_log "$STATE_FILE" info "Applying CSS styling"
+python .claude/skills/agenthero-ai/scripts/state_manager.py update_progress "$STATE_FILE" 40
+python .claude/skills/agenthero-ai/scripts/state_manager.py append_log "$STATE_FILE" info "Applying CSS styling"
 # ... use Write tool to create style-light.css ...
-python .claude/skills/csprojtasks/scripts/state_manager.py track_file_change "$STATE_FILE" "style-light.css" created
+python .claude/skills/agenthero-ai/scripts/state_manager.py track_file_change "$STATE_FILE" "style-light.css" created
 
 # 4. Complete (progress 100%)
-python .claude/skills/csprojtasks/scripts/state_manager.py set_task_result \
+python .claude/skills/agenthero-ai/scripts/state_manager.py set_task_result \
   "$STATE_FILE" \
   "Light Mode theme complete with all components" \
   --files-created '["index-light.html","style-light.css","script.js"]'

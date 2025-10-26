@@ -30,9 +30,9 @@ This skill provides markdown operations WITHOUT reading entire files into contex
 
 **Examples:**
 ```
-🔧 [markdown-helper] Running: node ~/.claude/skills/markdown-helper/md-helper.js extract-headers README.md
-🔧 [markdown-helper] Running: node ~/.claude/skills/markdown-helper/md-helper.js generate-mermaid workflow.md
-🔧 [markdown-helper] Running: node ~/.claude/skills/markdown-helper/md-helper.js lint *.md
+🔧 [markdown-helper] Running: node .claude/skills/markdown-helper/md-helper.js extract-headers README.md
+🔧 [markdown-helper] Running: node .claude/skills/markdown-helper/md-helper.js generate-mermaid workflow.md
+🔧 [markdown-helper] Running: node .claude/skills/markdown-helper/md-helper.js lint *.md
 ```
 
 **Why:** This pattern helps users identify which skill is executing which command, improving transparency and debugging.
@@ -105,7 +105,7 @@ bash .claude/skills/colored-output/color.sh success "" "Markdown parsed successf
 
 **Command:**
 ```bash
-node ~/.claude/skills/markdown-helper/md-helper.js extract-headers <file>
+node .claude/skills/markdown-helper/md-helper.js extract-headers <file>
 ```
 
 **Options:**
@@ -143,7 +143,7 @@ H2: Commands
 
 **Command:**
 ```bash
-node ~/.claude/skills/markdown-helper/md-helper.js extract-tables <file>
+node .claude/skills/markdown-helper/md-helper.js extract-tables <file>
 ```
 
 **Options:**
@@ -182,7 +182,7 @@ node md-helper.js extract-tables data.md --format csv
 
 **Command:**
 ```bash
-node ~/.claude/skills/markdown-helper/md-helper.js generate-diagram <type> <output>
+node .claude/skills/markdown-helper/md-helper.js generate-diagram <type> <output>
 ```
 
 **Types:**
@@ -229,7 +229,7 @@ flowchart TD
 
 **Command:**
 ```bash
-node ~/.claude/skills/markdown-helper/md-helper.js lint <file-or-pattern>
+node .claude/skills/markdown-helper/md-helper.js lint <file-or-pattern>
 ```
 
 **Options:**
@@ -274,7 +274,7 @@ node md-helper.js lint "project-tasks/**/*.md"
 
 **Command:**
 ```bash
-node ~/.claude/skills/markdown-helper/md-helper.js replace <pattern> <replacement> <files>
+node .claude/skills/markdown-helper/md-helper.js replace <pattern> <replacement> <files>
 ```
 
 **Options:**
@@ -313,7 +313,7 @@ Files modified:
 
 **Command:**
 ```bash
-node ~/.claude/skills/markdown-helper/md-helper.js extract-lists <file>
+node .claude/skills/markdown-helper/md-helper.js extract-lists <file>
 ```
 
 **Options:**
@@ -349,7 +349,7 @@ node md-helper.js extract-lists TASKS.md --type task --json
 
 **Command:**
 ```bash
-node ~/.claude/skills/markdown-helper/md-helper.js stats <file>
+node .claude/skills/markdown-helper/md-helper.js stats <file>
 ```
 
 **Output:**

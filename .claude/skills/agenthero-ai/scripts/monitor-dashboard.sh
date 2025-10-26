@@ -218,7 +218,7 @@ show_dashboard() {
     if [[ ! -f "$TOPICS_FILE" ]]; then
         echo -e "${YELLOW}No topics found.${RESET}"
         echo ""
-        echo "Run: bash topic-manager.sh create_topic \"Your Topic\" \"Description\""
+        echo "Run: python .claude/skills/agenthero-ai/scripts/topic_manager.py create_topic \"Your Topic\" --description \"Description\""
         return
     fi
 
@@ -228,7 +228,7 @@ show_dashboard() {
     if [[ $active_count -eq 0 ]]; then
         echo -e "${YELLOW}No active topics.${RESET}"
         echo ""
-        echo "Run: bash topic-manager.sh create_topic \"Your Topic\" \"Description\""
+        echo "Run: python .claude/skills/agenthero-ai/scripts/topic_manager.py create_topic \"Your Topic\" --description \"Description\""
         return
     fi
 

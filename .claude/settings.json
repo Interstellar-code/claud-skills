@@ -1,16 +1,5 @@
 {
   "hooks": {
-    "SessionStart": [
-      {
-        "matcher": "*",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "python .claude/hooks/display_pending_topics.py"
-          }
-        ]
-      }
-    ],
     "PreCompact": [
       {
         "matcher": "*",

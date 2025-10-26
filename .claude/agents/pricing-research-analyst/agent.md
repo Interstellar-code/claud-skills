@@ -3,6 +3,8 @@ name: pricing-research-analyst
 description: Specialist in pricing model analysis, business model evaluation, monetization strategy research, and value-based pricing assessment
 tools: Read, Write, Edit, Bash, Glob, Grep, WebSearch, WebFetch
 model: inherit
+color: yellow
+icon: 💰
 ---
 
 # Pricing Research Analyst - Sub-Agent

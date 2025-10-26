@@ -1,0 +1,104 @@
+# SAP LSMW Screenshot URLs
+# Add one URL per line (remove the # comment before each URL)
+# This file is ready for batch download using image-fetcher skill
+
+# ============================================
+# PRIORITY 1: LSMW 14 Steps Screenshots
+# ============================================
+
+# Step 1: Maintain Object Attributes
+# <paste-url-here>
+
+# Step 2: Maintain Source Structures
+# <paste-url-here>
+
+# Step 3: Maintain Source Fields
+# <paste-url-here>
+
+# Step 4: Maintain Structure Relations
+# <paste-url-here>
+
+# Step 5: Field Mapping and Conversion Rules
+# <paste-url-here>
+
+# Step 6: Fixed Values, Translations, User-Defined Routines
+# <paste-url-here>
+
+# Step 7: Specify Files
+# <paste-url-here>
+
+# Step 8: Assign Files
+# <paste-url-here>
+
+# Step 9: Read Data
+# <paste-url-here>
+
+# Step 10: Display Read Data
+# <paste-url-here>
+
+# Step 11: Convert Data
+# <paste-url-here>
+
+# Step 12: Display Converted Data
+# <paste-url-here>
+
+# Step 13: Create Batch Input Session
+# <paste-url-here>
+
+# Step 14: Run Batch Input Session (SM35)
+# <paste-url-here>
+
+# ============================================
+# PRIORITY 2: XD01 Transaction Screenshots
+# ============================================
+
+# XD01 General Data (KNA1)
+# <paste-url-here>
+
+# XD01 Company Code Data (KNB1)
+# <paste-url-here>
+
+# XD01 Sales Area Data (KNVV)
+# <paste-url-here>
+
+# ============================================
+# PRIORITY 3: Additional Screenshots
+# ============================================
+
+# SM35 Session Overview
+# <paste-url-here>
+
+# SHDB Recording Overview
+# <paste-url-here>
+
+# XD03 Customer Display
+# <paste-url-here>
+
+# ============================================
+# EXAMPLE URLS (for reference - remove in production)
+# ============================================
+
+# Example format - actual SAP community image:
+# https://community.sap.com/t5/image/serverpage/image-id/123456/image-size/large
+
+# Example format - SAP help portal:
+# https://help.sap.com/doc/saphelp_nw75/7.5.5/en-US/screenshot.png
+
+# Example format - blog post image:
+# https://blogs.sap.com/wp-content/uploads/2023/01/lsmw-screenshot.png
+
+# ============================================
+# INSTRUCTIONS
+# ============================================
+
+# 1. Find screenshots using IMAGE-SOURCES-AND-URLS.md guide
+# 2. Copy image URLs here (one per line, remove # comment)
+# 3. Run batch download:
+#    python .claude/skills/image-fetcher/scripts/fetch_images_batch.py \
+#      "Project-tasks/sap-lsmw-customer-master-migration-guide/deliverables/screenshots/screenshot-urls.txt" \
+#      "Project-tasks/sap-lsmw-customer-master-migration-guide/deliverables/screenshots/"
+# 4. Rename downloaded files to match SCREENSHOT-REQUIREMENTS.md naming
+
+# ============================================
+# READY TO USE - ADD YOUR URLS ABOVE
+# ============================================

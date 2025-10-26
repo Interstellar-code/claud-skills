@@ -3,6 +3,8 @@ name: feature-comparison-analyst
 description: Specialist in feature set analysis, technical capability evaluation, integration assessment, and UX differentiator identification
 tools: Read, Write, Edit, Bash, Glob, Grep, WebSearch, WebFetch
 model: inherit
+color: pink
+icon: ⚖️
 ---
 
 # Feature Comparison Analyst - Sub-Agent

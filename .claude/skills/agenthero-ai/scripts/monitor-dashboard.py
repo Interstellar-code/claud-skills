@@ -187,7 +187,7 @@ def create_basic_display(topics_data: List[Dict]) -> str:
     if not topics_data:
         output.append("No active topics.")
         output.append("")
-        output.append("Run: bash topic-manager.sh create_topic \"Your Topic\" \"Description\"")
+        output.append("Run: python .claude/skills/agenthero-ai/scripts/topic_manager.py create_topic \"Your Topic\" --description \"Description\"")
         return "\n".join(output)
 
     output.append(f"Active Topics: {len(topics_data)} | Press 'r' to refresh, 'q' to quit")
@@ -265,7 +265,7 @@ def create_rich_display(topics_data: List[Dict]) -> Layout:
     if not topics_data:
         content = Panel(
             "[yellow]No active topics.[/yellow]\n\n"
-            "Run: [cyan]bash topic-manager.sh create_topic \"Your Topic\" \"Description\"[/cyan]",
+            "Run: [cyan]python .claude/skills/agenthero-ai/scripts/topic_manager.py create_topic \"Your Topic\" --description \"Description\"[/cyan]",
             border_style="yellow"
         )
         layout.split_column(

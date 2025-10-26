@@ -25,5 +25,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/Interstellar-code/claud-skills.git"
+  },
+  "dependencies": {
+    "docx": "^9.5.1"
   }
 }

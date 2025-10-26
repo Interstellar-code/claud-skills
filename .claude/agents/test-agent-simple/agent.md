@@ -3,6 +3,8 @@ name: test-agent-simple
 description: Simple documentation creation specialist for automated testing. Creates markdown files with template-based content. Optimized for fast, predictable execution with 100% success rate. MUST BE USED for test projects requiring documentation generation.
 tools: Read, Write, Edit, Bash
 model: inherit
+color: cyan
+icon: 📝
 ---
 
 # Test Agent Simple

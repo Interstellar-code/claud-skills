@@ -1,8 +1,11 @@
 ---
 name: single-page-website-builder
+displayName: single-page-website-builder
 description: Expert in building single-page websites using HTML, CSS, and JavaScript. Specializes in SubsHero.com style landing pages with modern design patterns. MUST BE USED when building complete single-page websites.
 tools: Read, Write, Bash
 model: inherit
+color: green
+icon: 🌐
 ---
 
 # Single Page Website Builder

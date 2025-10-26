@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="SubsHero - Free your mind. Control your subscriptions. The ultimate Matrix-themed subscription analytics platform.">
+    <meta name="theme-color" content="#000000">
+
+    <!-- Open Graph / Social Meta Tags -->
+    <meta property="og:title" content="SubsHero - The Matrix has you... but not your subscriptions">
+    <meta property="og:description" content="Take the red pill. See your subscription costs clearly. Escape the system.">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://subshero.com/og-redpill.jpg">
+
+    <title>SubsHero - Wake Up, Neo. Control Your Subscriptions</title>
+
+    <style>
+        /* ============================================
+           CSS CUSTOM PROPERTIES - EFFECT INTENSITY
+           ============================================ */
+        :root {
+            /* Colors - Pure Black & Brightest Green */
+            --color-black: #000000;
+            --color-matrix-green: #00FF41;
+            --color-bright-green: #39FF14;
+            --color-dark-green-1: #001A00;
+            --color-dark-green-2: #002B00;
+            --color-red-pill: #8B0000;
+            --color-blue-pill: #00D9FF;
+            --color-white: #FFFFFF;
+
+            /* Effect Intensity - DEFAULT: HIGH */
+            --rain-density: 40;
+            --rain-speed: 1.5;
+            --scanline-opacity: 0.08;
+            --glow-intensity: 20px;
+            --glitch-frequency: 60s;
+            --grid-opacity: 0.03;
+        }
+
+        /* Effect Intensity Presets */
+        [data-intensity="medium"] {
+            --rain-density: 20;
+            --rain-speed: 1.0;
+            --scanline-opacity: 0.05;
+            --glow-intensity: 15px;
+            --glitch-frequency: 120s;
+            --grid-opacity: 0.02;
+        }
+
+        [data-intensity="low"] {
+            --rain-density: 10;
+            --rain-speed: 0.7;
+            --scanline-opacity: 0.02;
+            --glow-intensity: 10px;
+            --glitch-frequency: 999s; /* Effectively disabled */
+            --grid-opacity: 0.01;
+        }
+
+        /* Respect reduced motion preference (overrides intensity) */
+        @media (prefers-reduced-motion: reduce) {
+            :root {
+                --rain-density: 0;
+                --rain-speed: 0;
+                --scanline-opacity: 0;
+                --glow-intensity: 5px;
+                --glitch-frequency: 999s;
+                --grid-opacity: 0;
+            }
+        }
+
+        /* ============================================
+           RESET & BASE STYLES
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 16px;
+        }
+
+        body {
+            font-family: 'Courier New', Courier, monospace;
+            background: var(--color-black);
+            color: var(--color-bright-green);
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+            letter-spacing: 0.1em;
+        }
+
+        /* ============================================
+           GRID OVERLAY - Subtle Matrix Grid
+           ============================================ */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(0deg, transparent 24%, rgba(0, 255, 65, var(--grid-opacity)) 25%, rgba(0, 255, 65, var(--grid-opacity)) 26%, transparent 27%, transparent 74%, rgba(0, 255, 65, var(--grid-opacity)) 75%, rgba(0, 255, 65, var(--grid-opacity)) 76%, transparent 77%, transparent),
+                linear-gradient(90deg, transparent 24%, rgba(0, 255, 65, var(--grid-opacity)) 25%, rgba(0, 255, 65, var(--grid-opacity)) 26%, transparent 27%, transparent 74%, rgba(0, 255, 65, var(--grid-opacity)) 75%, rgba(0, 255, 65, var(--grid-opacity)) 76%, transparent 77%, transparent);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 1;
+        }
+
+        /* ============================================
+           CRT SCANLINES - Enhanced
+           ============================================ */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 255, 65, var(--scanline-opacity)) 0px,
+                transparent 1px,
+                transparent 2px,
+                rgba(0, 255, 65, var(--scanline-opacity)) 3px
+            );
+            pointer-events: none;
+            z-index: 2;
+            animation: scanline-move 8s linear infinite;
+        }
+
+        @keyframes scanline-move {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(10px); }
+        }
+
+        /* ============================================
+           DIGITAL RAIN CANVAS
+           ============================================ */
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.4;
+            pointer-events: none;
+        }
+
+        /* ============================================
+           MAIN CONTENT CONTAINER
+           ============================================ */
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+        }
+
+        /* ============================================
+           EFFECT INTENSITY CONTROL
+           ============================================ */
+        .effect-control {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        #effectToggle {
+            background: var(--color-dark-green-2);
+            border: 2px solid var(--color-matrix-green);
+            color: var(--color-bright-green);
+            padding: 10px 20px;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: bold;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 var(--glow-intensity) var(--color-matrix-green);
+            text-transform: uppercase;
+        }
+
+        #effectToggle:hover {
+            background: var(--color-matrix-green);
+            color: var(--color-black);
+            box-shadow: 0 0 calc(var(--glow-intensity) * 1.5) var(--color-matrix-green);
+        }
+
+        .bracket {
+            color: var(--color-matrix-green);
+            font-weight: bold;
+        }
+
+        /* ============================================
+           SYSTEM STATUS INDICATOR
+           ============================================ */
+        .system-status {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 9999;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.8rem;
+            color: var(--color-bright-green);
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+        }
+
+        .status-pulse {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background: var(--color-bright-green);
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: pulse 2s ease-in-out infinite;
+            box-shadow: 0 0 10px var(--color-bright-green);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
+        /* ============================================
+           CORNER BRACKETS - Targeting UI
+           ============================================ */
+        .corner-brackets {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .corner-brackets::before,
+        .corner-brackets::after {
+            content: '';
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--color-matrix-green);
+            opacity: 0.5;
+        }
+
+        .corner-brackets::before {
+            top: 20px;
+            left: 20px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .corner-brackets::after {
+            bottom: 20px;
+            right: 20px;
+            border-left: none;
+            border-top: none;
+        }
+
+        /* ============================================
+           SECTION STYLING
+           ============================================ */
+        section {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        /* ============================================
+           HERO SECTION - "System Breach" Edition
+           ============================================ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero__title {
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 300;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            text-shadow:
+                0 0 10px var(--color-matrix-green),
+                0 0 20px var(--color-matrix-green),
+                0 0 30px var(--color-matrix-green);
+            animation: title-glitch 5s ease-in-out infinite;
+        }
+
+        @keyframes title-glitch {
+            0%, 96%, 100% { transform: translate(0); opacity: 1; }
+            97% { transform: translate(-2px, 2px); opacity: 0.8; }
+            98% { transform: translate(2px, -2px); opacity: 0.8; }
+            99% { transform: translate(-2px, -2px); opacity: 0.8; }
+        }
+
+        .hero__subtitle {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            margin-bottom: 20px;
+            color: var(--color-matrix-green);
+            font-weight: 300;
+            letter-spacing: 0.12em;
+            min-height: 2.5em;
+        }
+
+        .typewriter {
+            display: inline-block;
+            border-right: 3px solid var(--color-bright-green);
+            animation: blink 0.7s step-end infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { border-color: var(--color-bright-green); }
+            50% { border-color: transparent; }
+        }
+
+        .hero__tagline {
+            font-size: clamp(0.9rem, 2vw, 1.2rem);
+            margin-bottom: 50px;
+            color: var(--color-matrix-green);
+            opacity: 0.8;
+            letter-spacing: 0.1em;
+        }
+
+        /* ============================================
+           DUAL CTA BUTTONS - Red Pill / Blue Pill
+           ============================================ */
+        .hero__cta-container {
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .hero__cta {
+            display: inline-block;
+            padding: 18px 40px;
+            font-size: 1.1rem;
+            font-family: inherit;
+            font-weight: bold;
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            border: 3px solid;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        /* Red Pill CTA */
+        .hero__cta--red {
+            background: var(--color-red-pill);
+            color: var(--color-white);
+            border-color: #FF0000;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+        }
+
+        .hero__cta--red:hover {
+            background: #B22222;
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.8);
+            animation: glitch-red 0.3s ease-in-out;
+        }
+
+        @keyframes glitch-red {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-3px, 3px); filter: hue-rotate(90deg); }
+            40% { transform: translate(3px, -3px); filter: hue-rotate(-90deg); }
+            60% { transform: translate(-3px, -3px); filter: hue-rotate(90deg); }
+            80% { transform: translate(3px, 3px); filter: hue-rotate(-90deg); }
+        }
+
+        /* Blue Pill CTA */
+        .hero__cta--blue {
+            background: var(--color-blue-pill);
+            color: var(--color-black);
+            border-color: var(--color-blue-pill);
+            box-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+        }
+
+        .hero__cta--blue:hover {
+            background: #33E5FF;
+            box-shadow: 0 0 30px rgba(0, 217, 255, 0.8);
+            animation: glitch-blue 0.3s ease-in-out;
+        }
+
+        @keyframes glitch-blue {
+            0%, 100% { transform: translate(0); }
+            20% { transform: translate(-3px, 3px); filter: hue-rotate(90deg); }
+            40% { transform: translate(3px, -3px); filter: hue-rotate(-90deg); }
+            60% { transform: translate(-3px, -3px); filter: hue-rotate(90deg); }
+            80% { transform: translate(3px, 3px); filter: hue-rotate(-90deg); }
+        }
+
+        /* ============================================
+           RANDOM GLITCH PULSE EFFECT
+           ============================================ */
+        @keyframes random-glitch {
+            0%, 100% {
+                clip-path: inset(0 0 0 0);
+                transform: translate(0);
+            }
+            10% {
+                clip-path: inset(10% 0 85% 0);
+                transform: translate(-5px, 0);
+            }
+            20% {
+                clip-path: inset(80% 0 15% 0);
+                transform: translate(5px, 0);
+            }
+            30% {
+                clip-path: inset(50% 0 30% 0);
+                transform: translate(-5px, 0);
+            }
+            40% {
+                clip-path: inset(20% 0 60% 0);
+                transform: translate(5px, 0);
+            }
+        }
+
+        .glitch-pulse {
+            animation: random-glitch var(--glitch-frequency) ease-in-out infinite;
+        }
+
+        /* ============================================
+           TYPOGRAPHY - Enhanced Glow
+           ============================================ */
+        h1, h2, h3 {
+            font-weight: 300;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            text-shadow:
+                0 0 10px var(--color-matrix-green),
+                0 0 var(--glow-intensity) var(--color-matrix-green);
+        }
+
+        h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            margin-bottom: 60px;
+            text-align: center;
+            color: var(--color-bright-green);
+        }
+
+        h3 {
+            font-size: clamp(1.3rem, 3vw, 1.8rem);
+            margin-bottom: 20px;
+            color: var(--color-bright-green);
+        }
+
+        p {
+            font-size: clamp(1rem, 2vw, 1.1rem);
+            line-height: 1.8;
+            color: var(--color-matrix-green);
+            letter-spacing: 0.08em;
+        }
+
+        /* ============================================
+           FEATURES SECTION
+           ============================================ */
+        .features {
+            background: var(--color-black);
+        }
+
+        .features__grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .feature-card {
+            background: var(--color-dark-green-1);
+            border: 2px solid var(--color-matrix-green);
+            padding: 40px 30px;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 var(--glow-intensity) rgba(0, 255, 65, 0.2);
+        }
+
+        .feature-card::before {
+            content: '>';
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            font-size: 1.5rem;
+            color: var(--color-bright-green);
+            animation: blink 1.5s step-end infinite;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 0 calc(var(--glow-intensity) * 1.5) rgba(0, 255, 65, 0.4);
+            background: var(--color-dark-green-2);
+        }
+
+        .feature-card__icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        /* ============================================
+           HOW IT WORKS SECTION
+           ============================================ */
+        .how-it-works {
+            background: var(--color-black);
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 50px;
+            margin-top: 60px;
+        }
+
+        .step {
+            text-align: center;
+            position: relative;
+        }
+
+        .step__number {
+            font-size: 4rem;
+            font-weight: bold;
+            color: var(--color-bright-green);
+            margin-bottom: 20px;
+            text-shadow:
+                0 0 10px var(--color-matrix-green),
+                0 0 var(--glow-intensity) var(--color-matrix-green);
+            display: block;
+        }
+
+        .step::after {
+            content: '▶';
+            position: absolute;
+            top: 50px;
+            right: -25px;
+            font-size: 2rem;
+            color: var(--color-matrix-green);
+            opacity: 0.3;
+        }
+
+        .step:last-child::after {
+            content: '';
+        }
+
+        /* ============================================
+           PRICING SECTION
+           ============================================ */
+        .pricing {
+            background: var(--color-black);
+        }
+
+        .pricing__grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        .pricing-card {
+            background: var(--color-dark-green-1);
+            border: 2px solid var(--color-matrix-green);
+            padding: 50px 30px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 var(--glow-intensity) rgba(0, 255, 65, 0.2);
+        }
+
+        .pricing-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 calc(var(--glow-intensity) * 2) rgba(0, 255, 65, 0.4);
+            background: var(--color-dark-green-2);
+        }
+
+        .pricing-card--featured {
+            border-color: var(--color-bright-green);
+            box-shadow: 0 0 calc(var(--glow-intensity) * 1.5) rgba(57, 255, 20, 0.4);
+        }
+
+        .pricing-card--featured::before {
+            content: 'RECOMMENDED';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--color-bright-green);
+            color: var(--color-black);
+            padding: 5px 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            letter-spacing: 0.1em;
+        }
+
+        .pricing-card__name {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .pricing-card__price {
+            font-size: 3rem;
+            font-weight: bold;
+            color: var(--color-bright-green);
+            margin-bottom: 10px;
+            text-shadow: 0 0 var(--glow-intensity) var(--color-bright-green);
+        }
+
+        .pricing-card__period {
+            font-size: 1rem;
+            color: var(--color-matrix-green);
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+
+        .pricing-card__features {
+            list-style: none;
+            margin-bottom: 40px;
+            text-align: left;
+        }
+
+        .pricing-card__features li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0, 255, 65, 0.2);
+            color: var(--color-matrix-green);
+        }
+
+        .pricing-card__features li::before {
+            content: '✓';
+            color: var(--color-bright-green);
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .pricing-card__cta {
+            display: inline-block;
+            width: 100%;
+            padding: 15px 30px;
+            background: transparent;
+            border: 2px solid var(--color-matrix-green);
+            color: var(--color-bright-green);
+            text-decoration: none;
+            text-transform: uppercase;
+            font-family: inherit;
+            font-weight: bold;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .pricing-card__cta:hover {
+            background: var(--color-matrix-green);
+            color: var(--color-black);
+            box-shadow: 0 0 20px var(--color-matrix-green);
+        }
+
+        /* ============================================
+           FAQ SECTION - Enhanced Terminal Style
+           ============================================ */
+        .faq {
+            background: var(--color-black);
+        }
+
+        .faq__list {
+            max-width: 800px;
+            margin: 60px auto 0;
+        }
+
+        .faq__item {
+            background: var(--color-dark-green-1);
+            border: 2px solid var(--color-matrix-green);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .faq__question {
+            width: 100%;
+            padding: 25px;
+            background: transparent;
+            border: none;
+            color: var(--color-bright-green);
+            font-family: inherit;
+            font-size: 1.1rem;
+            font-weight: bold;
+            text-align: left;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            transition: all 0.3s ease;
+        }
+
+        .faq__question::before {
+            content: '> RED_PILL_INIT:// ';
+            color: var(--color-matrix-green);
+            font-weight: normal;
+            margin-right: 10px;
+        }
+
+        .faq__question:hover {
+            background: var(--color-dark-green-2);
+            box-shadow: inset 0 0 20px rgba(0, 255, 65, 0.1);
+        }
+
+        .faq__question::after {
+            content: '[+]';
+            font-size: 1.5rem;
+            color: var(--color-bright-green);
+            transition: transform 0.3s ease;
+        }
+
+        .faq__question.active::after {
+            content: '[-]';
+            transform: rotate(180deg);
+        }
+
+        .faq__answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            background: var(--color-black);
+        }
+
+        .faq__answer-content {
+            padding: 25px;
+            color: var(--color-matrix-green);
+            line-height: 1.8;
+            border-top: 1px solid rgba(0, 255, 65, 0.2);
+        }
+
+        .faq__answer-content::after {
+            content: '█';
+            color: var(--color-bright-green);
+            animation: blink 0.7s step-end infinite;
+            margin-left: 5px;
+        }
+
+        /* ============================================
+           CTA SECTION - Final Call to Action
+           ============================================ */
+        .cta-section {
+            background: var(--color-black);
+            text-align: center;
+            padding: 150px 20px;
+            position: relative;
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(0, 255, 65, 0.1) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .cta-section__title {
+            font-size: clamp(2rem, 6vw, 4rem);
+            margin-bottom: 40px;
+            text-shadow:
+                0 0 10px var(--color-matrix-green),
+                0 0 20px var(--color-matrix-green),
+                0 0 30px var(--color-matrix-green);
+        }
+
+        .cta-section__subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            margin-bottom: 50px;
+            color: var(--color-matrix-green);
+            letter-spacing: 0.1em;
+        }
+
+        /* ============================================
+           FOOTER
+           ============================================ */
+        .footer {
+            background: var(--color-black);
+            border-top: 2px solid var(--color-matrix-green);
+            padding: 60px 20px 30px;
+            text-align: center;
+        }
+
+        .footer__content {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer__links {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .footer__link {
+            color: var(--color-matrix-green);
+            text-decoration: none;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer__link:hover {
+            color: var(--color-bright-green);
+            text-shadow: 0 0 10px var(--color-bright-green);
+        }
+
+        .footer__copyright {
+            color: var(--color-matrix-green);
+            font-size: 0.9rem;
+            opacity: 0.6;
+            letter-spacing: 0.08em;
+        }
+
+        /* ============================================
+           RESPONSIVE DESIGN
+           ============================================ */
+        @media (max-width: 768px) {
+            section {
+                padding: 60px 15px;
+            }
+
+            .hero__cta-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .hero__cta {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .effect-control {
+                top: 10px;
+                right: 10px;
+            }
+
+            #effectToggle {
+                padding: 8px 15px;
+                font-size: 0.8rem;
+            }
+
+            .system-status {
+                top: 10px;
+                left: 10px;
+                font-size: 0.7rem;
+            }
+
+            .features__grid,
+            .pricing__grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps {
+                grid-template-columns: 1fr;
+            }
+
+            .step::after {
+                content: '▼';
+                top: auto;
+                bottom: -35px;
+                right: 50%;
+                transform: translateX(50%);
+            }
+
+            .footer__links {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+
+        /* ============================================
+           ACCESSIBILITY
+           ============================================ */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Focus styles for keyboard navigation */
+        a:focus,
+        button:focus {
+            outline: 3px solid var(--color-bright-green);
+            outline-offset: 3px;
+        }
+
+        /* ============================================
+           LOADING ANIMATION
+           ============================================ */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+    </style>
+</head>
+<body data-intensity="high">
+    <!-- Digital Rain Canvas -->
+    <canvas id="matrix-canvas"></canvas>
+
+    <!-- Effect Intensity Control -->
+    <div class="effect-control">
+        <button id="effectToggle" aria-label="Toggle effect intensity">
+            <span class="bracket">[</span>
+            <span id="intensityLevel">HIGH</span>
+            <span class="bracket">]</span>
+        </button>
+    </div>
+
+    <!-- System Status Indicator -->
+    <div class="system-status">
+        <span class="status-pulse"></span>
+        <span>SYSTEM STATUS: BREACH DETECTED</span>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content-wrapper">
+        <!-- Hero Section -->
+        <section class="hero glitch-pulse">
+            <div class="corner-brackets"></div>
+            <h1 class="hero__title">SUBSHERO</h1>
+            <p class="hero__subtitle">
+                <span class="typewriter" id="typewriter"></span>
+            </p>
+            <p class="hero__tagline">Free your mind. Control your subscriptions.</p>
+
+            <div class="hero__cta-container">
+                <a href="#pricing" class="hero__cta hero__cta--red">Take the Red Pill</a>
+                <a href="#features" class="hero__cta hero__cta--blue">Take the Blue Pill</a>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features" id="features">
+            <h2 class="fade-in">System Capabilities</h2>
+
+            <div class="features__grid">
+                <div class="feature-card fade-in">
+                    <span class="feature-card__icon" aria-hidden="true">🎯</span>
+                    <h3>Total Transparency</h3>
+                    <p>See every subscription clearly. No hidden costs. The code reveals all.</p>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <span class="feature-card__icon" aria-hidden="true">📊</span>
+                    <h3>Real-Time Analytics</h3>
+                    <p>Live data streams showing where your money flows. Updated in real-time.</p>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <span class="feature-card__icon" aria-hidden="true">🔔</span>
+                    <h3>Intelligent Alerts</h3>
+                    <p>AI-powered notifications before renewals. Never be blindsided again.</p>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <span class="feature-card__icon" aria-hidden="true">💰</span>
+                    <h3>Cost Optimization</h3>
+                    <p>Identify wasteful spending. Recommendations to save hundreds per year.</p>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <span class="feature-card__icon" aria-hidden="true">🔒</span>
+                    <h3>Bank-Level Security</h3>
+                    <p>256-bit encryption. Your financial data is protected in the system.</p>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <span class="feature-card__icon" aria-hidden="true">📱</span>
+                    <h3>Cross-Platform Access</h3>
+                    <p>Web, mobile, desktop. Access your data from anywhere in the Matrix.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works Section -->
+        <section class="how-it-works">
+            <h2 class="fade-in">Initialization Sequence</h2>
+
+            <div class="steps">
+                <div class="step fade-in">
+                    <span class="step__number">01</span>
+                    <h3>Connect</h3>
+                    <p>Link your accounts securely. The system begins scanning.</p>
+                </div>
+
+                <div class="step fade-in">
+                    <span class="step__number">02</span>
+                    <h3>Analyze</h3>
+                    <p>AI analyzes spending patterns. Hidden subscriptions revealed.</p>
+                </div>
+
+                <div class="step fade-in">
+                    <span class="step__number">03</span>
+                    <h3>Optimize</h3>
+                    <p>Receive personalized recommendations. Take control now.</p>
+                </div>
+
+                <div class="step fade-in">
+                    <span class="step__number">04</span>
+                    <h3>Save</h3>
+                    <p>Cancel unwanted services. Save hundreds monthly.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section class="pricing" id="pricing">
+            <h2 class="fade-in">Choose Your Reality</h2>
+
+            <div class="pricing__grid">
+                <div class="pricing-card fade-in">
+                    <h3 class="pricing-card__name">Free Tier</h3>
+                    <div class="pricing-card__price">$0</div>
+                    <div class="pricing-card__period">forever</div>
+                    <ul class="pricing-card__features">
+                        <li>Up to 5 subscriptions</li>
+                        <li>Basic analytics</li>
+                        <li>Email alerts</li>
+                        <li>Mobile app access</li>
+                    </ul>
+                    <a href="#" class="pricing-card__cta">Start Free</a>
+                </div>
+
+                <div class="pricing-card pricing-card--featured fade-in">
+                    <h3 class="pricing-card__name">Pro Access</h3>
+                    <div class="pricing-card__price">$9</div>
+                    <div class="pricing-card__period">per month</div>
+                    <ul class="pricing-card__features">
+                        <li>Unlimited subscriptions</li>
+                        <li>Advanced AI analytics</li>
+                        <li>Smart alerts & forecasting</li>
+                        <li>Priority support</li>
+                        <li>API access</li>
+                        <li>Custom reports</li>
+                    </ul>
+                    <a href="#" class="pricing-card__cta">Upgrade Now</a>
+                </div>
+
+                <div class="pricing-card fade-in">
+                    <h3 class="pricing-card__name">Enterprise</h3>
+                    <div class="pricing-card__price">Custom</div>
+                    <div class="pricing-card__period">contact us</div>
+                    <ul class="pricing-card__features">
+                        <li>Everything in Pro</li>
+                        <li>Team management</li>
+                        <li>SSO & compliance</li>
+                        <li>Dedicated support</li>
+                        <li>Custom integrations</li>
+                        <li>SLA guarantee</li>
+                    </ul>
+                    <a href="#" class="pricing-card__cta">Contact Sales</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ Section -->
+        <section class="faq">
+            <h2 class="fade-in">System Queries</h2>
+
+            <div class="faq__list">
+                <div class="faq__item fade-in">
+                    <button class="faq__question">
+                        Is my financial data secure?
+                    </button>
+                    <div class="faq__answer">
+                        <div class="faq__answer-content">
+                            Absolutely. We use bank-level 256-bit AES encryption, zero-knowledge architecture, and never store your banking credentials. Your data is encrypted end-to-end. We're SOC 2 Type II certified.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq__item fade-in">
+                    <button class="faq__question">
+                        How does SubsHero find subscriptions?
+                    </button>
+                    <div class="faq__answer">
+                        <div class="faq__answer-content">
+                            Our AI analyzes your transaction history, identifies recurring charges, and matches them against our database of 50,000+ subscription services. Manual entry is also available.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq__item fade-in">
+                    <button class="faq__question">
+                        Can I cancel subscriptions through SubsHero?
+                    </button>
+                    <div class="faq__answer">
+                        <div class="faq__answer-content">
+                            Currently, SubsHero tracks and alerts you about subscriptions. We provide direct links and instructions to cancel with each provider. Automated cancellation is coming in Q2 2024.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq__item fade-in">
+                    <button class="faq__question">
+                        What banks are supported?
+                    </button>
+                    <div class="faq__answer">
+                        <div class="faq__answer-content">
+                            We support 15,000+ financial institutions via Plaid integration, including all major US banks, credit unions, and international banks. If your bank isn't supported, manual CSV import is available.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="faq__item fade-in">
+                    <button class="faq__question">
+                        How much can I save?
+                    </button>
+                    <div class="faq__answer">
+                        <div class="faq__answer-content">
+                            On average, SubsHero users discover $300-500 in forgotten or unnecessary subscriptions within the first month. Some users save over $1,000/year by optimizing their subscription portfolio.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Final CTA Section -->
+        <section class="cta-section">
+            <h2 class="cta-section__title glitch-pulse">Wake Up, Neo</h2>
+            <p class="cta-section__subtitle">The choice is yours. Take control now.</p>
+
+            <div class="hero__cta-container">
+                <a href="#pricing" class="hero__cta hero__cta--red">Take the Red Pill</a>
+                <a href="#features" class="hero__cta hero__cta--blue">Take the Blue Pill</a>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer__content">
+                <nav class="footer__links">
+                    <a href="#features" class="footer__link">Features</a>
+                    <a href="#pricing" class="footer__link">Pricing</a>
+                    <a href="#" class="footer__link">About</a>
+                    <a href="#" class="footer__link">Blog</a>
+                    <a href="#" class="footer__link">Privacy</a>
+                    <a href="#" class="footer__link">Terms</a>
+                    <a href="#" class="footer__link">Contact</a>
+                </nav>
+
+                <p class="footer__copyright">
+                    © 2024 SubsHero. Wake up from the subscription Matrix.
+                </p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // ============================================
+        // DIGITAL RAIN ANIMATION (INTENSIFIED)
+        // ============================================
+        (function() {
+            const canvas = document.getElementById('matrix-canvas');
+            const ctx = canvas.getContext('2d');
+
+            // Resize canvas to full window
+            function resizeCanvas() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+
+            // Matrix characters
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()_+-=[]{}|;:,.<>?/~`';
+            const fontSize = 16;
+            const columns = Math.floor(canvas.width / fontSize);
+
+            // Initialize drops
+            const drops = [];
+            for (let i = 0; i < columns; i++) {
+                drops[i] = Math.random() * -100;
+            }
+
+            // Check for reduced motion preference
+            const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+            // Get current intensity level
+            function getCurrentDensity() {
+                const intensity = document.body.getAttribute('data-intensity');
+                if (prefersReducedMotion) return 0;
+                if (intensity === 'high') return 1.0;
+                if (intensity === 'medium') return 0.5;
+                if (intensity === 'low') return 0.25;
+                return 1.0;
+            }
+
+            function getCurrentSpeed() {
+                const intensity = document.body.getAttribute('data-intensity');
+                if (prefersReducedMotion) return 0;
+                if (intensity === 'high') return 1.5;
+                if (intensity === 'medium') return 1.0;
+                if (intensity === 'low') return 0.7;
+                return 1.5;
+            }
+
+            // Draw function
+            function draw() {
+                // Semi-transparent black background for trail effect
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                const density = getCurrentDensity();
+                const speed = getCurrentSpeed();
+
+                // Skip drawing if density is 0 (reduced motion)
+                if (density === 0) {
+                    ctx.fillStyle = 'rgba(0, 0, 0, 1)';
+                    ctx.fillRect(0, 0, canvas.width, canvas.height);
+                    return;
+                }
+
+                ctx.font = fontSize + 'px monospace';
+
+                // Draw characters
+                for (let i = 0; i < columns; i++) {
+                    // Skip some columns based on density
+                    if (Math.random() > density) continue;
+
+                    const char = chars[Math.floor(Math.random() * chars.length)];
+
+                    // Brightest green for leading character
+                    ctx.fillStyle = '#39FF14';
+                    ctx.fillText(char, i * fontSize, drops[i] * fontSize);
+
+                    // Matrix green for trailing characters
+                    ctx.fillStyle = '#00FF41';
+                    ctx.fillText(char, i * fontSize, (drops[i] - 1) * fontSize);
+
+                    // Reset drop to top when it reaches bottom
+                    if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                        drops[i] = 0;
+                    }
+
+                    // Move drop down at variable speed
+                    drops[i] += speed * 0.5;
+                }
+            }
+
+            // Animation loop
+            let animationId;
+            function animate() {
+                draw();
+                animationId = requestAnimationFrame(animate);
+            }
+
+            // Start animation
+            if (!prefersReducedMotion) {
+                animate();
+            }
+
+            // Update animation when intensity changes
+            window.addEventListener('intensity-changed', () => {
+                if (prefersReducedMotion) return;
+                cancelAnimationFrame(animationId);
+                animate();
+            });
+        })();
+
+        // ============================================
+        // TYPEWRITER EFFECT
+        // ============================================
+        (function() {
+            const phrases = [
+                "The Matrix has you... but not your subscriptions.",
+                "How deep does the rabbit hole go?",
+                "Free your mind. Control your subscriptions.",
+                "Wake up, Neo. Your subscriptions need you."
+            ];
+
+            let phraseIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+            const typewriterElement = document.getElementById('typewriter');
+            const typingSpeed = 100;
+            const deletingSpeed = 50;
+            const pauseDuration = 2000;
+
+            function type() {
+                const currentPhrase = phrases[phraseIndex];
+
+                if (isDeleting) {
+                    typewriterElement.textContent = currentPhrase.substring(0, charIndex - 1);
+                    charIndex--;
+                } else {
+                    typewriterElement.textContent = currentPhrase.substring(0, charIndex + 1);
+                    charIndex++;
+                }
+
+                let delay = isDeleting ? deletingSpeed : typingSpeed;
+
+                if (!isDeleting && charIndex === currentPhrase.length) {
+                    delay = pauseDuration;
+                    isDeleting = true;
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false;
+                    phraseIndex = (phraseIndex + 1) % phrases.length;
+                    delay = 500;
+                }
+
+                setTimeout(type, delay);
+            }
+
+            // Start typewriter effect
+            type();
+        })();
+
+        // ============================================
+        // EFFECT INTENSITY TOGGLE
+        // ============================================
+        (function() {
+            const toggleButton = document.getElementById('effectToggle');
+            const intensityLabel = document.getElementById('intensityLevel');
+            const intensities = ['high', 'medium', 'low'];
+            let currentIndex = 0;
+
+            // Load saved intensity from localStorage
+            const savedIntensity = localStorage.getItem('subshero-effect-intensity');
+            if (savedIntensity && intensities.includes(savedIntensity)) {
+                currentIndex = intensities.indexOf(savedIntensity);
+                document.body.setAttribute('data-intensity', savedIntensity);
+                intensityLabel.textContent = savedIntensity.toUpperCase();
+            }
+
+            toggleButton.addEventListener('click', () => {
+                // Cycle to next intensity
+                currentIndex = (currentIndex + 1) % intensities.length;
+                const newIntensity = intensities[currentIndex];
+
+                // Update DOM
+                document.body.setAttribute('data-intensity', newIntensity);
+                intensityLabel.textContent = newIntensity.toUpperCase();
+
+                // Save to localStorage
+                localStorage.setItem('subshero-effect-intensity', newIntensity);
+
+                // Dispatch custom event for canvas animation
+                window.dispatchEvent(new CustomEvent('intensity-changed'));
+
+                // Brief glitch effect on button
+                toggleButton.style.animation = 'glitch-red 0.3s ease-in-out';
+                setTimeout(() => {
+                    toggleButton.style.animation = '';
+                }, 300);
+            });
+        })();
+
+        // ============================================
+        // FAQ ACCORDION
+        // ============================================
+        (function() {
+            const faqQuestions = document.querySelectorAll('.faq__question');
+
+            faqQuestions.forEach(question => {
+                question.addEventListener('click', () => {
+                    const isActive = question.classList.contains('active');
+
+                    // Close all other FAQs
+                    faqQuestions.forEach(q => {
+                        q.classList.remove('active');
+                        const answer = q.nextElementSibling;
+                        answer.style.maxHeight = null;
+                    });
+
+                    // Toggle current FAQ
+                    if (!isActive) {
+                        question.classList.add('active');
+                        const answer = question.nextElementSibling;
+                        answer.style.maxHeight = answer.scrollHeight + 'px';
+                    }
+                });
+            });
+        })();
+
+        // ============================================
+        // SMOOTH SCROLL
+        // ============================================
+        (function() {
+            const links = document.querySelectorAll('a[href^="#"]');
+
+            links.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    const href = link.getAttribute('href');
+                    if (href === '#') return;
+
+                    e.preventDefault();
+                    const target = document.querySelector(href);
+
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        })();
+
+        // ============================================
+        // SCROLL FADE-IN ANIMATIONS
+        // ============================================
+        (function() {
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.1
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+
+            // Observe all fade-in elements
+            const fadeElements = document.querySelectorAll('.fade-in');
+            fadeElements.forEach(el => {
+                el.style.opacity = '0';
+                el.style.transform = 'translateY(20px)';
+                el.style.transition = 'opacity 0.6s ease-out, transform 0.6s ease-out';
+                observer.observe(el);
+            });
+        })();
+
+        // ============================================
+        // RANDOM GLITCH PULSE (Optional)
+        // ============================================
+        (function() {
+            function triggerRandomGlitch() {
+                const intensity = document.body.getAttribute('data-intensity');
+
+                // Skip if low intensity or reduced motion
+                if (intensity === 'low' || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                    return;
+                }
+
+                const glitchElements = document.querySelectorAll('.glitch-pulse');
+                const randomElement = glitchElements[Math.floor(Math.random() * glitchElements.length)];
+
+                if (randomElement) {
+                    randomElement.style.animation = 'none';
+                    setTimeout(() => {
+                        randomElement.style.animation = '';
+                    }, 10);
+                }
+
+                // Schedule next glitch (30-60 seconds)
+                const nextGlitch = 30000 + Math.random() * 30000;
+                setTimeout(triggerRandomGlitch, nextGlitch);
+            }
+
+            // Start random glitch cycle
+            const intensity = document.body.getAttribute('data-intensity');
+            if (intensity !== 'low' && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                setTimeout(triggerRandomGlitch, 30000);
+            }
+        })();
+
+        // ============================================
+        // PERFORMANCE MONITORING
+        // ============================================
+        (function() {
+            window.addEventListener('load', () => {
+                if (window.performance && window.performance.timing) {
+                    const timing = window.performance.timing;
+                    const loadTime = timing.loadEventEnd - timing.navigationStart;
+                    console.log(`%c[SYSTEM] Page loaded in ${loadTime}ms`, 'color: #39FF14; font-weight: bold;');
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

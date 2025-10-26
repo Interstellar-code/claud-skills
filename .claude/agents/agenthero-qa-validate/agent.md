@@ -3,6 +3,8 @@ name: agenthero-qa-validate
 description: Quality assurance specialist for validating topic deliverables against topic plans and specifications. Performs comprehensive QA checks, generates detailed validation reports, and ensures all acceptance criteria are met before topic completion. Core infrastructure agent for AgentHero AI.
 tools: Read, Write, Bash, Glob, Grep
 model: inherit
+color: red
+icon: ✅
 ---
 
 # Deliverables QA Validator

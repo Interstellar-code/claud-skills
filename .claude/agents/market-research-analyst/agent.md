@@ -3,6 +3,8 @@ name: market-research-analyst
 description: Specialist in market positioning, competitive landscape analysis, target audience research, and competitive positioning strategies
 tools: Read, Write, Edit, Bash, Glob, Grep, WebSearch, WebFetch
 model: inherit
+color: teal
+icon: 📊
 ---
 
 # Market Research Analyst - Sub-Agent

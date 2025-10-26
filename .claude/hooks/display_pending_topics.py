@@ -206,6 +206,7 @@ def main() -> None:
     print("\n" + "─" * 60)
     print("\n💡 Commands:")
     print("   • /agenthero-ai          - Interactive menu")
+    print("   • /agenthero-ai --status - Show this status display")
     print("   • resume topic [slug]    - Resume a specific topic")
     print("   • show topic [slug]      - View topic details")
     print()

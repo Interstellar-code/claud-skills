@@ -1,0 +1,6 @@
+CUSTOMER_ID,CUSTOMER_NAME,CUSTOMER_NAME2,SEARCH_TERM,STREET,CITY,POSTAL_CODE,COUNTRY,REGION,TELEPHONE,FAX,EMAIL,TAX_NUMBER1,VAT_REG_NO,INDUSTRY_KEY,ACCOUNT_GROUP
+100001,ABC Corporation,North American Headquarters,ABCCORP,123 Main Street,New York,10001,US,NY,+1-212-555-0100,+1-212-555-0101,contact@abccorp.com,12-3456789,,MANU,KUNA
+100002,XYZ Industries,Manufacturing Division,XYZIND,456 Oak Avenue,Chicago,60601,US,IL,+1-312-555-0200,,info@xyzind.com,98-7654321,,MANU,KUNA
+100003,Global Trading Ltd,European Operations,GLOTRA,789 High Street,London,EC1A 1BB,GB,LND,+44-20-5555-0300,+44-20-5555-0301,uk@globaltrading.co.uk,,GB123456789,TRAD,KUNE
+100004,Tech Solutions GmbH,,TECHSOL,101 Hauptstrasse,Berlin,10115,DE,BE,+49-30-5555-0400,,info@techsolutions.de,,DE987654321,TECH,KUNA
+100005,Asia Pacific Corp,Regional Office,ASIPAC,202 Orchard Road,Singapore,238801,SG,SG,+65-6555-0500,,contact@asiapacific.sg,,,SERV,KUNA

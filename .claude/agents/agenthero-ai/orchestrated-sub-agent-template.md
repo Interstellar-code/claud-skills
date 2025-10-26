@@ -3,6 +3,8 @@ name: orchestrated-sub-agent-template
 description: Universal template for orchestrated sub-agents. This template is combined with user-specific prompts by the PM orchestrator to create specialized sub-agents on demand. NOT for direct invocation.
 tools: Read, Write, Edit, Bash, Glob, Grep
 model: inherit
+color: gray
+icon: 🤖
 ---
 
 # Orchestrated Sub-Agent Template

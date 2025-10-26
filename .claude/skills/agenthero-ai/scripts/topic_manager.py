@@ -412,9 +412,14 @@ def delete_topic(slug: str, force: bool = False) -> bool:
         return False
 
     if not force:
-        response = input(f"Are you sure you want to delete topic '{slug}'? (yes/no): ")
-        if response.lower() != "yes":
-            log_info("Topic deletion cancelled")
+        try:
+            response = input(f"Are you sure you want to delete topic '{slug}'? (yes/no): ")
+            if response.lower() != "yes":
+                log_info("Topic deletion cancelled")
+                return False
+        except EOFError:
+            # Non-interactive environment - require --force flag
+            log_error("Cannot confirm deletion in non-interactive environment. Use --force flag.")
             return False
 
     # Remove from topics.json

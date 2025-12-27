@@ -1,0 +1,248 @@
+{
+	"nodes": [
+		{
+			"id": "project_charter",
+			"x": -600,
+			"y": -400,
+			"width": 250,
+			"height": 120,
+			"color": "6",
+			"type": "text",
+			"text": "## Project Charter\n\n**Client:** Manufacturing Corp\n**Scope:** S/4HANA Migration\n**Budget:** $125K\n**Timeline:** 6 months\n**Go-Live:** Apr 2025"
+		},
+		{
+			"id": "phase1_prep",
+			"x": -300,
+			"y": -200,
+			"width": 220,
+			"height": 180,
+			"color": "3",
+			"type": "text",
+			"text": "## Phase 1: Preparation\n\n- [x] Kickoff meeting\n- [x] System landscape\n- [x] Project team setup\n- [ ] Hardware sizing\n- [ ] Basis setup\n- [ ] Development system\n\n**Status:** 70%"
+		},
+		{
+			"id": "phase2_bbp",
+			"x": 0,
+			"y": -200,
+			"width": 220,
+			"height": 180,
+			"color": "3",
+			"type": "text",
+			"text": "## Phase 2: Blueprint\n\n- [ ] Process workshops\n- [ ] Fit-gap analysis\n- [ ] Business blueprint\n- [ ] Technical design\n- [ ] Data mapping\n- [ ] Integration points\n\n**Status:** 10%"
+		},
+		{
+			"id": "phase3_realization",
+			"x": 300,
+			"y": -200,
+			"width": 220,
+			"height": 180,
+			"color": "2",
+			"type": "text",
+			"text": "## Phase 3: Realization\n\n- [ ] Configuration\n- [ ] Development\n- [ ] Unit testing\n- [ ] Data migration tools\n- [ ] Interface development\n- [ ] Security roles\n\n**Status:** 0%"
+		},
+		{
+			"id": "phase4_test",
+			"x": 600,
+			"y": -200,
+			"width": 220,
+			"height": 180,
+			"color": "4",
+			"type": "text",
+			"text": "## Phase 4: Testing\n\n- [ ] Integration testing\n- [ ] UAT preparation\n- [ ] User acceptance\n- [ ] Performance test\n- [ ] Cutover planning\n- [ ] Training delivery\n\n**Status:** 0%"
+		},
+		{
+			"id": "phase5_golive",
+			"x": 900,
+			"y": -200,
+			"width": 220,
+			"height": 180,
+			"color": "1",
+			"type": "text",
+			"text": "## Phase 5: Go-Live\n\n- [ ] Final data migration\n- [ ] Cutover execution\n- [ ] Go-live checks\n- [ ] Hypercare support\n- [ ] Issue resolution\n- [ ] Stabilization\n\n**Target:** Apr 15"
+		},
+		{
+			"id": "current_issues",
+			"x": -600,
+			"y": 100,
+			"width": 250,
+			"height": 150,
+			"color": "1",
+			"type": "text",
+			"text": "## 🚨 Current Issues\n\n1. **Server procurement delay**\n   - Impact: 2 weeks\n   - Action: Escalate\n\n2. **Key user availability**\n   - Impact: Blueprint delay\n   - Action: Schedule adjustment"
+		},
+		{
+			"id": "modules_scope",
+			"x": -300,
+			"y": 100,
+			"width": 200,
+			"height": 180,
+			"color": "5",
+			"type": "text",
+			"text": "## Modules in Scope\n\n**Core:**\n- FI (Finance)\n- CO (Controlling)\n- MM (Materials)\n- SD (Sales)\n\n**Additional:**\n- PP (Production)\n- QM (Quality)\n- PM (Plant Maint.)"
+		},
+		{
+			"id": "team_resources",
+			"x": 0,
+			"y": 100,
+			"width": 200,
+			"height": 180,
+			"type": "text",
+			"text": "## Team Resources\n\n**Client:**\n- Project Manager\n- 5 Key Users\n- IT Team (3)\n\n**Consulting:**\n- Rohit (Lead)\n- Technical Consultant\n- Data Migration Spec"
+		},
+		{
+			"id": "deliverables",
+			"x": 300,
+			"y": 100,
+			"width": 220,
+			"height": 180,
+			"color": "6",
+			"type": "text",
+			"text": "## Key Deliverables\n\n**Documents:**\n- [ ] Business Blueprint\n- [ ] Technical Specs\n- [ ] Test Scripts\n- [ ] Training Materials\n- [ ] Cutover Plan\n- [ ] Support Handbook"
+		},
+		{
+			"id": "milestones",
+			"x": 600,
+			"y": 100,
+			"width": 220,
+			"height": 180,
+			"color": "4",
+			"type": "text",
+			"text": "## Milestones\n\n- **Nov 15:** Prep complete\n- **Dec 30:** Blueprint sign-off\n- **Feb 15:** Dev complete\n- **Mar 20:** UAT sign-off\n- **Apr 15:** Go-Live\n- **May 15:** Project closure"
+		},
+		{
+			"id": "risks",
+			"x": 900,
+			"y": 100,
+			"width": 200,
+			"height": 180,
+			"color": "1",
+			"type": "text",
+			"text": "## Risk Register\n\n**High:**\n- Data quality issues\n- Change resistance\n\n**Medium:**\n- Integration complexity\n- Resource availability\n\n**Low:**\n- Technical issues"
+		},
+		{
+			"id": "weekly_status",
+			"x": 150,
+			"y": 350,
+			"width": 400,
+			"height": 120,
+			"color": "6",
+			"type": "text",
+			"text": "## Weekly Status Update\n\n**Week 44 (Oct 28 - Nov 1):**\n- ✅ Development system ready | ⏳ Basis configuration 80% | 🔄 Blueprint workshops scheduled\n- **Next Week:** Complete prep phase, Start blueprint workshops"
+		},
+		{
+			"id": "data_migration",
+			"x": -300,
+			"y": 350,
+			"width": 200,
+			"height": 120,
+			"color": "2",
+			"type": "text",
+			"text": "## Data Migration\n\n**Objects:**\n- Master Data (20)\n- Open Items (5)\n- Historical (3)\n\n**Tools:** LSMW, Custom"
+		},
+		{
+			"id": "training_plan",
+			"x": 700,
+			"y": 350,
+			"width": 200,
+			"height": 120,
+			"color": "3",
+			"type": "text",
+			"text": "## Training Plan\n\n- Key Users: 40 hrs\n- End Users: 16 hrs\n- IT Team: 60 hrs\n\n**Method:** Classroom + Virtual"
+		}
+	],
+	"edges": [
+		{
+			"id": "charter_to_prep",
+			"fromNode": "project_charter",
+			"fromSide": "right",
+			"toNode": "phase1_prep",
+			"toSide": "top"
+		},
+		{
+			"id": "prep_to_bbp",
+			"fromNode": "phase1_prep",
+			"fromSide": "right",
+			"toNode": "phase2_bbp",
+			"toSide": "left"
+		},
+		{
+			"id": "bbp_to_real",
+			"fromNode": "phase2_bbp",
+			"fromSide": "right",
+			"toNode": "phase3_realization",
+			"toSide": "left"
+		},
+		{
+			"id": "real_to_test",
+			"fromNode": "phase3_realization",
+			"fromSide": "right",
+			"toNode": "phase4_test",
+			"toSide": "left"
+		},
+		{
+			"id": "test_to_golive",
+			"fromNode": "phase4_test",
+			"fromSide": "right",
+			"toNode": "phase5_golive",
+			"toSide": "left"
+		},
+		{
+			"id": "issues_to_prep",
+			"fromNode": "current_issues",
+			"fromSide": "top",
+			"toNode": "phase1_prep",
+			"toSide": "bottom",
+			"color": "1"
+		},
+		{
+			"id": "modules_to_bbp",
+			"fromNode": "modules_scope",
+			"fromSide": "top",
+			"toNode": "phase2_bbp",
+			"toSide": "bottom"
+		},
+		{
+			"id": "team_to_all",
+			"fromNode": "team_resources",
+			"fromSide": "top",
+			"toNode": "phase3_realization",
+			"toSide": "bottom"
+		},
+		{
+			"id": "deliverables_link",
+			"fromNode": "deliverables",
+			"fromSide": "top",
+			"toNode": "phase3_realization",
+			"toSide": "bottom"
+		},
+		{
+			"id": "milestones_link",
+			"fromNode": "milestones",
+			"fromSide": "top",
+			"toNode": "phase4_test",
+			"toSide": "bottom"
+		},
+		{
+			"id": "risks_link",
+			"fromNode": "risks",
+			"fromSide": "top",
+			"toNode": "phase5_golive",
+			"toSide": "bottom",
+			"color": "1"
+		},
+		{
+			"id": "data_to_real",
+			"fromNode": "data_migration",
+			"fromSide": "top",
+			"toNode": "phase3_realization",
+			"toSide": "bottom"
+		},
+		{
+			"id": "training_to_test",
+			"fromNode": "training_plan",
+			"fromSide": "top",
+			"toNode": "phase4_test",
+			"toSide": "bottom"
+		}
+	]
+}

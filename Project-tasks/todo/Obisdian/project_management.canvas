@@ -1,0 +1,184 @@
+{
+	"nodes": [
+		{
+			"id": "central_hub",
+			"x": 0,
+			"y": 0,
+			"width": 300,
+			"height": 120,
+			"color": "6",
+			"type": "text",
+			"text": "# Project Hub\n\n**Active Projects:** 3\n**Pending Tasks:** 12\n**This Week Focus:** SAP Implementation"
+		},
+		{
+			"id": "web_projects",
+			"x": -500,
+			"y": -300,
+			"width": 280,
+			"height": 200,
+			"color": "2",
+			"type": "text",
+			"text": "## Web Dev Projects\n\n### Client A - E-commerce\n- [ ] Frontend redesign\n- [ ] Payment gateway integration\n- [ ] Mobile responsive testing\n\n### Client B - Portfolio\n- [x] Initial mockup\n- [ ] CMS integration\n- [ ] SEO optimization"
+		},
+		{
+			"id": "sap_projects",
+			"x": 500,
+			"y": -300,
+			"width": 280,
+			"height": 200,
+			"color": "4",
+			"type": "text",
+			"text": "## SAP Consulting\n\n### Manufacturing Co.\n- [ ] S/4HANA migration assessment\n- [ ] Process documentation\n- [ ] Training materials prep\n\n### Retail Client\n- [x] SAP SD configuration\n- [ ] User acceptance testing\n- [ ] Go-live support"
+		},
+		{
+			"id": "weekly_tasks",
+			"x": -500,
+			"y": 100,
+			"width": 250,
+			"height": 180,
+			"color": "3",
+			"type": "text",
+			"text": "## This Week\n\n**Monday**\n- Client A meeting 10 AM\n- Deploy staging site\n\n**Tuesday-Wednesday**\n- SAP config sessions\n\n**Thursday**\n- Code review\n- Testing phase\n\n**Friday**\n- Weekly reports\n- Planning session"
+		},
+		{
+			"id": "urgent_tasks",
+			"x": 0,
+			"y": -250,
+			"width": 220,
+			"height": 140,
+			"color": "1",
+			"type": "text",
+			"text": "## 🔥 URGENT\n\n1. Fix payment bug - Client A\n2. SAP transport request\n3. Submit proposal - New client\n4. Security patch update\n\n**Deadline: EOD Tomorrow**"
+		},
+		{
+			"id": "backlog",
+			"x": 500,
+			"y": 100,
+			"width": 250,
+			"height": 180,
+			"color": "5",
+			"type": "text",
+			"text": "## Backlog\n\n### Low Priority\n- Blog content updates\n- Portfolio refresh\n- Documentation cleanup\n\n### Ideas\n- Automation tools research\n- New service offerings\n- Partnership opportunities"
+		},
+		{
+			"id": "resources",
+			"x": -200,
+			"y": 350,
+			"width": 200,
+			"height": 120,
+			"type": "text",
+			"text": "## Resources\n\n- [[Templates]]\n- [[Client Contacts]]\n- [[SAP Notes]]\n- [[Code Snippets]]\n- [[Invoice Templates]]"
+		},
+		{
+			"id": "kpis",
+			"x": 200,
+			"y": 350,
+			"width": 200,
+			"height": 120,
+			"color": "6",
+			"type": "text",
+			"text": "## KPIs This Month\n\n- Projects: 5/6 on track\n- Revenue: 85% of target\n- Client satisfaction: 4.8/5\n- Billable hours: 142/160"
+		},
+		{
+			"id": "notes",
+			"x": 0,
+			"y": 200,
+			"width": 160,
+			"height": 100,
+			"type": "text",
+			"text": "## Quick Notes\n\n- Follow up with Client C\n- Research new SAP tools\n- Update portfolio site"
+		},
+		{
+			"id": "pipeline",
+			"x": -800,
+			"y": -100,
+			"width": 220,
+			"height": 150,
+			"color": "2",
+			"type": "text",
+			"text": "## Pipeline\n\n**Prospects:**\n- Startup X - Web app\n- Corp Y - SAP audit\n- Agency Z - Subcontract\n\n**Est. Value:** $45K"
+		},
+		{
+			"id": "learning",
+			"x": 800,
+			"y": -100,
+			"width": 220,
+			"height": 150,
+			"color": "4",
+			"type": "text",
+			"text": "## Learning Goals\n\n- [ ] Next.js 14 features\n- [ ] SAP BTP certification\n- [ ] AI integration tools\n- [ ] Cloud architecture\n\n**Study time: 2h/week**"
+		}
+	],
+	"edges": [
+		{
+			"id": "edge1",
+			"fromNode": "central_hub",
+			"fromSide": "left",
+			"toNode": "web_projects",
+			"toSide": "right"
+		},
+		{
+			"id": "edge2",
+			"fromNode": "central_hub",
+			"fromSide": "right",
+			"toNode": "sap_projects",
+			"toSide": "left"
+		},
+		{
+			"id": "edge3",
+			"fromNode": "central_hub",
+			"fromSide": "top",
+			"toNode": "urgent_tasks",
+			"toSide": "bottom"
+		},
+		{
+			"id": "edge4",
+			"fromNode": "central_hub",
+			"fromSide": "bottom",
+			"toNode": "notes",
+			"toSide": "top"
+		},
+		{
+			"id": "edge5",
+			"fromNode": "web_projects",
+			"fromSide": "bottom",
+			"toNode": "weekly_tasks",
+			"toSide": "top"
+		},
+		{
+			"id": "edge6",
+			"fromNode": "sap_projects",
+			"fromSide": "bottom",
+			"toNode": "backlog",
+			"toSide": "top"
+		},
+		{
+			"id": "edge7",
+			"fromNode": "notes",
+			"fromSide": "left",
+			"toNode": "resources",
+			"toSide": "top"
+		},
+		{
+			"id": "edge8",
+			"fromNode": "notes",
+			"fromSide": "right",
+			"toNode": "kpis",
+			"toSide": "top"
+		},
+		{
+			"id": "edge9",
+			"fromNode": "web_projects",
+			"fromSide": "left",
+			"toNode": "pipeline",
+			"toSide": "right"
+		},
+		{
+			"id": "edge10",
+			"fromNode": "sap_projects",
+			"fromSide": "right",
+			"toNode": "learning",
+			"toSide": "left"
+		}
+	]
+}

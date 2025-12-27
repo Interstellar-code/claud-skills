@@ -1,0 +1,172 @@
+{
+	"nodes": [
+		{
+			"id": "inbox",
+			"x": -800,
+			"y": 0,
+			"width": 200,
+			"height": 300,
+			"color": "5",
+			"type": "text",
+			"text": "## 📥 INBOX\n\n**New Requests:**\n- API integration task\n- Bug fix: Login issue\n- SAP report modification\n- Database optimization\n- UI color changes\n- Documentation update\n- Client meeting prep\n\n*Drag items to Planning →*"
+		},
+		{
+			"id": "planning",
+			"x": -500,
+			"y": 0,
+			"width": 200,
+			"height": 300,
+			"color": "3",
+			"type": "text",
+			"text": "## 📋 PLANNING\n\n**To Estimate:**\n- Homepage redesign\n  - Time: ?\n  - Priority: ?\n  \n- SAP workflow config\n  - Time: ?\n  - Priority: ?\n\n**Ready:**\n- Contact form (2h)\n- Data migration (4h)"
+		},
+		{
+			"id": "in_progress",
+			"x": -200,
+			"y": 0,
+			"width": 200,
+			"height": 300,
+			"color": "2",
+			"type": "text",
+			"text": "## 🚀 IN PROGRESS\n\n**Active Now:**\n\n### Task: E-commerce Cart\n- Started: Oct 28\n- Progress: 60%\n- Blockers: None\n\n### Task: SAP Testing\n- Started: Oct 30\n- Progress: 30%\n- Waiting: Client data"
+		},
+		{
+			"id": "review",
+			"x": 100,
+			"y": 0,
+			"width": 200,
+			"height": 300,
+			"color": "4",
+			"type": "text",
+			"text": "## 👀 REVIEW\n\n**Pending Review:**\n\n- Payment gateway code\n  - Reviewer: Self\n  - Type: Security check\n\n- SAP config document\n  - Reviewer: Client\n  - Sent: Oct 29\n\n- Mobile responsive test\n  - Status: Testing"
+		},
+		{
+			"id": "completed",
+			"x": 400,
+			"y": 0,
+			"width": 200,
+			"height": 300,
+			"color": "6",
+			"type": "text",
+			"text": "## ✅ COMPLETED\n\n**This Week:**\n- ✓ SSL certificate\n- ✓ Database backup\n- ✓ Client presentation\n- ✓ SAP user training\n- ✓ Bug fixes (batch 1)\n- ✓ Invoice generation\n\n**Total: 6 tasks**\n**Hours: 28**"
+		},
+		{
+			"id": "blocked",
+			"x": -200,
+			"y": 400,
+			"width": 200,
+			"height": 150,
+			"color": "1",
+			"type": "text",
+			"text": "## ⚠️ BLOCKED\n\n**Waiting on:**\n- Client approval (3 days)\n- API credentials\n- SAP system access\n\n*Escalate if > 2 days*"
+		},
+		{
+			"id": "metrics",
+			"x": 700,
+			"y": 0,
+			"width": 180,
+			"height": 200,
+			"type": "text",
+			"text": "## 📊 METRICS\n\n**Velocity:**\n- This week: 6 tasks\n- Avg/week: 8 tasks\n\n**Cycle Time:**\n- Avg: 2.5 days\n- Target: 2 days\n\n**WIP Limit:** 3\n**Current WIP:** 2"
+		},
+		{
+			"id": "legend",
+			"x": 700,
+			"y": 250,
+			"width": 180,
+			"height": 150,
+			"type": "text",
+			"text": "## Color Legend\n\n🔴 Urgent/Blocked\n🟢 Active/In Progress\n🔵 Review/Testing\n🟡 Planning\n🟣 Backlog/Ideas\n⚫ Complete/Archive"
+		},
+		{
+			"id": "daily_focus",
+			"x": -500,
+			"y": -250,
+			"width": 600,
+			"height": 100,
+			"color": "6",
+			"type": "text",
+			"text": "## 🎯 TODAY'S FOCUS\n\n**Priority 1:** Complete e-commerce cart functionality | **Priority 2:** SAP testing prep | **Priority 3:** Client call 3 PM"
+		},
+		{
+			"id": "notes_section",
+			"x": -500,
+			"y": 400,
+			"width": 300,
+			"height": 150,
+			"type": "text",
+			"text": "## 📝 Process Notes\n\n1. New tasks → INBOX\n2. Estimate in PLANNING (max 2 days)\n3. WIP limit: 3 tasks in PROGRESS\n4. Daily standup: 9 AM\n5. Review before moving to COMPLETE"
+		}
+	],
+	"edges": [
+		{
+			"id": "flow1",
+			"fromNode": "inbox",
+			"fromSide": "right",
+			"toNode": "planning",
+			"toSide": "left",
+			"label": "Triage"
+		},
+		{
+			"id": "flow2",
+			"fromNode": "planning",
+			"fromSide": "right",
+			"toNode": "in_progress",
+			"toSide": "left",
+			"label": "Start"
+		},
+		{
+			"id": "flow3",
+			"fromNode": "in_progress",
+			"fromSide": "right",
+			"toNode": "review",
+			"toSide": "left",
+			"label": "Test"
+		},
+		{
+			"id": "flow4",
+			"fromNode": "review",
+			"fromSide": "right",
+			"toNode": "completed",
+			"toSide": "left",
+			"label": "Done"
+		},
+		{
+			"id": "flow5",
+			"fromNode": "in_progress",
+			"fromSide": "bottom",
+			"toNode": "blocked",
+			"toSide": "top",
+			"label": "Issue"
+		},
+		{
+			"id": "flow6",
+			"fromNode": "blocked",
+			"fromSide": "right",
+			"toNode": "review",
+			"toSide": "bottom",
+			"label": "Resolved"
+		},
+		{
+			"id": "flow7",
+			"fromNode": "completed",
+			"fromSide": "right",
+			"toNode": "metrics",
+			"toSide": "left"
+		},
+		{
+			"id": "flow8",
+			"fromNode": "planning",
+			"fromSide": "top",
+			"toNode": "daily_focus",
+			"toSide": "bottom"
+		},
+		{
+			"id": "flow9",
+			"fromNode": "in_progress",
+			"fromSide": "top",
+			"toNode": "daily_focus",
+			"toSide": "bottom"
+		}
+	]
+}
